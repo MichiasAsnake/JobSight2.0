@@ -2,8 +2,7 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge as ShadcnBadge } from "@/components/ui/badge";
+import { Card, CardContent } from "@/components/ui/card";
 import {
   ChevronDown,
   ChevronRight,
@@ -12,9 +11,6 @@ import {
   Package,
   FileText,
   AlertTriangle,
-  CheckCircle,
-  Clock,
-  Truck,
   TrendingUp,
   Phone,
   Mail,
@@ -23,11 +19,31 @@ import {
   ExternalLink,
 } from "lucide-react";
 
+interface MessageContext {
+  lastQuery?: string;
+  shownOrders?: string[];
+  focusedCustomer?: string;
+  focusedJob?: string;
+}
+
 interface MessageProps {
   content: string;
   isUser: boolean;
   timestamp: string;
-  context?: any;
+  context?: MessageContext;
+}
+
+interface ParsedItem {
+  type: string;
+  content?: string;
+  key?: string;
+  value?: string;
+}
+
+interface ParsedSection {
+  type: string;
+  title: string;
+  items: ParsedItem[];
 }
 
 export function OMSMessage({
@@ -59,7 +75,7 @@ export function OMSMessage({
         hour: "2-digit",
         minute: "2-digit",
       });
-    } catch (error) {
+    } catch {
       return new Date().toLocaleTimeString([], {
         hour: "2-digit",
         minute: "2-digit",
@@ -67,45 +83,12 @@ export function OMSMessage({
     }
   };
 
-  const getStatusIcon = (status: string) => {
-    const statusLower = status.toLowerCase();
-    if (statusLower.includes("approved") || statusLower.includes("complete")) {
-      return <CheckCircle className="h-4 w-4 text-green-500" />;
-    } else if (statusLower.includes("rush") || statusLower.includes("urgent")) {
-      return <AlertTriangle className="h-4 w-4 text-orange-500" />;
-    } else if (
-      statusLower.includes("pending") ||
-      statusLower.includes("waiting")
-    ) {
-      return <Clock className="h-4 w-4 text-yellow-500" />;
-    } else if (
-      statusLower.includes("shipped") ||
-      statusLower.includes("delivered")
-    ) {
-      return <Truck className="h-4 w-4 text-blue-500" />;
-    }
-    return <FileText className="h-4 w-4 text-gray-500" />;
-  };
-
-  const getPriorityColor = (priority: string) => {
-    switch (priority.toLowerCase()) {
-      case "must":
-        return "bg-red-100 text-red-800 border-red-200";
-      case "high":
-        return "bg-orange-100 text-orange-800 border-orange-200";
-      case "normal":
-        return "bg-blue-100 text-blue-800 border-blue-200";
-      default:
-        return "bg-gray-100 text-gray-800 border-gray-200";
-    }
-  };
-
   // Enhanced markdown parsing
-  const parseContent = (content: string) => {
+  const parseContent = (content: string): ParsedSection[] => {
     const lines = content.split("\n");
-    const parsed: any[] = [];
+    const parsed: ParsedSection[] = [];
     let currentSection = null;
-    let currentItems: any[] = [];
+    let currentItems: ParsedItem[] = [];
 
     for (let i = 0; i < lines.length; i++) {
       const line = lines[i].trim();
@@ -171,7 +154,7 @@ export function OMSMessage({
     return parsed;
   };
 
-  const renderParsedContent = (sections: any[]) => {
+  const renderParsedContent = (sections: ParsedSection[]) => {
     return sections.map((section, sectionIndex) => (
       <div key={sectionIndex} className="mb-4">
         <h3 className="font-semibold text-lg mb-3 flex items-center gap-2">
@@ -203,7 +186,7 @@ export function OMSMessage({
         </h3>
 
         <div className="space-y-2">
-          {section.items.map((item: any, itemIndex: number) => {
+          {section.items.map((item: ParsedItem, itemIndex: number) => {
             switch (item.type) {
               case "subsection":
                 return (
@@ -240,31 +223,31 @@ export function OMSMessage({
                     className="flex justify-between items-center py-1 border-b border-gray-100"
                   >
                     <span className="text-sm text-muted-foreground flex items-center gap-1">
-                      {item.key.includes("Customer") && (
+                      {item.key?.includes("Customer") && (
                         <User className="h-3 w-3" />
                       )}
-                      {item.key.includes("Company") && (
+                      {item.key?.includes("Company") && (
                         <Building className="h-3 w-3" />
                       )}
-                      {item.key.includes("Value") && (
+                      {item.key?.includes("Value") && (
                         <DollarSign className="h-3 w-3" />
                       )}
-                      {item.key.includes("Revenue") && (
+                      {item.key?.includes("Revenue") && (
                         <DollarSign className="h-3 w-3" />
                       )}
-                      {item.key.includes("Due") && (
+                      {item.key?.includes("Due") && (
                         <Calendar className="h-3 w-3" />
                       )}
-                      {item.key.includes("Phone") && (
+                      {item.key?.includes("Phone") && (
                         <Phone className="h-3 w-3" />
                       )}
-                      {item.key.includes("Email") && (
+                      {item.key?.includes("Email") && (
                         <Mail className="h-3 w-3" />
                       )}
-                      {item.key.includes("Contact") && (
+                      {item.key?.includes("Contact") && (
                         <User className="h-3 w-3" />
                       )}
-                      {item.key.includes("Summary") && (
+                      {item.key?.includes("Summary") && (
                         <TrendingUp className="h-3 w-3" />
                       )}
                       {item.key}
@@ -425,7 +408,7 @@ export function OMSMessage({
                     <span className="font-medium">{context.lastQuery}</span>
                   </div>
                 )}
-                {context.shownOrders?.length > 0 && (
+                {context.shownOrders && context.shownOrders.length > 0 && (
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Orders Shown:</span>
                     <span className="font-medium">
