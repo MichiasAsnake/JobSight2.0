@@ -1,0 +1,75 @@
+{
+  "cookies": [
+    {
+      "name": "AspxAutoDetectCookieSupport",
+      "value": "1",
+      "domain": "intranet.decopress.com",
+      "path": "/",
+      "expires": -1,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": ".ASPXAUTH",
+      "value": "A1828F915F6B963E0D97E61C6C56589216C1525BBDF4C6265A910FFDB52FD0AF104C78E8CB19431A699B34E4BDD02BAEB7BC8EB8946CE9A2F242F1AA2991D4B9C8A163A87A9F258FDA1FD55E4C6D6BADF29CEDDA",
+      "domain": "intranet.decopress.com",
+      "path": "/",
+      "expires": 1751384775.999684,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "User",
+      "value": "Guid=8f2d089b-10df-4cff-895e-403fcc904f16&tag_permissions_add=asset,inwards,job,quote&tag_permissions_remove=asset,inwards,job,quote",
+      "domain": "intranet.decopress.com",
+      "path": "/",
+      "expires": -1,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "UserGuid",
+      "value": "8f2d089b-10df-4cff-895e-403fcc904f16",
+      "domain": "intranet.decopress.com",
+      "path": "/",
+      "expires": -1,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "TenantTz",
+      "value": "{\"TzId\":\"America%2fLos_Angeles\"}",
+      "domain": "intranet.decopress.com",
+      "path": "/",
+      "expires": -1,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "localeinfo",
+      "value": "{%22Locale%22:%22en%22%2C%22CustomFormats%22:{%22DM%22:%22MM/DD%22}}",
+      "domain": "intranet.decopress.com",
+      "path": "/",
+      "expires": -1,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "tz",
+      "value": "America/Los_Angeles",
+      "domain": "intranet.decopress.com",
+      "path": "/",
+      "expires": -1,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "Lax"
+    }
+  ],
+  "origins": []
+}

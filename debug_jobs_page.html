@@ -1,0 +1,2796 @@
+<!DOCTYPE html><html><head><title>
+	Job List
+</title>
+<!--
+************************************************************************************
+Don't t use CDNs, some factory machines do not have unrestricted access to internet
+************************************************************************************
+-->
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, minimum-scale=1">
+<style data-tippy-stylesheet="">.tippy-box[data-animation=fade][data-state=hidden]{opacity:0}[data-tippy-root]{max-width:calc(100vw - 10px)}.tippy-box{position:relative;background-color:#333;color:#fff;border-radius:4px;font-size:14px;line-height:1.4;outline:0;transition-property:transform,visibility,opacity}.tippy-box[data-placement^=top]>.tippy-arrow{bottom:0}.tippy-box[data-placement^=top]>.tippy-arrow:before{bottom:-7px;left:0;border-width:8px 8px 0;border-top-color:initial;transform-origin:center top}.tippy-box[data-placement^=bottom]>.tippy-arrow{top:0}.tippy-box[data-placement^=bottom]>.tippy-arrow:before{top:-7px;left:0;border-width:0 8px 8px;border-bottom-color:initial;transform-origin:center bottom}.tippy-box[data-placement^=left]>.tippy-arrow{right:0}.tippy-box[data-placement^=left]>.tippy-arrow:before{border-width:8px 0 8px 8px;border-left-color:initial;right:-7px;transform-origin:center left}.tippy-box[data-placement^=right]>.tippy-arrow{left:0}.tippy-box[data-placement^=right]>.tippy-arrow:before{left:-7px;border-width:8px 8px 8px 0;border-right-color:initial;transform-origin:center right}.tippy-box[data-inertia][data-state=visible]{transition-timing-function:cubic-bezier(.54,1.5,.38,1.11)}.tippy-arrow{width:16px;height:16px;color:#333}.tippy-arrow:before{content:"";position:absolute;border-color:transparent;border-style:solid}.tippy-content{position:relative;padding:5px 9px;z-index:1}</style><link href="../bundles/common/css/JQUERY_LATEST_BS4_TIPPY?v=1.0.20250624.023235" rel="stylesheet">
+<link href="../content/css/theme/decopress.com/theme.min.css?v=1.0.20250624.023235" rel="stylesheet">
+
+<!-- Script Files Render -->
+<script src="../bundles/common/js/JQUERY_LATEST_BS4_TIPPY?v=1.0.20250624.023235"></script>
+<script src="../Content/lib/moment/latest/locale/en-us.js?v=1.0.20250624.023235"></script>
+<!-- /Script Files Render -->
+    
+<!-- FavIcons -->
+<link rel="apple-touch-icon" sizes="57x57" href="/content/css/theme/decopress.com/images/fav/apple-icon-57x57.png">
+<link rel="apple-touch-icon" sizes="60x60" href="/content/css/theme/decopress.com/images/fav/apple-icon-60x60.png">
+<link rel="apple-touch-icon" sizes="72x72" href="/content/css/theme/decopress.com/images/fav/apple-icon-72x72.png">
+<link rel="apple-touch-icon" sizes="76x76" href="/content/css/theme/decopress.com/images/fav/apple-icon-76x76.png">
+<link rel="apple-touch-icon" sizes="114x114" href="/content/css/theme/decopress.com/images/fav/apple-icon-114x114.png">
+<link rel="apple-touch-icon" sizes="120x120" href="/content/css/theme/decopress.com/images/fav/apple-icon-120x120.png">
+<link rel="apple-touch-icon" sizes="144x144" href="/content/css/theme/decopress.com/images/fav/apple-icon-144x144.png">
+<link rel="apple-touch-icon" sizes="152x152" href="/content/css/theme/decopress.com/images/fav/apple-icon-152x152.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/content/css/theme/decopress.com/images/fav/apple-icon-180x180.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/content/css/theme/decopress.com/images/fav/android-icon-192x192.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/content/css/theme/decopress.com/images/fav/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="96x96" href="/content/css/theme/decopress.com/images/fav/favicon-96x96.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/content/css/theme/decopress.com/images/fav/favicon-16x16.png">
+<link rel="manifest" href="/content/css/theme/decopress.com/images/fav/manifest.json">
+<meta name="msapplication-TileColor" content="#ffffff">
+<meta name="msapplication-TileImage" content="/content/css/theme/decopress.com/images/fav/ms-icon-144x144.png">
+<meta name="theme-color" content="#ffffff">
+
+<!-- Tenant Css-->
+<style type="text/css" id="tenantCss">span.jobtag[data-tag-code="FIRST_ORDER"] {
+
+    border: none;
+
+    background-color: #5cb85c !important;
+
+    color: #fff;
+
+}
+
+span.jobtag[data-tag-code="SHOPIFY"] {
+
+    border: none;
+
+    background-color: #95BF47 !important;
+
+    color: #fff;
+
+}
+span.jobtag[data-tag-code="INITIAL_ORDERS"] {
+
+    border: none;
+
+    background-color: #ed2317 !important;
+
+    color: #fff;
+
+}
+
+span.jobtag[data-tag-code="SUCCESSIVE_ORDERS"] {
+
+    border: none;
+
+    background-color: #f792bc !important;
+
+    color: #fff;
+
+}
+
+span.jobtag[data-tag-code="MILESTONE_ORDERS"] {
+
+    border: none;
+
+    background-color: #fbf9b3 !important;
+
+    color: #000;
+
+}</style>
+    
+
+
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, minimum-scale=1">
+	<link href="/bundles/common/css/filterpanel?v=FSAEH8LCspaQ63GXKyle4SF1V_1rla0TfZugBNKYBbE1?v=1.0.20250624.023235" rel="stylesheet">
+<link href="/bundles/common/css/tagging?v=eMRbGBDqnyswJrw0L4rL1KD2aKDpsW8st5d2B7Yq42I1?v=1.0.20250624.023235" rel="stylesheet">
+<link href="/bundles/css/jobstatuslist?v=tnyixietbdWnKnNUouz031ZhK46VxuvdcRWBo5cBu-k1?v=1.0.20250624.023235" rel="stylesheet">
+
+	<style type="text/css">
+		body {
+			overflow-y:scroll;
+		}
+
+		.js-delivery-option {
+			position: relative;
+			background-color: #ccc;
+			border-radius: 3px;
+			padding: 4px 10px 4px 10px;
+			white-space: nowrap;
+			display: inline-block;
+			font-size: 9px;
+			cursor: default;
+		}
+
+	    .print-labels-btn {
+	        color: inherit;
+	        font-size: 16px;
+            padding: 0;
+	    }
+
+		[data-popper-reference-hidden] {
+  visibility: hidden;
+  pointer-events: none;
+}
+	</style>
+
+</head>
+<body data-theme="standard" class="themed-container">    
+    
+    <div id="layout-main" class="themed-container">        
+        
+
+<div id="header" class="mega-menu__inactive">
+	<div>
+		<div class="pl-2">
+			<div class="cw--control-mark">
+				<a href="/default.aspx" class="unselectable"><img src="/resources/megamenu/images/control_mark_white.png" alt="Control by Codewolf"></a>
+			</div>
+			<div class="burger-container">
+				<div class="circle" id="circle">
+	                <div class="burger-icon"></div>
+				</div>
+			</div>
+		</div>
+    </div>
+    <div class="cw--col-menu">
+		<header class="ctrl ctrl-menu">
+			<div class="mega-menu mega-menu__inactive">
+				<div class="mega-menu__wrapper" x-ref="mega_wrapper">
+					<div class="mega-menu__main">
+
+						<!-- *** Main Menu (Non Mobile)*** -->
+						<ul class="mega-menu__primary">
+
+							<!--Quotes-->
+							
+
+							<!-- Jobs -->
+							<li>
+								<div>
+									<a class="mega-menu__link mega-menu__item" href="/JobStatusList/JobStatusList.aspx?from=menu" data-dropdown="jobs" data-active="true">
+										Jobs
+										<div class="badge-container d-inline-block"><div href="/JobStatusList/JobStatusList.aspx?from=menu&amp;t" class="badge badge-pill d-inline-block badge-danger mx-1 px-2 unselectable " data-type="JOB" data-count="8" data-zerodisplay="1" title="8">8</div></div>
+									</a>
+								</div>
+							</li>
+
+							<!-- Assets -->
+							<li>
+								<div>
+									<a class="mega-menu__link mega-menu__item" href="/assetmanager/assetlist.aspx" data-dropdown="assets">
+										Assets
+										<div class="badge-container d-inline-block"><div href="/assetmanager/assetlist.aspx?t" class="badge badge-pill d-inline-block badge-secondary mx-1 px-2 unselectable " data-type="ASSET" data-count="0" data-zerodisplay="1" title="0">0</div></div>
+									</a>
+								</div>
+							</li>
+
+							<!--Inwards-->
+							
+							<li>
+								<div>
+									<a class="mega-menu__link mega-menu__item" href="/inwards/inwardslist.aspx" data-dropdown="inwards">
+										Inwards
+										<div class="badge-container d-inline-block"><div href="/inwards/inwardslist.aspx?t" class="badge badge-pill d-inline-block badge-secondary mx-1 px-2 unselectable " data-type="INWARDS" data-count="0" data-zerodisplay="1" title="0">0</div></div>
+									</a>
+								</div>
+							</li>
+							
+
+							<!--Stock-->							
+							
+
+							<!--BOM List-->
+							
+
+							<!--Scheduler-->
+							
+							<li>
+								<div>
+									<a class="mega-menu__link mega-menu__item" href="/scheduler/scheduler.aspx" data-dropdown="scheduler">
+										Scheduler
+									</a>
+								</div>
+							</li>
+							
+
+							<!--Spacer-->
+							<li class="flex-grow-1 no-border"></li>
+
+							<!--Reports-->
+							
+
+							<!--Admin-->
+							
+
+							<!--My Account-->
+							<li class="secondary-links flex-direction-row position-relative">
+								<a class="mega-menu__link mega-menu__item" href="/myaccount/default.aspx" data-dropdown="account">
+									<div class="js-profile-pic profile-pic" data-id="8f2d089b-10df-4cff-895e-403fcc904f16" data-size="menubar" data-use-anon="true">
+										
+											<div class="bg-dark rounded-circle text-center overflow-hidden d-flex flex-column justify-content-center p-0 profile-anon profile-anon-menubar">												<i class="fas fa-user text-white p-0"></i>
+											</div>
+										
+									</div>
+								</a>
+                                
+                                    <div class="cw--menu-notification-icon"><a href="/myaccount/notifications.aspx">
+                    <span class="js-notification-badge badge badge-pill badge-secondary py-1 px-2 unselectable opacity-0" data-type="NOTIFICATION" data-count="0" data-zerodisplay="0" title="0">
+                        0
+                    </span></a></div>
+                                
+							</li>
+						</ul>
+
+						<!-- *** Mobile Menu *** -->
+						<div class="mega-menu__mobile">
+							<div class="mega-menu__mobile-container">
+								<div class="mega-menu__mobile-content">
+									<div class="mega-menu__mobile-inner">
+										<div class="js-notification-container sticky-top" data-version="mobile"></div>
+										<a class="mega-menu__dropdown-link" href="/default.aspx">
+											<i class="far fa-home"></i>
+											<h6>Home</h6>
+										</a>
+										<a class="mega-menu__dropdown-link" href="/MyAccount/Default.aspx">											
+											<div class="js-profile-pic profile-pic d-inline-block" data-id="8f2d089b-10df-4cff-895e-403fcc904f16" data-size="menubarmobile">
+												
+													<i class="fal fa-user-alt p-0"></i>
+												
+											</div>
+											<h6>My Account</h6>
+										</a>
+                                        
+										<a class="mega-menu__dropdown-link" href="/myaccount/notifications.aspx">
+											<i class="far fa-envelope"></i>
+											<h6>Notifications</h6>
+											<div class="d-inline-block pb-1">
+                                                <div href="/myaccount/notifications.aspx" class="badge badge-pill d-inline-block badge-secondary mx-1 px-2 unselectable " data-type="NOTIFICATION" data-count="0" data-zerodisplay="1" title="0">0</div>
+                                            </div>
+										</a>
+										
+										<a class="mega-menu__dropdown-link" href="/logout.aspx">
+											<i class="far fa-sign-out"></i>
+											<h6>Logout</h6>
+										</a>
+
+										<!--Quotes-->
+										
+
+										<!--Jobs-->
+										<div class="mega-menu__mobile-section color-a">
+											<div class="mega-menu__mobile-header">
+												<i class="far fa-conveyor-belt-alt"></i>
+												<a href="/JobStatusList/JobStatusList.aspx?from=menu" class="unselectable"><strong>Jobs</strong></a>
+												<a href="/JobStatusList/JobStatusList.aspx?from=menu&amp;t" class="badge badge-initial badge-pill d-inline-block badge-danger mx-2 px-2 unselectable " data-type="JOB" data-count="8" data-zerodisplay="1" title="8">8</a>
+											</div>
+											<div class="mega-menu__mobile-sub-section">
+												<div class="mega-menu__mobile-sub-links">
+													<a class="mega-menu__dropdown-link" href="/JobStatusList/JobStatusList.aspx?from=menu">
+														<i class="far fa-list"></i>
+														<h6>Job List</h6>
+													</a>
+													<a class="mega-menu__dropdown-link" href="/quickjob/quickjob.aspx">
+														<i class="far fa-plus"></i>
+														<h6>New Job</h6>
+													</a>
+													<a class="mega-menu__dropdown-link" href="/JobStatusList/JobStatusList.aspx?from=menu&amp;mine">
+														<i class="far fa-user-tag"></i>
+														<h6>My Jobs</h6>
+													</a>
+												</div>
+											</div>
+										</div>
+
+										<!--Assets-->
+										<div class="mega-menu__mobile-section color-c">
+											<div class="mega-menu__mobile-header">
+												<i class="far fa-images"></i>
+												<a href="/assetmanager/assetlist.aspx" class="unselectable"><strong>Assets</strong></a>
+												<a href="/assetmanager/assetlist.aspx?t" class="badge badge-initial badge-pill d-inline-block badge-secondary mx-2 px-2 unselectable " data-type="ASSET" data-count="0" data-zerodisplay="1" title="0">0</a>
+											</div>
+											<div class="mega-menu__mobile-sub-section">
+												<div class="mega-menu__mobile-sub-links">
+													<a class="mega-menu__dropdown-link" href="/assetmanager/assetlist.aspx">
+														<i class="far fa-list"></i>
+														<h6>Asset List</h6>
+													</a>
+													<a class="mega-menu__dropdown-link" href="/assetmanager/assetlist.aspx?show=new-asset">
+														<i class="far fa-plus"></i>
+														<h6>New Asset</h6>
+													</a>
+												</div>
+											</div>
+										</div>
+
+										<!--Inwards-->
+										
+										<div class="mega-menu__mobile-section color-d">
+											<div class="mega-menu__mobile-header">
+												<i class="far fa-truck-loading"></i>
+												<a href="/inwards/inwardslist.aspx" class="unselectable"><strong>Inwards</strong></a>
+												<a href="/inwards/inwardslist.aspx?t" class="badge badge-initial badge-pill d-inline-block badge-secondary mx-2 px-2 unselectable " data-type="INWARDS" data-count="0" data-zerodisplay="1" title="0">0</a>
+											</div>
+											<div class="mega-menu__mobile-sub-section">
+												<div class="mega-menu__mobile-sub-links">
+													<a class="mega-menu__dropdown-link" href="/inwards/inwardslist.aspx">
+														<i class="far fa-list"></i>
+														<h6>Inwards List</h6>
+													</a>
+													<a class="mega-menu__dropdown-link" href="/inwards/viewinwards.aspx">
+														<i class="far fa-plus"></i>
+														<h6>New Inwards</h6>
+													</a>
+												</div>
+											</div>
+										</div>
+										
+
+										<!--Stock-->										
+										
+
+										<!--BOMS-->
+										
+
+										<!--Scheduler-->
+										
+										<div class="mega-menu__mobile-section color-g">
+											<div class="mega-menu__mobile-header">
+												<i class="far fa-calendar-alt"></i>
+												<a href="/scheduler/scheduler.aspx" class="unselectable"><strong>Scheduler</strong></a>
+
+											</div>
+											<div class="mega-menu__mobile-sub-section">
+												<div class="mega-menu__mobile-sub-links">
+													<a class="mega-menu__dropdown-link" href="/Scheduler/Scheduler.aspx">
+														<i class="far fa-calendar-week"></i>
+														<h6>Job Schedule</h6>
+													</a>			<a class="mega-menu__dropdown-link" href="/scheduler/MachineScheduler.aspx">
+														<i class="far fa-industry-alt"></i>
+														<h6>Machine Scheduler</h6>
+													</a>			<a class="mega-menu__dropdown-link" href="/Admin/scheduler/scheduletools.aspx">
+														<i class="far fa-tools"></i>
+														<h6>Schedule Tools</h6>
+													</a>
+												</div>
+											</div>
+										</div>
+										
+
+										<!--Reports-->
+										
+
+										<!--Admin-->
+										
+
+										<!--Profile-->
+										<div class="mega-menu__mobile-section ">
+											<div class="mega-menu__mobile-header">
+												<i class="far fa-user"></i>
+												<a href="#" class="unselectable"><strong>Profile</strong></a>
+											</div>
+											<div class="mega-menu__mobile-sub-section">
+												<div class="mega-menu__mobile-sub-links">
+													<a class="mega-menu__dropdown-link" href="/MyAccount/Default.aspx">
+														<i class="far fa-user-circle"></i>
+														<h6>My Account</h6>
+													</a>
+                                                    
+													<a class="mega-menu__dropdown-link" href="/MyAccount/notifications.aspx">
+														<i class="far fa-envelope"></i>
+														<h6>Notifications</h6>
+														<sup><div class="badge badge-pill d-inline-block badge-secondary py-1 px-2 unselectable  " href="/myaccount/notifications.aspx" data-type="NOTIFICATION" data-count="0" data-zerodisplay="1" title="0">0</div></sup>
+													</a>
+													
+													<a class="mega-menu__dropdown-link" href="/MyAccount/ChangePassword.aspx">
+														<i class="far fa-key"></i>
+														<h6>Change Password</h6>
+													</a><a class="mega-menu__dropdown-link" href="/ReleaseNotes/releases.aspx">
+                                                        <i class="fal fa-list-alt"></i>
+                                                        <h6>Release Notes</h6>
+                                                    </a><a class="mega-menu__dropdown-section cw-display-if-multi-tz hidden" href="#" data-menu="mobile">
+														<i class="far fa-clock"></i>
+														<h6>Timezone</h6>
+														<div class="js-timezone-selector-group d-inline-block"></div>
+													</a>
+													<a class="mega-menu__dropdown-link" href="/logout.aspx">
+														<i class="far fa-sign-out"></i>
+														<h6>Logout</h6>
+													</a>
+												</div>
+											</div>
+										</div>
+
+									</div>
+									<div class="mega-menu__mobile-footer p-2 justify-content-end">
+										<!--
+										<div class="mega-menu__mobile-footer-contact-us-container">
+											<a href="#" class="unselectable"><i class="fal fa-envelope"></i> Contact Us</a>
+										</div>
+										-->
+										<a href="https://www.codewolf.co.nz" target="_blank" class="unselectable"><img src="/resources/megamenu/images/Control_monocrome_white.png"></a>
+									</div>
+								</div>
+							</div>
+						</div>
+
+					</div>
+				</div>
+            </div>
+        </header>
+    </div>
+    <div class="pr-2">
+        <a id="clientbrand" href="/default.aspx"></a>
+    </div>
+
+	<!-- *** Dropdown Panels - For non mobile viewing *** -->
+    <div class="mega-menu__dropdown">
+	    <div class="mega-menu__dropdown-background"></div>
+		<div class="mega-menu__dropdown-container">
+
+			<!--Quotes-->
+			
+
+			<!--Jobs-->
+			<div class="mega-menu__dropdown-item right" data-dropdown="jobs">
+				<div class="mega-menu__dropdown-content mega-menu__dropdown-content-bleed" style="width:460px;">
+
+					<div class="row no-gutters border-top">
+						<div class="col-12 d-flex">
+							<div class="p-4 flex-grow-1 d-flex flex-column">
+								<div class="mega-menu__section">
+									<div class="mega-menu__subitems ">
+										<a class="mega-menu__dropdown-link mega-menu__dropdown-link-flex px-2 py-1" href="/JobStatusList/JobStatusList.aspx?from=menu">
+											<i class="far fa-list"></i>
+											<div>
+												<h6>Job List</h6>
+												<p>View and search all jobs.</p>
+											</div>
+										</a>
+										<a class="mega-menu__dropdown-link mega-menu__dropdown-link-flex px-2 py-1" href="/quickjob/quickjob.aspx">
+											<i class="far fa-plus"></i>
+											<div>
+												<h6>New Job</h6>
+												<p>Enter a new job.</p>
+											</div>
+										</a>
+										<a class="mega-menu__dropdown-link mega-menu__dropdown-link-flex px-2 py-1" href="/JobStatusList/JobStatusList.aspx?from=menu&amp;mine">
+											<i class="far fa-user-tag"></i>
+											<div>
+												<h6>My Jobs</h6>
+												<p>View all your jobs.</p>
+											</div>
+										</a>
+									</div>
+								</div>
+
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!--Assets-->
+			<div class="mega-menu__dropdown-item right" data-dropdown="assets">
+				<div class="mega-menu__dropdown-content mega-menu__dropdown-content-bleed" style="width:460px;">
+
+					<div class="row no-gutters border-top">
+						<div class="col-12 d-flex">
+							<div class="p-4 flex-grow-1 d-flex flex-column">
+								<div class="mega-menu__section">
+									<div class="mega-menu__subitems ">
+										<a class="mega-menu__dropdown-link mega-menu__dropdown-link-flex px-2 py-1" href="/assetmanager/assetlist.aspx">
+											<i class="far fa-list"></i>
+											<div>
+												<h6>Asset List</h6>
+												<p>View and search all assets.</p>
+											</div>
+										</a>
+										<a class="mega-menu__dropdown-link mega-menu__dropdown-link-flex px-2 py-1" href="/assetmanager/assetlist.aspx?show=new-asset">
+											<i class="far fa-plus"></i>
+											<div>
+												<h6>New Asset</h6>
+												<p>Enter a new asset.</p>
+											</div>
+										</a>
+									</div>
+								</div>
+
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!--Inwards-->
+			
+			<div class="mega-menu__dropdown-item right" data-dropdown="inwards">
+				<div class="mega-menu__dropdown-content mega-menu__dropdown-content-bleed" style="width:460px;">
+
+					<div class="row no-gutters border-top">
+						<div class="col-12 d-flex">
+							<div class="p-4 flex-grow-1 d-flex flex-column">
+								<div class="mega-menu__section">
+									<div class="mega-menu__subitems ">
+										<a class="mega-menu__dropdown-link mega-menu__dropdown-link-flex px-2 py-1" href="/inwards/inwardslist.aspx">
+											<i class="far fa-list"></i>
+											<div>
+												<h6>Inwards List</h6>
+												<p>View and search all inwards.</p>
+											</div>
+										</a>
+										<a class="mega-menu__dropdown-link mega-menu__dropdown-link-flex px-2 py-1" href="/inwards/viewinwards.aspx">
+											<i class="far fa-plus"></i>
+											<div>
+												<h6>New Inwards</h6>
+												<p>Enter a new inwards.</p>
+											</div>
+										</a>
+                                    </div>
+								</div>
+
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+
+			<!--Stock-->
+			
+
+			<!--BOMS-->
+			
+
+			<!--Scheduling-->
+			
+			<div class="mega-menu__dropdown-item right" data-dropdown="scheduler">
+				<div class="mega-menu__dropdown-content mega-menu__dropdown-content-bleed" style="width:520px;">
+
+					<div class="row no-gutters border-top">
+						<div class="col-12 d-flex">
+							<div class="p-4 flex-grow-1 d-flex flex-column">
+								<div class="mega-menu__section">
+									<div class="mega-menu__subitems ">
+										<a class="mega-menu__dropdown-link mega-menu__dropdown-link-flex px-2 py-1" href="/Scheduler/Scheduler.aspx">
+											<i class="far fa-calendar-week"></i>
+											<div>
+												<h6>Job Schedule</h6>
+												<p>View the current schedule.</p>
+											</div>
+										</a>
+										<a class="mega-menu__dropdown-link mega-menu__dropdown-link-flex px-2 py-1" href="/scheduler/MachineScheduler.aspx">
+											<i class="far fa-industry-alt"></i>
+											<div>
+												<h6>Machine Scheduler</h6>
+												<p>Set the factory machine availabilities.</p>
+											</div>
+										</a>
+										<a class="mega-menu__dropdown-link mega-menu__dropdown-link-flex px-2 py-1" href="/Admin/scheduler/scheduletools.aspx">
+											<i class="far fa-tools"></i>
+											<div>
+												<h6>Schedule Tools</h6>
+												<p>Toolset to monitor and maintain your the living schedule.</p>
+											</div>
+										</a>
+										<a class="mega-menu__dropdown-link mega-menu__dropdown-link-flex px-2 py-1" href="/scheduler/schedulerexternal.aspx" target="_blank">
+											<i class="fal fa-expand-wide"></i>
+											<div>
+												<h6>Kiosk View</h6>
+												<p>Fullscreen kiosk view of the current schedule.</p>
+											</div>
+										</a>
+									</div>
+								</div>
+
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+
+			<!--Reports-->
+			
+
+			<!--Admin-->
+			
+
+			<!--Account-->
+			<div class="mega-menu__dropdown-item right" data-dropdown="account">
+				<div class="mega-menu__dropdown-content mega-menu__dropdown-content-bleed" style="width:680px;">
+                    <div class="js-notification-container notification-panel" data-version="fs"></div>
+					<div class="mega-menu__dropdown-header py-3 username-container"><span>@laser</span></div>
+					<div class="border-top">
+						<div class="d-flex flex-row">
+							<div class="px-4 pt-2 pb-4 flex-grow-1 d-flex flex-column">
+								<div class="mega-menu__section">
+									<div class="mega-menu__subitems ">
+										<a class="mega-menu__dropdown-link mega-menu__dropdown-link-flex px-2 py-1" href="/MyAccount/Default.aspx">
+											<i class="far fa-user-circle"></i>
+											<div>
+												<h6>My Account</h6>
+												<p>View your account and access details.</p>
+											</div>
+										</a>
+                                        
+										<a class="mega-menu__dropdown-link mega-menu__dropdown-link-flex px-2 py-1" href="/MyAccount/notifications.aspx">
+											<i class="far fa-envelope"></i>
+											<div>
+												<h6>Notifications <sup><div class="badge badge-pill d-inline-block badge-secondary py-1 px-2 unselectable  " href="/myaccount/notifications.aspx" data-type="NOTIFICATION" data-count="0" data-zerodisplay="1" title="0" data-disableanimation="1">0</div></sup></h6>
+												<p>Check your system notifications.</p>
+											</div>
+										</a>
+                                        
+										<a class="mega-menu__dropdown-link mega-menu__dropdown-link-flex px-2 py-1" href="/MyAccount/ChangePassword.aspx">
+											<i class="far fa-key"></i>
+											<div>
+												<h6>Change Password</h6>
+												<p>Change your current password.</p>
+											</div>
+										</a>
+                                        <a class="mega-menu__dropdown-link mega-menu__dropdown-link-flex px-2 py-1" href="/ReleaseNotes/releases.aspx">
+                                            <i class="fal fa-list-alt"></i>
+                                            <div>
+                                                <h6>Release Notes</h6>
+                                                <p>Check latest features and fixes.</p>
+                                            </div>
+                                        </a>
+										<div class="mega-menu__dropdown-section mega-menu__dropdown-link-flex px-2 py-1 cw-display-if-multi-tz hidden" href="#" data-menu="fullscreen">
+											<i class="far fa-clock"></i>
+											<div>
+												<div class="d-block">
+													<h6 class="d-inline-block mr-2">Timezone</h6>
+													<div class="js-timezone-selector-group d-inline-block"></div>
+												</div>
+												<p>Switch timezones between the factory and your timezone.</p>
+											</div>
+										</div>
+										<a class="mega-menu__dropdown-link mega-menu__dropdown-link-flex px-2 py-1" href="/logout.aspx">
+											<i class="far fa-sign-out"></i>
+											<div>
+												<h6>Logout</h6>
+												<p>Atsiprasau. Joigin. Bidāẏa. <span class="fal fa-hand-heart"></span></p>												
+											</div>
+										</a>
+									</div>
+								</div>
+							</div>
+							
+							<div class="d-flex border-left px-2">
+								<div class="flex-grow-1 d-flex flex-column">
+									<div class="mega-menu__section">
+										<div class="flex-grow-1 p-2">
+											<a href="/myaccount/default.aspx">
+												<div class="js-profile-pic profile-pic" data-id="8f2d089b-10df-4cff-895e-403fcc904f16" data-size="250" data-use-anon="true">
+													
+														<div class="bg-dark rounded-circle text-center overflow-hidden d-flex flex-column justify-content-center p-0 profile-anon profile-anon-250">
+															<i class="fas fa-portrait text-muted p-0" style="font-size:8rem;"></i>
+														</div>
+													
+												</div>
+											</a>
+										</div>
+									</div>
+								</div>
+							</div>
+						
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</div>
+
+</div>
+        
+        <div id="content-container" class="px-3">
+            <div class="content">
+                
+
+		<div id="filterPanelContainer" class=""><!-- THERE CAN ONLY BE ONE ROOT -->
+<div class="js-fc js-693">
+	<div class="filter-panel-container infinity-panel ">
+		<div id="filterPanel" class="filter-panel maximized ">
+			<ul>
+				<li class="pt-2 pb-1 pr-2">
+					<div class="text-filter-container mini">
+						<div class="input-group input-group-sm m-0 mr-sm-2 flex-nowrap">
+							<input id="textFilter" type="text" name="text-filter" class="form-control form-control-sm" data-default="" placeholder="Search" value="" style="">
+							<div id="searchclear" class="clear-button js-clear-text-filter far fa-times-circle" data-for="textFilter"></div>
+							<span class="input-group-append input-group-btn">
+								<button class="btn btn-outline btn-secondary" id="btnTextFilter" title="Search" type="button">
+									<i class="fal fa-search"></i>
+								</button>
+							</span>
+						</div>
+					</div>
+				</li>
+
+
+
+				<li class="pr-2 mini flex-grow-1 pr-4 ">
+
+					
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+					<div class="cw-user-favourites" id="userFavourites2">
+						<ul class="sortable d-flex flex-wrap" data-can-delete="true">
+							<li class="d-inline-block" data-id="55ba0be9-6c4b-4951-9de0-3c1e7244eb02" data-label="EMB PATCHES">
+								<label class="btn btn-secondary">
+									<input type="checkbox" value="" id="favourite0" data-favourite="true" data-criteria="{&quot;text-filter&quot;:&quot;&quot;,&quot;location&quot;:&quot;-1&quot;,&quot;job-status-codes&quot;:&quot;approved,ontime,completed,dispatched&quot;,&quot;job-status&quot;:&quot;2,18,3,4,11,5,6,7,8,9,10,12&quot;,&quot;tagged-only&quot;:&quot;1&quot;,&quot;stock-status&quot;:&quot;0,1,2&quot;,&quot;process-filter&quot;:&quot;EM&quot;,&quot;machine-filter&quot;:&quot;US,1,2,4,8,16,32,64,128,256,512,1024,2048&quot;,&quot;due-date&quot;:&quot;1,2,3&quot;}" data-id="55ba0be9-6c4b-4951-9de0-3c1e7244eb02" data-label="EMB PATCHES" style="">EMB PATCHES
+								</label>
+							</li>
+							<li class="d-inline-block" data-id="a59a309b-13c1-4e0c-b032-7a6150274bda" data-label="ETCHING ORDERS">
+								<label class="btn btn-secondary">
+									<input type="checkbox" value="" id="favourite1" data-favourite="true" data-criteria="{&quot;text-filter&quot;:&quot;ETCHING&quot;,&quot;location&quot;:&quot;-1&quot;,&quot;job-status-codes&quot;:&quot;approved,ontime,completed,dispatched&quot;,&quot;job-status&quot;:&quot;2,18,3,4,11,5,6,7,8,9,10,12&quot;,&quot;tagged-only&quot;:&quot;1&quot;,&quot;stock-status&quot;:&quot;0,1,2&quot;,&quot;process-filter&quot;:&quot;HW,AP,TC,MP,PR,DS,ES,PP,PA,EM,SC,DF,Misc,Sewing,Dispatch,Stock,Bagging&quot;,&quot;machine-filter&quot;:&quot;US,1,2,4,8,16,32,64,128,256,512,1024,2048&quot;,&quot;due-date&quot;:&quot;1,2,3&quot;}" data-id="a59a309b-13c1-4e0c-b032-7a6150274bda" data-label="ETCHING ORDERS" style="">ETCHING ORDERS
+								</label>
+							</li>
+							<li class="d-inline-block" data-id="6659d7ba-2cda-4a63-8af0-81fae3e4ecff" data-label="ALL TAGGED ORDERS">
+								<label class="btn btn-secondary">
+									<input type="checkbox" value="" id="favourite2" data-favourite="true" data-criteria="{&quot;text-filter&quot;:&quot;&quot;,&quot;location&quot;:&quot;-1&quot;,&quot;job-status-codes&quot;:&quot;approved,ontime,completed,dispatched&quot;,&quot;job-status&quot;:&quot;2,18,3,4,11,5,6,7,8,9,10,12&quot;,&quot;tagged-only&quot;:&quot;1&quot;,&quot;stock-status&quot;:&quot;0,1,2&quot;,&quot;process-filter&quot;:&quot;HW,AP,TC,MP,PR,DS,ES,PP,PA,EM,SC,DF,Misc,Sewing,Dispatch,Stock,Bagging&quot;,&quot;machine-filter&quot;:&quot;US,1,2,4,8,16,32,64,128,256,512,1024,2048&quot;,&quot;due-date&quot;:&quot;1,2,3&quot;}" data-id="6659d7ba-2cda-4a63-8af0-81fae3e4ecff" data-label="ALL TAGGED ORDERS" style="">ALL TAGGED ORDERS
+								</label>
+							</li>
+							<li class="d-inline-block" data-id="adeb04f1-5a73-477c-bf73-ab614a809058" data-label="@laser">
+								<label class="btn btn-secondary">
+									<input type="checkbox" value="" id="favourite3" data-favourite="true" data-criteria="{&quot;text-filter&quot;:&quot;@laser&quot;,&quot;location&quot;:&quot;-1&quot;,&quot;job-status-codes&quot;:&quot;approved,ontime,runninglate,problem&quot;,&quot;job-status&quot;:&quot;2,18,3,4,11,5,6,7,8,9,10,12&quot;,&quot;tagged-only&quot;:&quot;1&quot;,&quot;stock-status&quot;:&quot;0,1,2&quot;,&quot;process-filter&quot;:&quot;HW,AP,TC,MP,PR,NA,CR,DS,ES,PP,PA,EM,SC,DF,Misc,Sewing,Dispatch,Stock,Bagging&quot;,&quot;machine-filter&quot;:&quot;US,1,2,4,8,16,32,64,128,256,512,1024,2048&quot;,&quot;due-date&quot;:&quot;1,2,3&quot;}" data-id="adeb04f1-5a73-477c-bf73-ab614a809058" data-label="@laser" style="">@laser
+								</label>
+							</li>
+							<li class="d-inline-block" data-id="0f5ecbf3-db67-4d0d-87cf-81d92aa76e24" data-label="FILL INS">
+								<label class="btn btn-secondary">
+									<input type="checkbox" value="" id="favourite4" data-favourite="true" data-criteria="{&quot;text-filter&quot;:&quot;fill ins&quot;,&quot;location&quot;:&quot;-1&quot;,&quot;job-status-codes&quot;:&quot;approved,ontime,runninglate,problem&quot;,&quot;job-status&quot;:&quot;5,6,7,8&quot;,&quot;stock-status&quot;:&quot;0,1,2&quot;,&quot;process-filter&quot;:&quot;HW,AP,TC,MP,PR,NA,CR,DS,ES,PP,PA,EM,SC,DF,Misc,Sewing,Dispatch,Stock,Bagging&quot;,&quot;due-date&quot;:&quot;1,2,3&quot;}" data-id="0f5ecbf3-db67-4d0d-87cf-81d92aa76e24" data-label="FILL INS" style="">FILL INS
+								</label>
+							</li>
+							<li class="d-inline-block" data-id="b3c16a45-e3b0-4238-8fb8-34e423106867" data-label="RFP">
+								<label class="btn btn-secondary">
+									<input type="checkbox" value="" id="favourite5" data-favourite="true" data-criteria="{&quot;text-filter&quot;:&quot;RFP&quot;,&quot;location&quot;:&quot;-1&quot;,&quot;job-status-codes&quot;:&quot;approved,ontime,runninglate,problem&quot;,&quot;job-status&quot;:&quot;5,6,7,8&quot;,&quot;due-date&quot;:&quot;1,2,3&quot;,&quot;stock-status&quot;:&quot;0,1,2&quot;,&quot;process-filter&quot;:&quot;HW,AP,TC,MP,PR,NA,CR,DS,PP,PA,DF&quot;}" data-id="b3c16a45-e3b0-4238-8fb8-34e423106867" data-label="RFP" style="">RFP
+								</label>
+							</li>
+							<li class="d-inline-block" data-id="d1b78cdf-e018-4e99-b589-980021569aed" data-label="@printer">
+								<label class="btn btn-secondary">
+									<input type="checkbox" value="" id="favourite6" data-favourite="true" data-criteria="{&quot;text-filter&quot;:&quot;@printer&quot;,&quot;location&quot;:&quot;-1&quot;,&quot;job-status-codes&quot;:&quot;approved,ontime,runninglate,problem&quot;,&quot;sort-by&quot;:&quot;&quot;,&quot;sort-direction&quot;:&quot;&quot;,&quot;job-status&quot;:&quot;5,6,7,8&quot;,&quot;due-date&quot;:&quot;1,2,3&quot;,&quot;stock-status&quot;:&quot;0,1,2&quot;,&quot;process-filter&quot;:&quot;HW,AP,TC,MP,PR,NA,CR,DS,PP,PA,DF&quot;}" data-id="d1b78cdf-e018-4e99-b589-980021569aed" data-label="@printer" style="">@printer
+								</label>
+							</li>
+							<li class="d-inline-block" data-id="84759318-771a-428e-9042-c6fdac0836b7" data-label="@sub">
+								<label class="btn btn-secondary">
+									<input type="checkbox" value="" id="favourite7" data-favourite="true" data-criteria="{&quot;text-filter&quot;:&quot;@sub&quot;,&quot;location&quot;:&quot;-1&quot;,&quot;job-status-codes&quot;:&quot;approved,ontime,runninglate,problem&quot;,&quot;sort-by&quot;:&quot;&quot;,&quot;sort-direction&quot;:&quot;&quot;,&quot;job-status&quot;:&quot;5,6,7,8&quot;,&quot;due-date&quot;:&quot;1,2,3&quot;,&quot;stock-status&quot;:&quot;0,1,2&quot;,&quot;process-filter&quot;:&quot;HW,AP,TC,MP,PR,NA,CR,DS,PP,PA,DF&quot;,&quot;machine-filter&quot;:&quot;US,1,2,4,8,16,32,64,128,256,512,1024,2048,4096,8192,16384&quot;}" data-id="84759318-771a-428e-9042-c6fdac0836b7" data-label="@sub" style="">@sub
+								</label>
+							</li>
+							<li class="d-inline-block" data-id="6699e45c-7880-4fb2-9c60-ac8a6ad19de1" data-label="PATCH SUPPLY -PS - GAMMA">
+								<label class="btn btn-secondary">
+									<input type="checkbox" value="" id="favourite8" data-favourite="true" data-criteria="{&quot;text-filter&quot;:&quot;-ps -gamma&quot;,&quot;location&quot;:&quot;-1&quot;,&quot;job-status-codes&quot;:&quot;approved,ontime,runninglate,problem&quot;,&quot;sort-by&quot;:&quot;&quot;,&quot;sort-direction&quot;:&quot;&quot;,&quot;job-status&quot;:&quot;5,6,7,8&quot;,&quot;due-date&quot;:&quot;1,2,3&quot;,&quot;stock-status&quot;:&quot;0,1,2&quot;,&quot;process-filter&quot;:&quot;HW,AP,TC,MP,PR,NA,CR,DS,PP,PA,DF&quot;}" data-id="6699e45c-7880-4fb2-9c60-ac8a6ad19de1" data-label="PATCH SUPPLY -PS - GAMMA" style="">PATCH SUPPLY -PS - GAMMA
+								</label>
+							</li>
+							<li class="d-inline-block" data-id="3b3a9dfe-6748-4169-9583-24fd86c40d43" data-label="QC">
+								<label class="btn btn-secondary">
+									<input type="checkbox" value="" id="favourite9" data-favourite="true" data-criteria="{&quot;text-filter&quot;:&quot;QC&quot;,&quot;location&quot;:&quot;-1&quot;,&quot;job-status-codes&quot;:&quot;approved,ontime,runninglate,problem&quot;,&quot;sort-by&quot;:&quot;&quot;,&quot;sort-direction&quot;:&quot;&quot;,&quot;job-status&quot;:&quot;5,6,7,8&quot;,&quot;due-date&quot;:&quot;1,2,3&quot;,&quot;stock-status&quot;:&quot;0,1,2&quot;,&quot;process-filter&quot;:&quot;HW,AP,TC,MP,PR,NA,CR,DS,PP,PA,DF&quot;}" data-id="3b3a9dfe-6748-4169-9583-24fd86c40d43" data-label="QC" style="">QC
+								</label>
+							</li>
+							<li class="d-inline-block" data-id="f826343b-6964-42b0-83d5-6052991f6ccd" data-label="rts">
+								<label class="btn btn-secondary">
+									<input type="checkbox" value="" id="favourite10" data-favourite="true" data-criteria="{&quot;text-filter&quot;:&quot;rts&quot;,&quot;location&quot;:&quot;-1&quot;,&quot;job-status-codes&quot;:&quot;approved,ontime,runninglate,problem&quot;,&quot;sort-by&quot;:&quot;&quot;,&quot;sort-direction&quot;:&quot;&quot;,&quot;job-status&quot;:&quot;5,6,7,8&quot;,&quot;due-date&quot;:&quot;1,2,3&quot;,&quot;stock-status&quot;:&quot;0,1,2&quot;,&quot;process-filter&quot;:&quot;HW,AP,TC,MP,PR,NA,CR,DS,PP,PA,DF&quot;,&quot;machine-filter&quot;:&quot;US,1,2,4,8,16,32,64,128,256,512,1024,2048,4096,8192,16384&quot;}" data-id="f826343b-6964-42b0-83d5-6052991f6ccd" data-label="rts" style="">rts
+								</label>
+							</li>
+							<li class="locked d-inline-block">
+								<a class="js-action btn btn-secondary" data-action="save-favourite" href="#"><i class="far fa-bookmark"></i></a>
+							</li>
+						</ul>
+					</div>
+
+
+
+
+
+
+
+				</li><li class="w-100">
+	<div class="button-trash hidden">
+		<div class="text-center title-container"><h4 class="d-inline"><i class="far fa-trash-alt"></i> Drag here to delete</h4></div>
+		<ul class="sortable"></ul>
+	</div>
+</li>
+
+
+
+				<li class="w-100"></li>
+				<li class="pr-2 job-statuses cw-collapsible">
+
+					<h4>Job Status</h4>
+
+
+
+
+
+
+
+
+
+
+
+
+
+					<!--ToggleButtonGroup-->
+					<ul id="jobStatusFilter" class="js-toggle-button-group btn-group-toggle d-flex flex-wrap m-0 p-0" data-toggle="buttons">
+								<li class="m-0 pb-1">
+									<label class="btn btn-secondary badge-holder">
+										<input type="checkbox" value="2" name="job-status" data-code="awaitingproof" id="jobStatusFilter_1" data-toggle-group="true" style="">Sent to Proof
+										<span class="badge" title="10">10</span>
+									</label>
+									
+								</li>
+								<li class="m-0 pb-1">
+									<label class="btn btn-secondary badge-holder">
+										<input type="checkbox" value="18" name="job-status" data-code="changerequested" id="jobStatusFilter_2" data-toggle-group="true" style="">Change Req
+										<span class="badge" title="0">0</span>
+									</label>
+									
+								</li>
+								<li class="m-0 pb-1">
+									<label class="btn btn-secondary badge-holder">
+										<input type="checkbox" value="3,4,11" name="job-status" data-code="proofed" id="jobStatusFilter_3" data-toggle-group="true" style="">Proofed
+										<span class="badge" title="24">24</span>
+									</label>
+									
+								</li>
+								<li class="m-0 pb-1">
+									<label class="btn btn-secondary active badge-holder">
+										<input type="checkbox" value="5" name="job-status" data-code="approved" id="jobStatusFilter_4" checked="checked" data-toggle-group="true" style="">Approved
+										<span class="badge" title="72">72</span>
+									</label>
+									
+								</li>
+								<li class="m-0 pb-1">
+									<label class="btn btn-secondary active badge-holder">
+										<input type="checkbox" value="6" name="job-status" data-code="ontime" id="jobStatusFilter_5" checked="checked" data-toggle-group="true" style="">On Time
+										<span class="badge" title="7">7</span>
+									</label>
+									
+								</li>
+								<li class="m-0 pb-1">
+									<label class="btn btn-secondary active badge-holder">
+										<input type="checkbox" value="7" name="job-status" data-code="runninglate" id="jobStatusFilter_6" checked="checked" data-toggle-group="true" style="">Running Late
+										<span class="badge" title="2">2</span>
+									</label>
+									
+								</li>
+								<li class="m-0 pb-1">
+									<label class="btn btn-secondary active badge-holder">
+										<input type="checkbox" value="8" name="job-status" data-code="problem" id="jobStatusFilter_7" checked="checked" data-toggle-group="true" style="">Problem
+										<span class="badge" title="0">0</span>
+									</label>
+									
+								</li>
+								<li class="m-0 pb-1">
+									<label class="btn btn-secondary badge-holder">
+										<input type="checkbox" value="9" name="job-status" data-code="completed" id="jobStatusFilter_8" data-toggle-group="true" style="">Completed
+										<span class="badge" title="3">3</span>
+									</label>
+									
+								</li>
+								<li class="m-0 pb-1">
+									<label class="btn btn-secondary badge-holder">
+										<input type="checkbox" value="10" name="job-status" data-code="dispatched" id="jobStatusFilter_9" data-toggle-group="true" style="">Dispatched
+										<span class="badge" title="0">0</span>
+									</label>
+									
+								</li>
+								<li class="m-0 pb-1">
+									<label class="btn btn-secondary badge-holder">
+										<input type="checkbox" value="12" name="job-status" data-code="closed" id="jobStatusFilter_11" data-toggle-group="true" style="">Closed
+										<span class="badge" title="21617">999+</span>
+									</label>
+									
+								</li>
+					</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+				</li>
+
+
+				<li class="w-100"></li>
+				<li class="pr-2  cw-collapsible">
+
+					<h4>Other</h4>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+					<!--LinkButton-->
+					<a href="/quickjob/quickjob.aspx" target="_blank" class="btn btn-primary mb-1"><span class="pr-1"><i class="fal fa-layer-plus"></i></span>New Job</a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+					<!--Checkbox-->
+					<div class="btn-group btn-group-toggle d-inline-block pb-1" data-toggle="buttons">
+						<label class="btn btn-secondary">
+							<input type="checkbox" id="myJobsOnly" value="1" name="my-jobs-only" style="">Show My Jobs
+						</label>
+					</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+					<!--EventCheckbox-->
+					<div class="btn-group btn-group-toggle d-inline-block pb-1 js-event-checkbox" data-toggle="buttons" data-event="cw:tagged-only">
+						<label class="btn btn-secondary">
+							<input type="checkbox" id="taggedOnly" value="1" name="tagged-only" style="">Tagged
+						</label>
+					</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+					<!--Hidden-->
+					<input type="hidden" name="location" value="-1" style="">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+					<!--Hidden-->
+					<input type="hidden" name="job-status-codes" value="approved,ontime,runninglate,problem" style="">
+
+
+
+
+
+
+				</li>
+
+
+				<li class="pr-2  cw-collapsible">
+
+					<h4>Due Date</h4>
+
+
+
+
+
+
+
+
+
+
+
+
+
+					<!--ToggleButtonGroup-->
+					<ul id="dueDateFilter" class="js-toggle-button-group btn-group-toggle d-flex flex-wrap m-0 p-0" data-toggle="buttons">
+						<li class="m-0 pb-1">
+							<label class="btn btn-secondary active">
+								<input type="checkbox" value="ALL" data-code="ALL" data-for="due-date" style="">All
+							</label>
+						</li>
+								<li class="m-0 pb-1">
+									<label class="btn btn-secondary active">
+										<input type="checkbox" value="1" name="due-date" data-code="LATE" id="dueDateFilter_1" checked="checked" data-toggle-group="true" style="">Late
+									</label>
+									
+								</li>
+								<li class="m-0 pb-1">
+									<label class="btn btn-secondary active">
+										<input type="checkbox" value="2" name="due-date" data-code="TODAY" id="dueDateFilter_2" checked="checked" data-toggle-group="true" style="">Today
+									</label>
+									
+								</li>
+								<li class="m-0 pb-1">
+									<label class="btn btn-secondary active">
+										<input type="checkbox" value="3" name="due-date" data-code="TOMORROW" id="dueDateFilter_3" checked="checked" data-toggle-group="true" style="">Tomorrow
+									</label>
+									
+								</li>
+					</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+				</li>
+
+
+				<li class="pr-2  cw-collapsible">
+
+					<h4>Stock</h4>
+
+
+
+
+
+
+
+
+
+
+
+
+
+					<!--ToggleButtonGroup-->
+					<ul id="stockStatusFilter" class="js-toggle-button-group btn-group-toggle d-flex flex-wrap m-0 p-0" data-toggle="buttons">
+						<li class="m-0 pb-1">
+							<label class="btn btn-secondary active">
+								<input type="checkbox" value="ALL" data-code="ALL" data-for="stock-status" style="">All
+							</label>
+						</li>
+								<li class="m-0 pb-1">
+									<label class="btn btn-secondary active">
+										<input type="checkbox" value="0" name="stock-status" data-code="NOSTOCK" id="stockStatusFilter_1" checked="checked" data-toggle-group="true" style="">None
+									</label>
+									
+								</li>
+								<li class="m-0 pb-1">
+									<label class="btn btn-secondary active">
+										<input type="checkbox" value="1" name="stock-status" data-code="PARTIALSTOCK" id="stockStatusFilter_2" checked="checked" data-toggle-group="true" style="">Partial
+									</label>
+									
+								</li>
+								<li class="m-0 pb-1">
+									<label class="btn btn-secondary active">
+										<input type="checkbox" value="2" name="stock-status" data-code="STOCKCOMPLETE" id="stockStatusFilter_3" checked="checked" data-toggle-group="true" style="">Complete
+									</label>
+									
+								</li>
+					</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+				</li>
+
+
+
+				<li class="pr-2  cw-collapsible">
+
+					<h4>Process</h4>
+
+
+
+
+
+
+
+
+
+
+
+
+
+					<!--ToggleButtonGroup-->
+					<ul id="processFilter" class="js-toggle-button-group btn-group-toggle d-flex flex-wrap m-0 p-0" data-toggle="buttons">
+						<li class="m-0 pb-1">
+							<label class="btn btn-secondary active">
+								<input type="checkbox" value="ALL" data-code="ALL" data-for="process-filter" checked="checked" style="">All
+							</label>
+						</li>
+								<li class="m-0 pb-1">
+									<label class="btn btn-secondary active">
+										<input type="checkbox" value="HW" data-aux1="1" name="process-filter" id="processFilter_0" checked="checked" data-toggle-group="true" style="">HW S
+									</label>
+									
+								</li>
+								<li class="m-0 pb-1">
+									<label class="btn btn-secondary active">
+										<input type="checkbox" value="AP" data-aux1="2" name="process-filter" id="processFilter_1" checked="checked" data-toggle-group="true" style="">AP S
+									</label>
+									
+								</li>
+								<li class="m-0 pb-1">
+									<label class="btn btn-secondary active">
+										<input type="checkbox" value="TC" data-aux1="4" name="process-filter" id="processFilter_2" checked="checked" data-toggle-group="true" style="">TC S
+									</label>
+									
+								</li>
+								<li class="m-0 pb-1">
+									<label class="btn btn-secondary active">
+										<input type="checkbox" value="MP" data-aux1="32" name="process-filter" id="processFilter_3" checked="checked" data-toggle-group="true" style="">MP S
+									</label>
+									
+								</li>
+								<li class="m-0 pb-1">
+									<label class="btn btn-secondary active">
+										<input type="checkbox" value="PR" data-aux1="64" name="process-filter" id="processFilter_4" checked="checked" data-toggle-group="true" style="">PR S
+									</label>
+									
+								</li>
+								<li class="m-0 pb-1">
+									<label class="btn btn-secondary active">
+										<input type="checkbox" value="NA" data-aux1="8388608" name="process-filter" id="processFilter_5" checked="checked" data-toggle-group="true" style="">NA S
+									</label>
+									
+								</li>
+								<li class="m-0 pb-1">
+									<label class="btn btn-secondary active">
+										<input type="checkbox" value="CR" data-aux1="16777216" name="process-filter" id="processFilter_6" checked="checked" data-toggle-group="true" style="">CR
+									</label>
+									
+								</li>
+								<li class="m-0 pb-1">
+									<label class="btn btn-secondary active">
+										<input type="checkbox" value="DS" data-aux1="131072" name="process-filter" id="processFilter_7" checked="checked" data-toggle-group="true" style="">DS S
+									</label>
+									
+								</li>
+								<li class="m-0 pb-1">
+									<label class="btn btn-secondary active">
+										<input type="checkbox" value="ES" data-aux1="512" name="process-filter" id="processFilter_8" checked="checked" data-toggle-group="true" style="">ES S
+									</label>
+									
+								</li>
+								<li class="m-0 pb-1">
+									<label class="btn btn-secondary active">
+										<input type="checkbox" value="PP" data-aux1="256" name="process-filter" id="processFilter_9" checked="checked" data-toggle-group="true" style="">PP S
+									</label>
+									
+								</li>
+								<li class="m-0 pb-1">
+									<label class="btn btn-secondary active">
+										<input type="checkbox" value="PA" data-aux1="128" name="process-filter" id="processFilter_10" checked="checked" data-toggle-group="true" style="">PA
+									</label>
+									
+								</li>
+								<li class="m-0 pb-1">
+									<label class="btn btn-secondary active">
+										<input type="checkbox" value="EM" data-aux1="2048" name="process-filter" id="processFilter_11" checked="checked" data-toggle-group="true" style="">EM
+									</label>
+									
+								</li>
+								<li class="m-0 pb-1">
+									<label class="btn btn-secondary active">
+										<input type="checkbox" value="SW" data-aux1="8192" name="process-filter" id="processFilter_12" checked="checked" data-toggle-group="true" style="">SW
+									</label>
+									
+								</li>
+								<li class="m-0 pb-1">
+									<label class="btn btn-secondary active">
+										<input type="checkbox" value="SC" data-aux1="16384" name="process-filter" id="processFilter_13" checked="checked" data-toggle-group="true" style="">SC
+									</label>
+									
+								</li>
+								<li class="m-0 pb-1">
+									<label class="btn btn-secondary active">
+										<input type="checkbox" value="DF" data-aux1="65536" name="process-filter" id="processFilter_14" checked="checked" data-toggle-group="true" style="">DF
+									</label>
+									
+								</li>
+								<li class="m-0 pb-1">
+									<label class="btn btn-secondary active">
+										<input type="checkbox" value="Misc" data-aux1="262144" name="process-filter" id="processFilter_15" checked="checked" data-toggle-group="true" style="">MISC
+									</label>
+									
+								</li>
+								<li class="m-0 pb-1">
+									<label class="btn btn-secondary active">
+										<input type="checkbox" value="Sewing" data-aux1="524288" name="process-filter" id="processFilter_16" checked="checked" data-toggle-group="true" style="">SEW
+									</label>
+									
+								</li>
+								<li class="m-0 pb-1">
+									<label class="btn btn-secondary active">
+										<input type="checkbox" value="Dispatch" data-aux1="1048576" name="process-filter" id="processFilter_17" checked="checked" data-toggle-group="true" style="">DISP
+									</label>
+									
+								</li>
+								<li class="m-0 pb-1">
+									<label class="btn btn-secondary active">
+										<input type="checkbox" value="Stock" data-aux1="2097152" name="process-filter" id="processFilter_18" checked="checked" data-toggle-group="true" style="">STOCK
+									</label>
+									
+								</li>
+								<li class="m-0 pb-1">
+									<label class="btn btn-secondary active">
+										<input type="checkbox" value="Bagging" data-aux1="4194304" name="process-filter" id="processFilter_19" checked="checked" data-toggle-group="true" style="">BAG
+									</label>
+									
+								</li>
+					</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+				</li>
+
+
+				<li class="pr-2  cw-collapsible">
+
+					<h4>Suggested Machines</h4>
+
+
+
+
+
+
+
+
+
+
+
+
+
+					<!--ToggleButtonGroup-->
+					<ul id="machineFilter" class="js-toggle-button-group btn-group-toggle d-flex flex-wrap m-0 p-0" data-toggle="buttons">
+						<li class="m-0 pb-1">
+							<label class="btn btn-secondary active">
+								<input type="checkbox" value="ALL" data-code="ALL" data-for="machine-filter" checked="checked" style="">All
+							</label>
+						</li>
+								<li class="m-0 pb-1">
+									<label class="btn btn-secondary active">
+										<input type="checkbox" value="US" data-code="None" name="machine-filter" id="machineFilter_0" checked="checked" data-toggle-group="true" style="">None
+									</label>
+									
+								</li>
+								<li class="m-0 pb-1">
+									<label class="btn btn-secondary active">
+										<input type="checkbox" value="1" data-code="E1" name="machine-filter" id="machineFilter_1" checked="checked" data-toggle-group="true" style="">E1
+									</label>
+									
+								</li>
+								<li class="m-0 pb-1">
+									<label class="btn btn-secondary active">
+										<input type="checkbox" value="2" data-code="E2" name="machine-filter" id="machineFilter_2" checked="checked" data-toggle-group="true" style="">E2
+									</label>
+									
+								</li>
+								<li class="m-0 pb-1">
+									<label class="btn btn-secondary active">
+										<input type="checkbox" value="4" data-code="D1" name="machine-filter" id="machineFilter_3" checked="checked" data-toggle-group="true" style="">D1
+									</label>
+									
+								</li>
+								<li class="m-0 pb-1">
+									<label class="btn btn-secondary active">
+										<input type="checkbox" value="8" data-code="H1" name="machine-filter" id="machineFilter_4" checked="checked" data-toggle-group="true" style="">H1
+									</label>
+									
+								</li>
+								<li class="m-0 pb-1">
+									<label class="btn btn-secondary active">
+										<input type="checkbox" value="16" data-code="H2" name="machine-filter" id="machineFilter_5" checked="checked" data-toggle-group="true" style="">H2
+									</label>
+									
+								</li>
+								<li class="m-0 pb-1">
+									<label class="btn btn-secondary active">
+										<input type="checkbox" value="32" data-code="H3" name="machine-filter" id="machineFilter_6" checked="checked" data-toggle-group="true" style="">H3
+									</label>
+									
+								</li>
+								<li class="m-0 pb-1">
+									<label class="btn btn-secondary active">
+										<input type="checkbox" value="64" data-code="H4" name="machine-filter" id="machineFilter_7" checked="checked" data-toggle-group="true" style="">H4
+									</label>
+									
+								</li>
+								<li class="m-0 pb-1">
+									<label class="btn btn-secondary active">
+										<input type="checkbox" value="128" data-code="H5" name="machine-filter" id="machineFilter_8" checked="checked" data-toggle-group="true" style="">H5
+									</label>
+									
+								</li>
+								<li class="m-0 pb-1">
+									<label class="btn btn-secondary active">
+										<input type="checkbox" value="256" data-code="H6" name="machine-filter" id="machineFilter_9" checked="checked" data-toggle-group="true" style="">H6
+									</label>
+									
+								</li>
+								<li class="m-0 pb-1">
+									<label class="btn btn-secondary active">
+										<input type="checkbox" value="512" data-code="E3" name="machine-filter" id="machineFilter_10" checked="checked" data-toggle-group="true" style="">E3
+									</label>
+									
+								</li>
+								<li class="m-0 pb-1">
+									<label class="btn btn-secondary active">
+										<input type="checkbox" value="1024" data-code="E4" name="machine-filter" id="machineFilter_11" checked="checked" data-toggle-group="true" style="">E4
+									</label>
+									
+								</li>
+								<li class="m-0 pb-1">
+									<label class="btn btn-secondary active">
+										<input type="checkbox" value="2048" data-code="H7" name="machine-filter" id="machineFilter_12" checked="checked" data-toggle-group="true" style="">H7
+									</label>
+									
+								</li>
+								<li class="m-0 pb-1">
+									<label class="btn btn-secondary active">
+										<input type="checkbox" value="4096" data-code="S1" name="machine-filter" id="machineFilter_13" checked="checked" data-toggle-group="true" style="">S1
+									</label>
+									
+								</li>
+								<li class="m-0 pb-1">
+									<label class="btn btn-secondary active">
+										<input type="checkbox" value="8192" data-code="S2" name="machine-filter" id="machineFilter_14" checked="checked" data-toggle-group="true" style="">S2
+									</label>
+									
+								</li>
+								<li class="m-0 pb-1">
+									<label class="btn btn-secondary active">
+										<input type="checkbox" value="16384" data-code="E5" name="machine-filter" id="machineFilter_15" checked="checked" data-toggle-group="true" style="">E5
+									</label>
+									
+								</li>
+					</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+				</li>
+			</ul>
+
+			<div class="panel-controls">
+				<!--LinkButton-->
+				<a href="javascript:void(0)" data-event="cw:list-settings" class="js-window-control js-event-trigger"><span class=""><i class="far fa-cog"></i></span></a>
+				<div class="js-togglers d-inline-block filter-panel-toggler">
+					<a href="#" class="js-window-control" data-action="minimize"><i class="far fa-minus-square"></i></a>
+					<a href="#" class="js-window-control" data-action="maximize"><i class="far fa-plus-square"></i></a>
+				</div>
+			</div>
+
+		</div>
+	</div>
+
+
+		<input type="hidden" name="sort-by" value="" style="">
+		<input type="hidden" name="sort-direction" value="" style="">
+</div></div>
+		<div class="job-list-content clearfix">
+			<div class="row m-0">
+				<div class="col-3 pl-0">
+					<div class="record-count-label"><span class="js-record-label-counter">81 Records</span></div>
+				</div>
+				<div class="col-9 text-right align-bottom pr-0">
+					<div class="js-page-container page-container ew-inline-flex"><nav><ul class="pagination bootpag  pagination-sm pagination-smaller"><li data-lp="1" class="prev page-item disabled"><a class="page-link" href="javascript:void(0);">«</a></li><li data-lp="1" class="page-item active"><a class="page-link" href="javascript:void(0);">1</a></li><li data-lp="2" class="page-item"><a class="page-link" href="javascript:void(0);">2</a></li><li data-lp="3" class="page-item"><a class="page-link" href="javascript:void(0);">3</a></li><li data-lp="4" class="page-item"><a class="page-link" href="javascript:void(0);">4</a></li><li data-lp="5" class="page-item"><a class="page-link" href="javascript:void(0);">5</a></li><li data-lp="2" class="next page-item"><a class="page-link" href="javascript:void(0);">»</a></li></ul></nav></div>
+				</div>
+			</div>
+			<div id="jobStatusListResults" class="">
+				<table class="data-results">
+					<thead>
+						<tr>
+						<th class="sortable" data-col="jobnumber" id="sortJobNumber">Job Number</th>
+						<th class="sortable" data-col="client" id="sortClient">Customer</th>
+						<th class="sortable" data-col="description" id="sortDescription">Description</th>
+						
+						<th class="sortable" data-col="userdefined" data-sort="status,stockstatus" id="sortStatus">Job Status</th>
+						<th class="sortable" data-col="ordernumber" id="sortOrderNumber">Order#</th>
+						
+						<th class="text-center sortable" data-col="datein" id="sortDateIn">Date In</th>
+						<th class="text-center sortable" data-col="dateduefactory" id="sortDateDue1">Ship Date</th>
+						<th class="text-right sortable sorted asc" data-col="dateduefactory" id="sortDateDue2"><span title="Days to Due Date">Days</span></th>
+						<th class="text-center">&nbsp;</th>
+						</tr>
+					</thead>
+					<tbody style="display: table-row-group;"><tr id="jobStatusListRow_51094" class="js-jobstatus-row" data-jobnumber="51094">
+    <td>
+        <a href="https://intranet.decopress.com/Jobs/job.aspx?ID=51094" target="_blank">51094</a>
+        <div class="ew-badge-container">
+            <div class="ew-badge" data-code="DUPE">
+                <div class="process-code-badge">DUPE</div>
+            </div>
+        </div>
+    </td>
+    <td>Jackalope<div class="jobtag-container js-jobtag-container tag-container js-tag-container" data-id="51094" data-tag-type="JOB"><ul><li>
+    <span class="jobtag tag showtag " data-tag="ps done - gamma" data-tag-code="" data-when-entered-utc="2025-06-23T15:57:20.563+00:00" data-tooltip="from @juliol at [whenentered]">
+        <span class="tag-text">ps done - gamma</span>
+                <a class="far fa-times ew-datatag-remove js-datatag-remove" aria-hidden="true"></a>
+    </span>
+</li>
+<li class="hidden js-tag-pending"><i class="far fa-circle-notch fa-spin opacity-20"></i></li>
+<li>
+    <span class="jobtag tag addtag">
+        <a class="far fa-plus js-datatag-add hot" aria-hidden="true"></a>
+    </span>
+</li>
+</ul></div></td>
+    <td>
+        MICRON / INVENTOR APPAREL - SPLIT 
+        <div class="ew-badge-container process-codes">
+            <div class="ew-badge static" style="" data-code="Bagging" data-id="51094_badge_Bagging" data-jobnumber="51094" data-suggestedmachineid="0"><div class="process-code-badge " style="background-color: #0D40D9; color: #FFFFFF; font-weight:normal;">Bagging</div><div class="process-qty">79</div></div>
+            <div class="ew-badge static" style="" data-code="Dispatch" data-id="51094_badge_Dispatch" data-jobnumber="51094" data-suggestedmachineid="0"><div class="process-code-badge " style="background-color: #35DB56; color: #FFFFFF; font-weight:normal;">Dispatch</div><div class="process-qty">1</div></div>
+            <div class="ew-badge static" style="" data-code="EM" data-id="51094_badge_EM" data-jobnumber="51094" data-suggestedmachineid="0"><div class="process-code-badge " style="background-color: #9aad6c; color: #FFFFFF; font-weight:normal;">EM</div><div class="process-qty">276</div></div>
+            <div class="ew-badge static" style="" data-code="HW" data-id="51094_badge_HW" data-jobnumber="51094" data-suggestedmachineid="0"><div class="process-code-badge " style="background-color: #b7dee8; color: #FFFFFF; font-weight:normal;">HW</div><div class="process-qty">92</div></div>
+            <div class="ew-badge static" style="" data-code="Misc" data-id="51094_badge_Misc" data-jobnumber="51094" data-suggestedmachineid="0"><div class="process-code-badge " style="background-color: #B4B4B4; color: #FFFFFF; font-weight:normal;">Misc</div><div class="process-qty">79</div></div>
+        </div>
+    </td>
+
+    <td class="js-jobstatus-container">
+        <div class="cw--job-list-job-status-line">
+            <span class="cw--master-status-pill jobstatus_5">Approved</span> - <span class="cw--stock-status-pill stockstatus_2">Stock Complete</span>
+        </div>
+    </td>
+    <td>10979-4</td>
+    <td class="text-center">
+        <span data-tz-utc="2025-06-18T16:13:22-07:00" data-tz-format="L" class="js-tz-aware" title="America/Los_Angeles -07:00">06/18/2025</span>
+    </td>
+    <td class="text-center">
+        <span class=""><span data-tz-utc="2025-06-27T22:00:00-07:00" data-tz-format="L" class="js-tz-aware" title="America/Los_Angeles -07:00">06/27/2025</span></span>
+        
+        <div class="js-delivery-option">
+            NDA
+        </div>
+    </td>
+    <td class="text-right">
+        <span class="js-days-to-due-date"> -1 </span>
+        <br>
+        <a href="#" class="js-schedule-it schedule-link" data-jobnumber="51094" data-datedue-utc="2025-06-28T05:00:00+00:00" data-datedue="06/27/2025" data-toggle="popover" data-placement="left">Schedule</a>
+        <div class="job-location-codes">A0</div>
+    </td>
+    <td>
+        <button class="print-labels-btn btn btn-link fal fa-print" title="Print Labels"></button>
+    </td>
+</tr>
+<tr id="jobStatusListRow_50717" class="js-jobstatus-row" data-jobnumber="50717">
+    <td>
+        <a href="https://intranet.decopress.com/Jobs/job.aspx?ID=50717" target="_blank">50717</a>
+        <div class="ew-badge-container">
+            <div class="ew-badge" data-code="DUPE">
+                <div class="process-code-badge">DUPE</div>
+            </div>
+        </div>
+    </td>
+    <td>Family Industries<div class="jobtag-container js-jobtag-container tag-container js-tag-container" data-id="50717" data-tag-type="JOB"><ul><li>
+    <span class="jobtag tag showtag " data-tag="jackets" data-tag-code="" data-when-entered-utc="2025-06-30T23:39:43.033+00:00" data-tooltip="from @rumw at [whenentered]">
+        <span class="tag-text">jackets</span>
+                <a class="far fa-times ew-datatag-remove js-datatag-remove" aria-hidden="true"></a>
+    </span>
+</li>
+<li class="hidden js-tag-pending"><i class="far fa-circle-notch fa-spin opacity-20"></i></li>
+<li>
+    <span class="jobtag tag addtag">
+        <a class="far fa-plus js-datatag-add hot" aria-hidden="true"></a>
+    </span>
+</li>
+</ul></div></td>
+    <td>
+        ROCKET LAB JACKETS 
+        <div class="ew-badge-container process-codes">
+            <div class="ew-badge static" style="" data-code="EM" data-id="50717_badge_EM" data-jobnumber="50717" data-suggestedmachineid="0"><div class="process-code-badge " style="background-color: #9aad6c; color: #FFFFFF; font-weight:normal;">EM</div><div class="process-qty">1530</div></div>
+            <div class="ew-badge static" style="" data-code="Misc" data-id="50717_badge_Misc" data-jobnumber="50717" data-suggestedmachineid="0"><div class="process-code-badge " style="background-color: #B4B4B4; color: #FFFFFF; font-weight:normal;">Misc</div><div class="process-qty">765</div></div>
+        </div>
+    </td>
+
+    <td class="js-jobstatus-container">
+        <div class="cw--job-list-job-status-line">
+            <span class="cw--master-status-pill jobstatus_7">Running Late</span> - <span class="cw--stock-status-pill stockstatus_2">Stock Complete</span>
+        </div>
+    </td>
+    <td>05232025ROC</td>
+    <td class="text-center">
+        <span data-tz-utc="2025-05-22T09:10:59-07:00" data-tz-format="L" class="js-tz-aware" title="America/Los_Angeles -07:00">05/22/2025</span>
+    </td>
+    <td class="text-center">
+        <span class=""><span data-tz-utc="2025-06-30T14:00:00-07:00" data-tz-format="L" class="js-tz-aware" title="America/Los_Angeles -07:00">06/30/2025</span></span>
+        
+        <div class="js-delivery-option">
+            TBD
+        </div>
+    </td>
+    <td class="text-right">
+        <span class="js-days-to-due-date"> 0 </span>
+    </td>
+    <td>
+    </td>
+</tr>
+<tr id="jobStatusListRow_51081" class="js-jobstatus-row" data-jobnumber="51081">
+    <td>
+        <a href="https://intranet.decopress.com/Jobs/job.aspx?ID=51081" target="_blank">51081</a>
+    </td>
+    <td>Family Industries<div class="jobtag-container js-jobtag-container tag-container js-tag-container" data-id="51081" data-tag-type="JOB"><ul><li class="hidden js-tag-pending"><i class="far fa-circle-notch fa-spin opacity-20"></i></li>
+<li>
+    <span class="jobtag tag addtag">
+        <a class="far fa-plus js-datatag-add hot" aria-hidden="true"></a>
+    </span>
+</li>
+</ul></div></td>
+    <td>
+        EAGLES CAPS
+        <div class="ew-badge-container process-codes">
+            <div class="ew-badge static" style="" data-code="Dispatch" data-id="51081_badge_Dispatch" data-jobnumber="51081" data-suggestedmachineid="0"><div class="process-code-badge " style="background-color: #35DB56; color: #FFFFFF; font-weight:normal;">Dispatch</div><div class="process-qty">1</div></div>
+            <div class="ew-badge static" style="" data-code="EM" data-id="51081_badge_EM" data-jobnumber="51081" data-suggestedmachineid="0"><div class="process-code-badge " style="background-color: #9aad6c; color: #FFFFFF; font-weight:normal;">EM</div><div class="process-qty">180</div></div>
+            <div class="ew-badge static" style="" data-code="Misc" data-id="51081_badge_Misc" data-jobnumber="51081" data-suggestedmachineid="0"><div class="process-code-badge " style="background-color: #B4B4B4; color: #FFFFFF; font-weight:normal;">Misc</div><div class="process-qty">180</div></div>
+        </div>
+    </td>
+
+    <td class="js-jobstatus-container">
+        <div class="cw--job-list-job-status-line">
+            <span class="cw--master-status-pill jobstatus_7">Running Late</span> - <span class="cw--stock-status-pill stockstatus_2">Stock Complete</span>
+        </div>
+    </td>
+    <td>33422</td>
+    <td class="text-center">
+        <span data-tz-utc="2025-06-18T09:41:16-07:00" data-tz-format="L" class="js-tz-aware" title="America/Los_Angeles -07:00">06/18/2025</span>
+    </td>
+    <td class="text-center">
+        <span class=" warning "><span data-tz-utc="2025-06-30T14:00:00-07:00" data-tz-format="L" class="js-tz-aware" title="America/Los_Angeles -07:00">06/30/2025</span></span>
+        
+        <div class="js-delivery-option">
+            GND
+        </div>
+        <div class="ew-badge-container js-must-date-container"><div class="ew-badge" data-code="MUST"><div class="process-code-badge">MUST</div></div></div>
+    </td>
+    <td class="text-right">
+        <span class="js-days-to-due-date"> 0 </span>
+    </td>
+    <td>
+    </td>
+</tr>
+<tr id="jobStatusListRow_51066" class="js-jobstatus-row" data-jobnumber="51066">
+    <td>
+        <a href="https://intranet.decopress.com/Jobs/job.aspx?ID=51066" target="_blank">51066</a>
+    </td>
+    <td>Canary LLC<div class="jobtag-container js-jobtag-container tag-container js-tag-container" data-id="51066" data-tag-type="JOB"><ul><li class="hidden js-tag-pending"><i class="far fa-circle-notch fa-spin opacity-20"></i></li>
+<li>
+    <span class="jobtag tag addtag">
+        <a class="far fa-plus js-datatag-add hot" aria-hidden="true"></a>
+    </span>
+</li>
+</ul></div></td>
+    <td>
+        N-ABLE PULLOVERS
+        <div class="ew-badge-container process-codes">
+            <div class="ew-badge static" style="" data-code="EM" data-id="51066_badge_EM" data-jobnumber="51066" data-suggestedmachineid="0"><div class="process-code-badge " style="background-color: #9aad6c; color: #FFFFFF; font-weight:normal;">EM</div><div class="process-qty">125</div></div>
+            <div class="ew-badge static" style="" data-code="Misc" data-id="51066_badge_Misc" data-jobnumber="51066" data-suggestedmachineid="0"><div class="process-code-badge " style="background-color: #B4B4B4; color: #FFFFFF; font-weight:normal;">Misc</div><div class="process-qty">125</div></div>
+        </div>
+    </td>
+
+    <td class="js-jobstatus-container">
+        <div class="cw--job-list-job-status-line">
+            <span class="cw--master-status-pill jobstatus_6">On Time</span> - <span class="cw--stock-status-pill stockstatus_2">Stock Complete</span>
+        </div>
+    </td>
+    <td>5398702</td>
+    <td class="text-center">
+        <span data-tz-utc="2025-06-17T12:46:51-07:00" data-tz-format="L" class="js-tz-aware" title="America/Los_Angeles -07:00">06/17/2025</span>
+    </td>
+    <td class="text-center">
+        <span class=" warning "><span data-tz-utc="2025-07-01T15:00:00-07:00" data-tz-format="L" class="js-tz-aware" title="America/Los_Angeles -07:00">07/01/2025</span></span>
+        
+        <div class="js-delivery-option">
+            GND
+        </div>
+        <div class="ew-badge-container js-must-date-container"><div class="ew-badge" data-code="MUST"><div class="process-code-badge">MUST</div></div></div>
+    </td>
+    <td class="text-right">
+        <span class="js-days-to-due-date"> 1 </span>
+    </td>
+    <td>
+    </td>
+</tr>
+<tr id="jobStatusListRow_51138" class="js-jobstatus-row" data-jobnumber="51138">
+    <td>
+        <a href="https://intranet.decopress.com/Jobs/job.aspx?ID=51138" target="_blank">51138</a>
+    </td>
+    <td>Canary LLC<div class="jobtag-container js-jobtag-container tag-container js-tag-container" data-id="51138" data-tag-type="JOB"><ul><li>
+    <span class="jobtag tag showtag " data-tag="supacolor:sample dispatched" data-tag-code="EXTERNAL_SUPPLIER_ORDER_SUPACO" data-when-entered-utc="2025-06-26T03:15:02.047+00:00" data-tooltip="[whenentered]">
+        <span class="tag-text">supacolor:sample dispatched</span>
+    </span>
+</li>
+<li>
+    <span class="jobtag tag showtag " data-tag="supacolor:dispatched" data-tag-code="EXTERNAL_SUPPLIER_ORDER" data-when-entered-utc="2025-06-28T05:21:00.33+00:00" data-tooltip="[whenentered]">
+        <span class="tag-text">supacolor:dispatched</span>
+    </span>
+</li>
+<li>
+    <span class="jobtag tag showtag " data-tag="sc check" data-tag-code="" data-when-entered-utc="2025-06-30T19:02:43.6+00:00" data-tooltip="from @zairap at [whenentered]">
+        <span class="tag-text">sc check</span>
+                <a class="far fa-times ew-datatag-remove js-datatag-remove" aria-hidden="true"></a>
+    </span>
+</li>
+<li class="hidden js-tag-pending"><i class="far fa-circle-notch fa-spin opacity-20"></i></li>
+<li>
+    <span class="jobtag tag addtag">
+        <a class="far fa-plus js-datatag-add hot" aria-hidden="true"></a>
+    </span>
+</li>
+</ul></div></td>
+    <td>
+        TUBI SF BAGS
+        <div class="ew-badge-container process-codes">
+            <div class="ew-badge static" style="" data-code="Bagging" data-id="51138_badge_Bagging" data-jobnumber="51138" data-suggestedmachineid="0"><div class="process-code-badge " style="background-color: #0D40D9; color: #FFFFFF; font-weight:normal;">Bagging</div><div class="process-qty">60</div></div>
+            <div class="ew-badge static" style="" data-code="Misc" data-id="51138_badge_Misc" data-jobnumber="51138" data-suggestedmachineid="0"><div class="process-code-badge " style="background-color: #B4B4B4; color: #FFFFFF; font-weight:normal;">Misc</div><div class="process-qty">61</div></div>
+            <div class="ew-badge static" style="" data-code="SC" data-id="51138_badge_SC" data-jobnumber="51138" data-suggestedmachineid="0"><div class="process-code-badge " style="background-color: #2b86f9; color: #FFFFFF; font-weight:normal;">SC</div><div class="process-qty">61</div></div>
+        </div>
+    </td>
+
+    <td class="js-jobstatus-container">
+        <div class="cw--job-list-job-status-line">
+            <span class="cw--master-status-pill jobstatus_6">On Time</span> - <span class="cw--stock-status-pill stockstatus_2">Stock Complete</span>
+        </div>
+    </td>
+    <td>5399433</td>
+    <td class="text-center">
+        <span data-tz-utc="2025-06-24T07:58:37-07:00" data-tz-format="L" class="js-tz-aware" title="America/Los_Angeles -07:00">06/24/2025</span>
+    </td>
+    <td class="text-center">
+        <span class=" warning "><span data-tz-utc="2025-07-01T14:00:00-07:00" data-tz-format="L" class="js-tz-aware" title="America/Los_Angeles -07:00">07/01/2025</span></span>
+        
+        <div class="js-delivery-option">
+            NDA
+        </div>
+        <div class="ew-badge-container js-must-date-container"><div class="ew-badge" data-code="MUST"><div class="process-code-badge">MUST</div></div></div>
+    </td>
+    <td class="text-right">
+        <span class="js-days-to-due-date"> 1 </span>
+    </td>
+    <td>
+    </td>
+</tr>
+<tr id="jobStatusListRow_51148" class="js-jobstatus-row" data-jobnumber="51148">
+    <td>
+        <a href="https://intranet.decopress.com/Jobs/job.aspx?ID=51148" target="_blank">51148</a>
+    </td>
+    <td>Canary LLC<div class="jobtag-container js-jobtag-container tag-container js-tag-container" data-id="51148" data-tag-type="JOB"><ul><li>
+    <span class="jobtag tag showtag " data-tag="9470136208303274492804" data-tag-code="" data-when-entered-utc="2025-06-24T21:22:59.833+00:00" data-tooltip="from @aleg at [whenentered]">
+        <span class="tag-text">9470136208303274492804</span>
+                <a class="far fa-times ew-datatag-remove js-datatag-remove" aria-hidden="true"></a>
+    </span>
+</li>
+<li>
+    <span class="jobtag tag showtag " data-tag="@shay patches ready, leaving them on your desk" data-tag-code="" data-when-entered-utc="2025-06-27T22:25:02.633+00:00" data-tooltip="from @norithp at [whenentered]">
+        <span class="tag-text">@shay patches ready, leaving them on your desk</span>
+                <a class="far fa-times ew-datatag-remove js-datatag-remove" aria-hidden="true"></a>
+    </span>
+</li>
+<li class="hidden js-tag-pending"><i class="far fa-circle-notch fa-spin opacity-20"></i></li>
+<li>
+    <span class="jobtag tag addtag">
+        <a class="far fa-plus js-datatag-add hot" aria-hidden="true"></a>
+    </span>
+</li>
+</ul></div></td>
+    <td>
+        ZOOX BLANKETS
+        <div class="ew-badge-container process-codes">
+            <div class="ew-badge static" style="" data-code="Bagging" data-id="51148_badge_Bagging" data-jobnumber="51148" data-suggestedmachineid="0"><div class="process-code-badge " style="background-color: #0D40D9; color: #FFFFFF; font-weight:normal;">Bagging</div><div class="process-qty">2</div></div>
+            <div class="ew-badge static" style="" data-code="CR" data-id="51148_badge_CR" data-jobnumber="51148" data-suggestedmachineid="0"><div class="process-code-badge " style="background-color: #fc8003; color: #FFFFFF; font-weight:normal;">CR</div><div class="process-qty">1</div></div>
+            <div class="ew-badge static" style="" data-code="Misc" data-id="51148_badge_Misc" data-jobnumber="51148" data-suggestedmachineid="0"><div class="process-code-badge " style="background-color: #B4B4B4; color: #FFFFFF; font-weight:normal;">Misc</div><div class="process-qty">2</div></div>
+            <div class="ew-badge static" style="" data-code="SW" data-id="51148_badge_SW" data-jobnumber="51148" data-suggestedmachineid="0"><div class="process-code-badge " style="background-color: #9DCF30; color: #FFFFFF; font-weight:normal;">SW</div><div class="process-qty">1</div></div>
+        </div>
+    </td>
+
+    <td class="js-jobstatus-container">
+        <div class="cw--job-list-job-status-line">
+            <span class="cw--master-status-pill jobstatus_5">Approved</span> - <span class="cw--stock-status-pill stockstatus_2">Stock Complete</span>
+        </div>
+    </td>
+    <td>5399445</td>
+    <td class="text-center">
+        <span data-tz-utc="2025-06-24T11:28:46-07:00" data-tz-format="L" class="js-tz-aware" title="America/Los_Angeles -07:00">06/24/2025</span>
+    </td>
+    <td class="text-center">
+        <span class=""><span data-tz-utc="2025-07-01T05:00:00-07:00" data-tz-format="L" class="js-tz-aware" title="America/Los_Angeles -07:00">07/01/2025</span></span>
+        
+        <div class="js-delivery-option">
+            NDA
+        </div>
+    </td>
+    <td class="text-right">
+        <span class="js-days-to-due-date"> 1 </span>
+        <br>
+        <a href="#" class="js-schedule-it schedule-link" data-jobnumber="51148" data-datedue-utc="2025-07-01T12:00:00+00:00" data-datedue="07/01/2025" data-toggle="popover" data-placement="left">Schedule</a>
+        <div class="job-location-codes">C2</div>
+    </td>
+    <td>
+    </td>
+</tr>
+<tr id="jobStatusListRow_51165" class="js-jobstatus-row" data-jobnumber="51165">
+    <td>
+        <a href="https://intranet.decopress.com/Jobs/job.aspx?ID=51165" target="_blank">51165</a>
+    </td>
+    <td>EcoStiks<div class="jobtag-container js-jobtag-container tag-container js-tag-container" data-id="51165" data-tag-type="JOB"><ul><li>
+    <span class="jobtag tag showtag " data-tag="use ecostiks adhesive &amp; fabric" data-tag-code="" data-when-entered-utc="2025-06-25T14:16:14.27+00:00" data-tooltip="[whenentered]">
+        <span class="tag-text">use ecostiks adhesive &amp; fabric</span>
+                <a class="far fa-times ew-datatag-remove js-datatag-remove" aria-hidden="true"></a>
+    </span>
+</li>
+<li>
+    <span class="jobtag tag showtag " data-tag="c" data-tag-code="" data-when-entered-utc="2025-06-30T18:22:02.583+00:00" data-tooltip="from @laser at [whenentered]">
+        <span class="tag-text">c</span>
+                <a class="far fa-times ew-datatag-remove js-datatag-remove" aria-hidden="true"></a>
+    </span>
+</li>
+<li>
+    <span class="jobtag tag showtag mine" data-tag="@laser" data-tag-code="" data-when-entered-utc="2025-06-30T18:25:03.52+00:00" data-tooltip="from @carlosp at [whenentered]">
+        <span class="tag-text">@laser</span>
+                <a class="far fa-times ew-datatag-remove js-datatag-remove" aria-hidden="true"></a>
+    </span>
+</li>
+<li>
+    <span class="jobtag tag showtag mine" data-tag="@laser fill in, 15" data-tag-code="" data-when-entered-utc="2025-06-30T18:59:49.677+00:00" data-tooltip="from @norithp at [whenentered]">
+        <span class="tag-text">@laser fill in, 15</span>
+                <a class="far fa-times ew-datatag-remove js-datatag-remove" aria-hidden="true"></a>
+    </span>
+</li>
+<li>
+    <span class="jobtag tag showtag " data-tag="emailed a j and asked for a shipping label" data-tag-code="" data-when-entered-utc="2025-06-30T20:58:40.453+00:00" data-tooltip="from @esmeh at [whenentered]">
+        <span class="tag-text">emailed a j and asked for a shipping label</span>
+                <a class="far fa-times ew-datatag-remove js-datatag-remove" aria-hidden="true"></a>
+    </span>
+</li>
+<li class="hidden js-tag-pending"><i class="far fa-circle-notch fa-spin opacity-20"></i></li>
+<li>
+    <span class="jobtag tag addtag">
+        <a class="far fa-plus js-datatag-add hot" aria-hidden="true"></a>
+    </span>
+</li>
+</ul></div></td>
+    <td>
+        Comeau Comfort - 4 x 3
+        <div class="ew-badge-container process-codes">
+            <div class="ew-badge static" style="" data-code="Misc" data-id="51165_badge_Misc" data-jobnumber="51165" data-suggestedmachineid="0"><div class="process-code-badge " style="background-color: #B4B4B4; color: #FFFFFF; font-weight:normal;">Misc</div><div class="process-qty">0</div></div>
+            <div class="ew-badge static" style="" data-code="MP" data-id="51165_badge_MP" data-jobnumber="51165" data-suggestedmachineid="0"><div class="process-code-badge " style="background-color: #29c515; color: #FFFFFF; font-weight:normal;">MP</div><div class="process-qty">100</div></div>
+        </div>
+    </td>
+
+    <td class="js-jobstatus-container">
+        <div class="cw--job-list-job-status-line">
+            <span class="cw--master-status-pill jobstatus_5">Approved</span> - <span class="cw--stock-status-pill stockstatus_2">Stock Complete</span>
+        </div>
+    </td>
+    <td>7314-6013</td>
+    <td class="text-center">
+        <span data-tz-utc="2025-06-25T07:16:10-07:00" data-tz-format="L" class="js-tz-aware" title="America/Los_Angeles -07:00">06/25/2025</span>
+    </td>
+    <td class="text-center">
+        <span class=""><span data-tz-utc="2025-07-01T15:00:00-07:00" data-tz-format="L" class="js-tz-aware" title="America/Los_Angeles -07:00">07/01/2025</span></span>
+        
+        <div class="js-delivery-option">
+            GND
+        </div>
+    </td>
+    <td class="text-right">
+        <span class="js-days-to-due-date"> 1 </span>
+    </td>
+    <td>
+        <button class="print-labels-btn btn btn-link fal fa-print" title="Print Labels"></button>
+    </td>
+</tr>
+<tr id="jobStatusListRow_51172" class="js-jobstatus-row" data-jobnumber="51172">
+    <td>
+        <a href="https://intranet.decopress.com/Jobs/job.aspx?ID=51172" target="_blank">51172</a>
+    </td>
+    <td>Jack Nadel International<div class="jobtag-container js-jobtag-container tag-container js-tag-container" data-id="51172" data-tag-type="JOB"><ul><li>
+    <span class="jobtag tag showtag " data-tag="emb_border $2.75" data-tag-code="" data-when-entered-utc="2025-06-25T22:30:08.097+00:00" data-tooltip="from @aleg at [whenentered]">
+        <span class="tag-text">emb_border $2.75</span>
+                <a class="far fa-times ew-datatag-remove js-datatag-remove" aria-hidden="true"></a>
+    </span>
+</li>
+<li>
+    <span class="jobtag tag showtag mine" data-tag="@laser" data-tag-code="" data-when-entered-utc="2025-06-27T16:06:40.697+00:00" data-tooltip="from @juliol at [whenentered]">
+        <span class="tag-text">@laser</span>
+                <a class="far fa-times ew-datatag-remove js-datatag-remove" aria-hidden="true"></a>
+    </span>
+</li>
+<li class="hidden js-tag-pending"><i class="far fa-circle-notch fa-spin opacity-20"></i></li>
+<li>
+    <span class="jobtag tag addtag">
+        <a class="far fa-plus js-datatag-add hot" aria-hidden="true"></a>
+    </span>
+</li>
+</ul></div></td>
+    <td>
+        IN N OUT PATCHES
+        <div class="ew-badge-container process-codes">
+            <div class="ew-badge static" style="" data-code="CR" data-id="51172_badge_CR" data-jobnumber="51172" data-suggestedmachineid="0"><div class="process-code-badge " style="background-color: #fc8003; color: #FFFFFF; font-weight:normal;">CR</div><div class="process-qty">4</div></div>
+            <div class="ew-badge static" style="" data-code="EM" data-id="51172_badge_EM" data-jobnumber="51172" data-suggestedmachineid="0"><div class="process-code-badge " style="background-color: #9aad6c; color: #FFFFFF; font-weight:normal;">EM</div><div class="process-qty">4</div></div>
+        </div>
+    </td>
+
+    <td class="js-jobstatus-container">
+        <div class="cw--job-list-job-status-line">
+            <span class="cw--master-status-pill jobstatus_5">Approved</span> - <span class="cw--stock-status-pill stockstatus_2">Stock Complete</span>
+        </div>
+    </td>
+    <td> 40180387D</td>
+    <td class="text-center">
+        <span data-tz-utc="2025-06-25T10:24:55-07:00" data-tz-format="L" class="js-tz-aware" title="America/Los_Angeles -07:00">06/25/2025</span>
+    </td>
+    <td class="text-center">
+        <span class=" warning "><span data-tz-utc="2025-07-01T01:00:00-07:00" data-tz-format="L" class="js-tz-aware" title="America/Los_Angeles -07:00">07/01/2025</span></span>
+        
+        <div class="js-delivery-option">
+            GND
+        </div>
+        <div class="ew-badge-container js-must-date-container"><div class="ew-badge" data-code="MUST"><div class="process-code-badge">MUST</div></div></div>
+    </td>
+    <td class="text-right">
+        <span class="js-days-to-due-date"> 1 </span>
+        <br>
+        <a href="#" class="js-schedule-it schedule-link" data-jobnumber="51172" data-datedue-utc="2025-07-01T08:00:00+00:00" data-datedue="07/01/2025" data-toggle="popover" data-placement="left">Schedule</a>
+        <div class="job-location-codes"></div>
+    </td>
+    <td>
+    </td>
+</tr>
+<tr id="jobStatusListRow_51179" class="js-jobstatus-row" data-jobnumber="51179">
+    <td>
+        <a href="https://intranet.decopress.com/Jobs/job.aspx?ID=51179" target="_blank">51179</a>
+    </td>
+    <td>EcoStiks<div class="jobtag-container js-jobtag-container tag-container js-tag-container" data-id="51179" data-tag-type="JOB"><ul><li>
+    <span class="jobtag tag showtag " data-tag="use ecostiks adhesive &amp; fabric" data-tag-code="" data-when-entered-utc="2025-06-25T21:31:25.93+00:00" data-tooltip="[whenentered]">
+        <span class="tag-text">use ecostiks adhesive &amp; fabric</span>
+                <a class="far fa-times ew-datatag-remove js-datatag-remove" aria-hidden="true"></a>
+    </span>
+</li>
+<li>
+    <span class="jobtag tag showtag " data-tag="c" data-tag-code="" data-when-entered-utc="2025-06-30T18:21:56.757+00:00" data-tooltip="from @laser at [whenentered]">
+        <span class="tag-text">c</span>
+                <a class="far fa-times ew-datatag-remove js-datatag-remove" aria-hidden="true"></a>
+    </span>
+</li>
+<li class="hidden js-tag-pending"><i class="far fa-circle-notch fa-spin opacity-20"></i></li>
+<li>
+    <span class="jobtag tag addtag">
+        <a class="far fa-plus js-datatag-add hot" aria-hidden="true"></a>
+    </span>
+</li>
+</ul></div></td>
+    <td>
+        MP00376 - 2" - 300 pcs.
+        <div class="ew-badge-container process-codes">
+            <div class="ew-badge static" style="" data-code="MP" data-id="51179_badge_MP" data-jobnumber="51179" data-suggestedmachineid="0"><div class="process-code-badge " style="background-color: #29c515; color: #FFFFFF; font-weight:normal;">MP</div><div class="process-qty">300</div></div>
+        </div>
+    </td>
+
+    <td class="js-jobstatus-container">
+        <div class="cw--job-list-job-status-line">
+            <span class="cw--master-status-pill jobstatus_5">Approved</span> - <span class="cw--stock-status-pill stockstatus_2">Stock Complete</span>
+        </div>
+    </td>
+    <td>JULIE</td>
+    <td class="text-center">
+        <span data-tz-utc="2025-06-25T14:31:25-07:00" data-tz-format="L" class="js-tz-aware" title="America/Los_Angeles -07:00">06/25/2025</span>
+    </td>
+    <td class="text-center">
+        <span class=" warning "><span data-tz-utc="2025-07-01T15:00:00-07:00" data-tz-format="L" class="js-tz-aware" title="America/Los_Angeles -07:00">07/01/2025</span></span>
+        
+        <div class="js-delivery-option">
+            2DA
+        </div>
+        <div class="ew-badge-container js-must-date-container"><div class="ew-badge" data-code="MUST"><div class="process-code-badge">MUST</div></div></div>
+    </td>
+    <td class="text-right">
+        <span class="js-days-to-due-date"> 1 </span>
+    </td>
+    <td>
+        <button class="print-labels-btn btn btn-link fal fa-print" title="Print Labels"></button>
+    </td>
+</tr>
+<tr id="jobStatusListRow_51199" class="js-jobstatus-row" data-jobnumber="51199">
+    <td>
+        <a href="https://intranet.decopress.com/Jobs/job.aspx?ID=51199" target="_blank">51199</a>
+        <div class="ew-badge-container">
+            <div class="ew-badge" data-code="DUPE">
+                <div class="process-code-badge">DUPE</div>
+            </div>
+        </div>
+    </td>
+    <td>ScreenWorks USA<div class="jobtag-container js-jobtag-container tag-container js-tag-container" data-id="51199" data-tag-type="JOB"><ul><li>
+    <span class="jobtag tag showtag " data-tag="approved by customer msg_2m2l49n5" data-tag-code="" data-when-entered-utc="2025-06-30T16:02:53.75+00:00" data-tooltip="from @alfiec at [whenentered]">
+        <span class="tag-text">approved by customer msg_2m2l49n5</span>
+                <a class="far fa-times ew-datatag-remove js-datatag-remove" aria-hidden="true"></a>
+    </span>
+</li>
+<li>
+    <span class="jobtag tag showtag " data-tag="pls make sure it is 2&quot; h" data-tag-code="" data-when-entered-utc="2025-06-30T18:16:39.067+00:00" data-tooltip="from @dania at [whenentered]">
+        <span class="tag-text">pls make sure it is 2" h</span>
+                <a class="far fa-times ew-datatag-remove js-datatag-remove" aria-hidden="true"></a>
+    </span>
+</li>
+<li>
+    <span class="jobtag tag showtag " data-tag="@printer" data-tag-code="" data-when-entered-utc="2025-06-30T18:22:35.02+00:00" data-tooltip="from @carlosp at [whenentered]">
+        <span class="tag-text">@printer</span>
+                <a class="far fa-times ew-datatag-remove js-datatag-remove" aria-hidden="true"></a>
+    </span>
+</li>
+<li>
+    <span class="jobtag tag showtag " data-tag="rfp" data-tag-code="" data-when-entered-utc="2025-06-30T18:24:01.8+00:00" data-tooltip="from @carlosp at [whenentered]">
+        <span class="tag-text">rfp</span>
+                <a class="far fa-times ew-datatag-remove js-datatag-remove" aria-hidden="true"></a>
+    </span>
+</li>
+<li>
+    <span class="jobtag tag showtag " data-tag="re0order" data-tag-code="" data-when-entered-utc="2025-06-30T18:24:08.363+00:00" data-tooltip="from @carlosp at [whenentered]">
+        <span class="tag-text">re0order</span>
+                <a class="far fa-times ew-datatag-remove js-datatag-remove" aria-hidden="true"></a>
+    </span>
+</li>
+<li class="hidden js-tag-pending"><i class="far fa-circle-notch fa-spin opacity-20"></i></li>
+<li>
+    <span class="jobtag tag addtag">
+        <a class="far fa-plus js-datatag-add hot" aria-hidden="true"></a>
+    </span>
+</li>
+</ul></div></td>
+    <td>
+        HALLOWEEN HORROR NIGHTS 2025 - FILL INS
+        <div class="ew-badge-container process-codes">
+            <div class="ew-badge static" style="" data-code="EM" data-id="51199_badge_EM" data-jobnumber="51199" data-suggestedmachineid="0"><div class="process-code-badge " style="background-color: #9aad6c; color: #FFFFFF; font-weight:normal;">EM</div><div class="process-qty">108</div></div>
+            <div class="ew-badge static" style="" data-code="HW" data-id="51199_badge_HW" data-jobnumber="51199" data-suggestedmachineid="0"><div class="process-code-badge " style="background-color: #b7dee8; color: #FFFFFF; font-weight:normal;">HW</div><div class="process-qty">108</div></div>
+        </div>
+    </td>
+
+    <td class="js-jobstatus-container">
+        <div class="cw--job-list-job-status-line">
+            <span class="cw--master-status-pill jobstatus_5">Approved</span> - <span class="cw--stock-status-pill stockstatus_2">Stock Complete</span>
+        </div>
+    </td>
+    <td>119258</td>
+    <td class="text-center">
+        <span data-tz-utc="2025-06-27T09:28:13-07:00" data-tz-format="L" class="js-tz-aware" title="America/Los_Angeles -07:00">06/27/2025</span>
+    </td>
+    <td class="text-center">
+        <span class=" warning "><span data-tz-utc="2025-07-01T15:00:00-07:00" data-tz-format="L" class="js-tz-aware" title="America/Los_Angeles -07:00">07/01/2025</span></span>
+        
+        <div class="js-delivery-option">
+            2DA
+        </div>
+        <div class="ew-badge-container js-must-date-container"><div class="ew-badge" data-code="MUST"><div class="process-code-badge">MUST</div></div></div>
+    </td>
+    <td class="text-right">
+        <span class="js-days-to-due-date"> 1 </span>
+        <br>
+        <a href="#" class="js-schedule-it schedule-link" data-jobnumber="51199" data-datedue-utc="2025-07-01T22:00:00+00:00" data-datedue="07/01/2025" data-toggle="popover" data-placement="left">Schedule</a>
+        <div class="job-location-codes"></div>
+    </td>
+    <td>
+        <button class="print-labels-btn btn btn-link fal fa-print" title="Print Labels"></button>
+    </td>
+</tr>
+<tr id="jobStatusListRow_51206" class="js-jobstatus-row" data-jobnumber="51206">
+    <td>
+        <a href="https://intranet.decopress.com/Jobs/job.aspx?ID=51206" target="_blank">51206</a>
+        <div class="ew-badge-container">
+            <div class="ew-badge" data-code="DUPE">
+                <div class="process-code-badge">DUPE</div>
+            </div>
+        </div>
+    </td>
+    <td>ScreenWorks USA<div class="jobtag-container js-jobtag-container tag-container js-tag-container" data-id="51206" data-tag-type="JOB"><ul><li>
+    <span class="jobtag tag showtag " data-tag="run along with 51199" data-tag-code="" data-when-entered-utc="2025-06-27T19:33:24.073+00:00" data-tooltip="from @alfiec at [whenentered]">
+        <span class="tag-text">run along with 51199</span>
+                <a class="far fa-times ew-datatag-remove js-datatag-remove" aria-hidden="true"></a>
+    </span>
+</li>
+<li>
+    <span class="jobtag tag showtag " data-tag="approved by customer msg_2m2l49n5" data-tag-code="" data-when-entered-utc="2025-06-30T16:03:06.217+00:00" data-tooltip="from @alfiec at [whenentered]">
+        <span class="tag-text">approved by customer msg_2m2l49n5</span>
+                <a class="far fa-times ew-datatag-remove js-datatag-remove" aria-hidden="true"></a>
+    </span>
+</li>
+<li>
+    <span class="jobtag tag showtag " data-tag="@printer" data-tag-code="" data-when-entered-utc="2025-06-30T18:23:00.973+00:00" data-tooltip="from @carlosp at [whenentered]">
+        <span class="tag-text">@printer</span>
+                <a class="far fa-times ew-datatag-remove js-datatag-remove" aria-hidden="true"></a>
+    </span>
+</li>
+<li>
+    <span class="jobtag tag showtag " data-tag="rfp" data-tag-code="" data-when-entered-utc="2025-06-30T18:25:17.817+00:00" data-tooltip="from @carlosp at [whenentered]">
+        <span class="tag-text">rfp</span>
+                <a class="far fa-times ew-datatag-remove js-datatag-remove" aria-hidden="true"></a>
+    </span>
+</li>
+<li>
+    <span class="jobtag tag showtag " data-tag="re-order" data-tag-code="" data-when-entered-utc="2025-06-30T18:25:21.113+00:00" data-tooltip="from @carlosp at [whenentered]">
+        <span class="tag-text">re-order</span>
+                <a class="far fa-times ew-datatag-remove js-datatag-remove" aria-hidden="true"></a>
+    </span>
+</li>
+<li class="hidden js-tag-pending"><i class="far fa-circle-notch fa-spin opacity-20"></i></li>
+<li>
+    <span class="jobtag tag addtag">
+        <a class="far fa-plus js-datatag-add hot" aria-hidden="true"></a>
+    </span>
+</li>
+</ul></div></td>
+    <td>
+        HALLOWEEN HORROR NIGHTS 2025 - FILL INS
+        <div class="ew-badge-container process-codes">
+            <div class="ew-badge static" style="" data-code="EM" data-id="51206_badge_EM" data-jobnumber="51206" data-suggestedmachineid="0"><div class="process-code-badge " style="background-color: #9aad6c; color: #FFFFFF; font-weight:normal;">EM</div><div class="process-qty">72</div></div>
+            <div class="ew-badge static" style="" data-code="HW" data-id="51206_badge_HW" data-jobnumber="51206" data-suggestedmachineid="0"><div class="process-code-badge " style="background-color: #b7dee8; color: #FFFFFF; font-weight:normal;">HW</div><div class="process-qty">72</div></div>
+        </div>
+    </td>
+
+    <td class="js-jobstatus-container">
+        <div class="cw--job-list-job-status-line">
+            <span class="cw--master-status-pill jobstatus_5">Approved</span> - <span class="cw--stock-status-pill stockstatus_2">Stock Complete</span>
+        </div>
+    </td>
+    <td>119267</td>
+    <td class="text-center">
+        <span data-tz-utc="2025-06-27T12:31:14-07:00" data-tz-format="L" class="js-tz-aware" title="America/Los_Angeles -07:00">06/27/2025</span>
+    </td>
+    <td class="text-center">
+        <span class=" warning "><span data-tz-utc="2025-07-01T15:00:00-07:00" data-tz-format="L" class="js-tz-aware" title="America/Los_Angeles -07:00">07/01/2025</span></span>
+        
+        <div class="js-delivery-option">
+            2DA
+        </div>
+        <div class="ew-badge-container js-must-date-container"><div class="ew-badge" data-code="MUST"><div class="process-code-badge">MUST</div></div></div>
+    </td>
+    <td class="text-right">
+        <span class="js-days-to-due-date"> 1 </span>
+        <br>
+        <a href="#" class="js-schedule-it schedule-link" data-jobnumber="51206" data-datedue-utc="2025-07-01T22:00:00+00:00" data-datedue="07/01/2025" data-toggle="popover" data-placement="left">Schedule</a>
+        <div class="job-location-codes"></div>
+    </td>
+    <td>
+        <button class="print-labels-btn btn btn-link fal fa-print" title="Print Labels"></button>
+    </td>
+</tr>
+<tr id="jobStatusListRow_51211" class="js-jobstatus-row" data-jobnumber="51211">
+    <td>
+        <a href="https://intranet.decopress.com/Jobs/job.aspx?ID=51211" target="_blank">51211</a>
+    </td>
+    <td>Logomark<div class="jobtag-container js-jobtag-container tag-container js-tag-container" data-id="51211" data-tag-type="JOB"><ul><li>
+    <span class="jobtag tag showtag mine" data-tag="@laser" data-tag-code="" data-when-entered-utc="2025-06-30T16:43:19.023+00:00" data-tooltip="from @carlosp at [whenentered]">
+        <span class="tag-text">@laser</span>
+                <a class="far fa-times ew-datatag-remove js-datatag-remove" aria-hidden="true"></a>
+    </span>
+</li>
+<li>
+    <span class="jobtag tag showtag " data-tag="etching: need panels" data-tag-code="" data-when-entered-utc="2025-06-30T16:43:28.29+00:00" data-tooltip="from @carlosp at [whenentered]">
+        <span class="tag-text">etching: need panels</span>
+                <a class="far fa-times ew-datatag-remove js-datatag-remove" aria-hidden="true"></a>
+    </span>
+</li>
+<li class="hidden js-tag-pending"><i class="far fa-circle-notch fa-spin opacity-20"></i></li>
+<li>
+    <span class="jobtag tag addtag">
+        <a class="far fa-plus js-datatag-add hot" aria-hidden="true"></a>
+    </span>
+</li>
+</ul></div></td>
+    <td>
+        PROUD ON BLACK LEATHERETTE
+        <div class="ew-badge-container process-codes">
+            <div class="ew-badge static" style="" data-code="Misc" data-id="51211_badge_Misc" data-jobnumber="51211" data-suggestedmachineid="0"><div class="process-code-badge " style="background-color: #B4B4B4; color: #FFFFFF; font-weight:normal;">Misc</div><div class="process-qty">0</div></div>
+            <div class="ew-badge static" style="" data-code="MP" data-id="51211_badge_MP" data-jobnumber="51211" data-suggestedmachineid="0"><div class="process-code-badge " style="background-color: #29c515; color: #FFFFFF; font-weight:normal;">MP</div><div class="process-qty">165</div></div>
+        </div>
+    </td>
+
+    <td class="js-jobstatus-container">
+        <div class="cw--job-list-job-status-line">
+            <span class="cw--master-status-pill jobstatus_5">Approved</span> - <span class="cw--stock-status-pill stockstatus_2">Stock Complete</span>
+        </div>
+    </td>
+    <td>A281192</td>
+    <td class="text-center">
+        <span data-tz-utc="2025-06-27T16:11:47-07:00" data-tz-format="L" class="js-tz-aware" title="America/Los_Angeles -07:00">06/27/2025</span>
+    </td>
+    <td class="text-center">
+        <span class=" warning "><span data-tz-utc="2025-07-01T14:00:00-07:00" data-tz-format="L" class="js-tz-aware" title="America/Los_Angeles -07:00">07/01/2025</span></span>
+        
+        <div class="js-delivery-option">
+            NDA
+        </div>
+        <div class="ew-badge-container js-must-date-container"><div class="ew-badge" data-code="MUST"><div class="process-code-badge">MUST</div></div></div>
+    </td>
+    <td class="text-right">
+        <span class="js-days-to-due-date"> 1 </span>
+    </td>
+    <td>
+        <button class="print-labels-btn btn btn-link fal fa-print" title="Print Labels"></button>
+    </td>
+</tr>
+<tr id="jobStatusListRow_51225" class="js-jobstatus-row" data-jobnumber="51225">
+    <td>
+        <a href="https://intranet.decopress.com/Jobs/job.aspx?ID=51225" target="_blank">51225</a>
+        <div class="ew-badge-container">
+            <div class="ew-badge" data-code="DUPE">
+                <div class="process-code-badge">DUPE</div>
+            </div>
+        </div>
+    </td>
+    <td>Mars Marketing<div class="jobtag-container js-jobtag-container tag-container js-tag-container" data-id="51225" data-tag-type="JOB"><ul><li class="hidden js-tag-pending"><i class="far fa-circle-notch fa-spin opacity-20"></i></li>
+<li>
+    <span class="jobtag tag addtag">
+        <a class="far fa-plus js-datatag-add hot" aria-hidden="true"></a>
+    </span>
+</li>
+</ul></div></td>
+    <td>
+        STRATEGIC LAUNCH JACKETS - BO PIECE
+        <div class="ew-badge-container process-codes">
+            <div class="ew-badge static" style="" data-code="Bagging" data-id="51225_badge_Bagging" data-jobnumber="51225" data-suggestedmachineid="0"><div class="process-code-badge " style="background-color: #0D40D9; color: #FFFFFF; font-weight:normal;">Bagging</div><div class="process-qty">1</div></div>
+            <div class="ew-badge static" style="" data-code="Misc" data-id="51225_badge_Misc" data-jobnumber="51225" data-suggestedmachineid="0"><div class="process-code-badge " style="background-color: #B4B4B4; color: #FFFFFF; font-weight:normal;">Misc</div><div class="process-qty">1</div></div>
+            <div class="ew-badge static" style="" data-code="SC" data-id="51225_badge_SC" data-jobnumber="51225" data-suggestedmachineid="0"><div class="process-code-badge " style="background-color: #2b86f9; color: #FFFFFF; font-weight:normal;">SC</div><div class="process-qty">1</div></div>
+        </div>
+    </td>
+
+    <td class="js-jobstatus-container">
+        <div class="cw--job-list-job-status-line">
+            <span class="cw--master-status-pill jobstatus_6">On Time</span> - <span class="cw--stock-status-pill stockstatus_2">Stock Complete</span>
+        </div>
+    </td>
+    <td>47998</td>
+    <td class="text-center">
+        <span data-tz-utc="2025-06-30T12:51:37-07:00" data-tz-format="L" class="js-tz-aware" title="America/Los_Angeles -07:00">06/30/2025</span>
+    </td>
+    <td class="text-center">
+        <span class=" warning "><span data-tz-utc="2025-07-01T14:00:00-07:00" data-tz-format="L" class="js-tz-aware" title="America/Los_Angeles -07:00">07/01/2025</span></span>
+        
+        <div class="js-delivery-option">
+            GND
+        </div>
+        <div class="ew-badge-container js-must-date-container"><div class="ew-badge" data-code="MUST"><div class="process-code-badge">MUST</div></div></div>
+    </td>
+    <td class="text-right">
+        <span class="js-days-to-due-date"> 1 </span>
+    </td>
+    <td>
+    </td>
+</tr>
+<tr id="jobStatusListRow_50862" class="js-jobstatus-row" data-jobnumber="50862">
+    <td>
+        <a href="https://intranet.decopress.com/Jobs/job.aspx?ID=50862" target="_blank">50862</a>
+        <div class="ew-badge-container">
+            <div class="ew-badge" data-code="DUPE">
+                <div class="process-code-badge">DUPE</div>
+            </div>
+        </div>
+    </td>
+    <td>Canary LLC<div class="jobtag-container js-jobtag-container tag-container js-tag-container" data-id="50862" data-tag-type="JOB"><ul><li>
+    <span class="jobtag tag showtag " data-tag="supacolor job# 540712" data-tag-code="" data-when-entered-utc="2025-06-24T19:19:27.1+00:00" data-tooltip="from @karencu at [whenentered]">
+        <span class="tag-text">supacolor job# 540712</span>
+                <a class="far fa-times ew-datatag-remove js-datatag-remove" aria-hidden="true"></a>
+    </span>
+</li>
+<li class="hidden js-tag-pending"><i class="far fa-circle-notch fa-spin opacity-20"></i></li>
+<li>
+    <span class="jobtag tag addtag">
+        <a class="far fa-plus js-datatag-add hot" aria-hidden="true"></a>
+    </span>
+</li>
+</ul></div></td>
+    <td>
+        PRESIDENT'S CLUB 2025 - VESTS &amp; TEES
+        <div class="ew-badge-container process-codes">
+            <div class="ew-badge static" style="" data-code="Bagging" data-id="50862_badge_Bagging" data-jobnumber="50862" data-suggestedmachineid="0"><div class="process-code-badge " style="background-color: #0D40D9; color: #FFFFFF; font-weight:normal;">Bagging</div><div class="process-qty">189</div></div>
+            <div class="ew-badge static" style="" data-code="Misc" data-id="50862_badge_Misc" data-jobnumber="50862" data-suggestedmachineid="0"><div class="process-code-badge " style="background-color: #B4B4B4; color: #FFFFFF; font-weight:normal;">Misc</div><div class="process-qty">94</div></div>
+            <div class="ew-badge static" style="" data-code="SC" data-id="50862_badge_SC" data-jobnumber="50862" data-suggestedmachineid="0"><div class="process-code-badge " style="background-color: #2b86f9; color: #FFFFFF; font-weight:normal;">SC</div><div class="process-qty">188</div></div>
+        </div>
+    </td>
+
+    <td class="js-jobstatus-container">
+        <div class="cw--job-list-job-status-line">
+            <span class="cw--master-status-pill jobstatus_5">Approved</span> - <span class="cw--stock-status-pill stockstatus_1">Partial Stock</span>
+        </div>
+    </td>
+    <td>5396318</td>
+    <td class="text-center">
+        <span data-tz-utc="2025-06-03T16:53:57-07:00" data-tz-format="L" class="js-tz-aware" title="America/Los_Angeles -07:00">06/03/2025</span>
+    </td>
+    <td class="text-center">
+        <span class=""><span data-tz-utc="2025-07-02T16:00:00-07:00" data-tz-format="L" class="js-tz-aware" title="America/Los_Angeles -07:00">07/02/2025</span></span>
+        
+        <div class="js-delivery-option">
+            GND
+        </div>
+    </td>
+    <td class="text-right">
+        <span class="js-days-to-due-date"> 2 </span>
+    </td>
+    <td>
+    </td>
+</tr>
+<tr id="jobStatusListRow_50935" class="js-jobstatus-row" data-jobnumber="50935">
+    <td>
+        <a href="https://intranet.decopress.com/Jobs/job.aspx?ID=50935" target="_blank">50935</a>
+    </td>
+    <td>Canary LLC<div class="jobtag-container js-jobtag-container tag-container js-tag-container" data-id="50935" data-tag-type="JOB"><ul><li>
+    <span class="jobtag tag showtag " data-tag="tracking info 1z8a9y400350827352, 1ze435930348014533" data-tag-code="" data-when-entered-utc="2025-06-13T17:05:30.787+00:00" data-tooltip="from @aleg at [whenentered]">
+        <span class="tag-text">tracking info 1z8a9y400350827352, 1ze435930348014533</span>
+                <a class="far fa-times ew-datatag-remove js-datatag-remove" aria-hidden="true"></a>
+    </span>
+</li>
+<li>
+    <span class="jobtag tag showtag " data-tag="supacolor job# 540712" data-tag-code="" data-when-entered-utc="2025-06-24T19:19:12.273+00:00" data-tooltip="from @karencu at [whenentered]">
+        <span class="tag-text">supacolor job# 540712</span>
+                <a class="far fa-times ew-datatag-remove js-datatag-remove" aria-hidden="true"></a>
+    </span>
+</li>
+<li class="hidden js-tag-pending"><i class="far fa-circle-notch fa-spin opacity-20"></i></li>
+<li>
+    <span class="jobtag tag addtag">
+        <a class="far fa-plus js-datatag-add hot" aria-hidden="true"></a>
+    </span>
+</li>
+</ul></div></td>
+    <td>
+        PRESIDENT'S CLUB 2025 - BROOKS ZIPS
+        <div class="ew-badge-container process-codes">
+            <div class="ew-badge static" style="" data-code="Bagging" data-id="50935_badge_Bagging" data-jobnumber="50935" data-suggestedmachineid="0"><div class="process-code-badge " style="background-color: #0D40D9; color: #FFFFFF; font-weight:normal;">Bagging</div><div class="process-qty">157</div></div>
+            <div class="ew-badge static" style="" data-code="Misc" data-id="50935_badge_Misc" data-jobnumber="50935" data-suggestedmachineid="0"><div class="process-code-badge " style="background-color: #B4B4B4; color: #FFFFFF; font-weight:normal;">Misc</div><div class="process-qty">78</div></div>
+            <div class="ew-badge static" style="" data-code="SC" data-id="50935_badge_SC" data-jobnumber="50935" data-suggestedmachineid="0"><div class="process-code-badge " style="background-color: #2b86f9; color: #FFFFFF; font-weight:normal;">SC</div><div class="process-qty">156</div></div>
+        </div>
+    </td>
+
+    <td class="js-jobstatus-container">
+        <div class="cw--job-list-job-status-line">
+            <span class="cw--master-status-pill jobstatus_5">Approved</span> - <span class="cw--stock-status-pill stockstatus_1">Partial Stock</span>
+        </div>
+    </td>
+    <td>5396318</td>
+    <td class="text-center">
+        <span data-tz-utc="2025-06-09T13:02:39-07:00" data-tz-format="L" class="js-tz-aware" title="America/Los_Angeles -07:00">06/09/2025</span>
+    </td>
+    <td class="text-center">
+        <span class=""><span data-tz-utc="2025-07-02T23:00:00-07:00" data-tz-format="L" class="js-tz-aware" title="America/Los_Angeles -07:00">07/02/2025</span></span>
+        
+        <div class="js-delivery-option">
+            TBD
+        </div>
+    </td>
+    <td class="text-right">
+        <span class="js-days-to-due-date"> 2 </span>
+    </td>
+    <td>
+    </td>
+</tr>
+<tr id="jobStatusListRow_50938" class="js-jobstatus-row" data-jobnumber="50938">
+    <td>
+        <a href="https://intranet.decopress.com/Jobs/job.aspx?ID=50938" target="_blank">50938</a>
+    </td>
+    <td>Canary LLC<div class="jobtag-container js-jobtag-container tag-container js-tag-container" data-id="50938" data-tag-type="JOB"><ul><li>
+    <span class="jobtag tag showtag " data-tag="supacolor job# 540712" data-tag-code="" data-when-entered-utc="2025-06-24T19:19:01.773+00:00" data-tooltip="from @karencu at [whenentered]">
+        <span class="tag-text">supacolor job# 540712</span>
+                <a class="far fa-times ew-datatag-remove js-datatag-remove" aria-hidden="true"></a>
+    </span>
+</li>
+<li class="hidden js-tag-pending"><i class="far fa-circle-notch fa-spin opacity-20"></i></li>
+<li>
+    <span class="jobtag tag addtag">
+        <a class="far fa-plus js-datatag-add hot" aria-hidden="true"></a>
+    </span>
+</li>
+</ul></div></td>
+    <td>
+        PRESIDENT'S CLUB 2025 - MARINE LAYER
+        <div class="ew-badge-container process-codes">
+            <div class="ew-badge static" style="" data-code="Bagging" data-id="50938_badge_Bagging" data-jobnumber="50938" data-suggestedmachineid="0"><div class="process-code-badge " style="background-color: #0D40D9; color: #FFFFFF; font-weight:normal;">Bagging</div><div class="process-qty">181</div></div>
+            <div class="ew-badge static" style="" data-code="Misc" data-id="50938_badge_Misc" data-jobnumber="50938" data-suggestedmachineid="0"><div class="process-code-badge " style="background-color: #B4B4B4; color: #FFFFFF; font-weight:normal;">Misc</div><div class="process-qty">90</div></div>
+            <div class="ew-badge static" style="" data-code="SC" data-id="50938_badge_SC" data-jobnumber="50938" data-suggestedmachineid="0"><div class="process-code-badge " style="background-color: #2b86f9; color: #FFFFFF; font-weight:normal;">SC</div><div class="process-qty">180</div></div>
+        </div>
+    </td>
+
+    <td class="js-jobstatus-container">
+        <div class="cw--job-list-job-status-line">
+            <span class="cw--master-status-pill jobstatus_5">Approved</span> - <span class="cw--stock-status-pill stockstatus_1">Partial Stock</span>
+        </div>
+    </td>
+    <td>5396318</td>
+    <td class="text-center">
+        <span data-tz-utc="2025-06-09T13:48:27-07:00" data-tz-format="L" class="js-tz-aware" title="America/Los_Angeles -07:00">06/09/2025</span>
+    </td>
+    <td class="text-center">
+        <span class=""><span data-tz-utc="2025-07-02T16:00:00-07:00" data-tz-format="L" class="js-tz-aware" title="America/Los_Angeles -07:00">07/02/2025</span></span>
+        
+        <div class="js-delivery-option">
+            TBD
+        </div>
+    </td>
+    <td class="text-right">
+        <span class="js-days-to-due-date"> 2 </span>
+    </td>
+    <td>
+    </td>
+</tr>
+<tr id="jobStatusListRow_50940" class="js-jobstatus-row" data-jobnumber="50940">
+    <td>
+        <a href="https://intranet.decopress.com/Jobs/job.aspx?ID=50940" target="_blank">50940</a>
+    </td>
+    <td>Canary LLC<div class="jobtag-container js-jobtag-container tag-container js-tag-container" data-id="50940" data-tag-type="JOB"><ul><li>
+    <span class="jobtag tag showtag " data-tag="tracking 1z20800a0333041155, 1z8118920339728577" data-tag-code="" data-when-entered-utc="2025-06-13T17:04:39.99+00:00" data-tooltip="from @aleg at [whenentered]">
+        <span class="tag-text">tracking 1z20800a0333041155, 1z8118920339728577</span>
+                <a class="far fa-times ew-datatag-remove js-datatag-remove" aria-hidden="true"></a>
+    </span>
+</li>
+<li>
+    <span class="jobtag tag showtag " data-tag="supacolor job# 540712" data-tag-code="" data-when-entered-utc="2025-06-24T19:18:36.773+00:00" data-tooltip="from @karencu at [whenentered]">
+        <span class="tag-text">supacolor job# 540712</span>
+                <a class="far fa-times ew-datatag-remove js-datatag-remove" aria-hidden="true"></a>
+    </span>
+</li>
+<li>
+    <span class="jobtag tag showtag " data-tag="supacolor:dispatched" data-tag-code="EXTERNAL_SUPPLIER_ORDER" data-when-entered-utc="2025-06-25T00:32:07.213+00:00" data-tooltip="[whenentered]">
+        <span class="tag-text">supacolor:dispatched</span>
+    </span>
+</li>
+<li class="hidden js-tag-pending"><i class="far fa-circle-notch fa-spin opacity-20"></i></li>
+<li>
+    <span class="jobtag tag addtag">
+        <a class="far fa-plus js-datatag-add hot" aria-hidden="true"></a>
+    </span>
+</li>
+</ul></div></td>
+    <td>
+        PRESIDENT'S CLUB 2025 - NORTH FACE ZIPS
+        <div class="ew-badge-container process-codes">
+            <div class="ew-badge static" style="" data-code="Bagging" data-id="50940_badge_Bagging" data-jobnumber="50940" data-suggestedmachineid="0"><div class="process-code-badge " style="background-color: #0D40D9; color: #FFFFFF; font-weight:normal;">Bagging</div><div class="process-qty">427</div></div>
+            <div class="ew-badge static" style="" data-code="Misc" data-id="50940_badge_Misc" data-jobnumber="50940" data-suggestedmachineid="0"><div class="process-code-badge " style="background-color: #B4B4B4; color: #FFFFFF; font-weight:normal;">Misc</div><div class="process-qty">213</div></div>
+            <div class="ew-badge static" style="" data-code="SC" data-id="50940_badge_SC" data-jobnumber="50940" data-suggestedmachineid="0"><div class="process-code-badge " style="background-color: #2b86f9; color: #FFFFFF; font-weight:normal;">SC</div><div class="process-qty">426</div></div>
+        </div>
+    </td>
+
+    <td class="js-jobstatus-container">
+        <div class="cw--job-list-job-status-line">
+            <span class="cw--master-status-pill jobstatus_5">Approved</span> - <span class="cw--stock-status-pill stockstatus_0">No Stock</span>
+        </div>
+    </td>
+    <td>5396318</td>
+    <td class="text-center">
+        <span data-tz-utc="2025-06-09T14:25:05-07:00" data-tz-format="L" class="js-tz-aware" title="America/Los_Angeles -07:00">06/09/2025</span>
+    </td>
+    <td class="text-center">
+        <span class=""><span data-tz-utc="2025-07-02T16:00:00-07:00" data-tz-format="L" class="js-tz-aware" title="America/Los_Angeles -07:00">07/02/2025</span></span>
+        
+        <div class="js-delivery-option">
+            TBD
+        </div>
+    </td>
+    <td class="text-right">
+        <span class="js-days-to-due-date"> 2 </span>
+    </td>
+    <td>
+    </td>
+</tr>
+<tr id="jobStatusListRow_50943" class="js-jobstatus-row" data-jobnumber="50943">
+    <td>
+        <a href="https://intranet.decopress.com/Jobs/job.aspx?ID=50943" target="_blank">50943</a>
+    </td>
+    <td>Canary LLC<div class="jobtag-container js-jobtag-container tag-container js-tag-container" data-id="50943" data-tag-type="JOB"><ul><li>
+    <span class="jobtag tag showtag " data-tag="tracking 1z6a91y10315844228, 288700977524" data-tag-code="" data-when-entered-utc="2025-06-13T17:05:06.71+00:00" data-tooltip="from @aleg at [whenentered]">
+        <span class="tag-text">tracking 1z6a91y10315844228, 288700977524</span>
+                <a class="far fa-times ew-datatag-remove js-datatag-remove" aria-hidden="true"></a>
+    </span>
+</li>
+<li>
+    <span class="jobtag tag showtag " data-tag="supacolor job# 540702" data-tag-code="" data-when-entered-utc="2025-06-24T19:00:31.947+00:00" data-tooltip="from @karencu at [whenentered]">
+        <span class="tag-text">supacolor job# 540702</span>
+                <a class="far fa-times ew-datatag-remove js-datatag-remove" aria-hidden="true"></a>
+    </span>
+</li>
+<li>
+    <span class="jobtag tag showtag " data-tag="supacolor:dispatched" data-tag-code="EXTERNAL_SUPPLIER_ORDER" data-when-entered-utc="2025-06-24T23:29:40.917+00:00" data-tooltip="[whenentered]">
+        <span class="tag-text">supacolor:dispatched</span>
+    </span>
+</li>
+<li class="hidden js-tag-pending"><i class="far fa-circle-notch fa-spin opacity-20"></i></li>
+<li>
+    <span class="jobtag tag addtag">
+        <a class="far fa-plus js-datatag-add hot" aria-hidden="true"></a>
+    </span>
+</li>
+</ul></div></td>
+    <td>
+        PRESIDENT'S CLUB 2025 - CAPS
+        <div class="ew-badge-container process-codes">
+            <div class="ew-badge static" style="" data-code="Bagging" data-id="50943_badge_Bagging" data-jobnumber="50943" data-suggestedmachineid="0"><div class="process-code-badge " style="background-color: #0D40D9; color: #FFFFFF; font-weight:normal;">Bagging</div><div class="process-qty">137</div></div>
+            <div class="ew-badge static" style="" data-code="Misc" data-id="50943_badge_Misc" data-jobnumber="50943" data-suggestedmachineid="0"><div class="process-code-badge " style="background-color: #B4B4B4; color: #FFFFFF; font-weight:normal;">Misc</div><div class="process-qty">68</div></div>
+            <div class="ew-badge static" style="" data-code="SC" data-id="50943_badge_SC" data-jobnumber="50943" data-suggestedmachineid="0"><div class="process-code-badge " style="background-color: #2b86f9; color: #FFFFFF; font-weight:normal;">SC</div><div class="process-qty">68</div></div>
+        </div>
+    </td>
+
+    <td class="js-jobstatus-container">
+        <div class="cw--job-list-job-status-line">
+            <span class="cw--master-status-pill jobstatus_5">Approved</span> - <span class="cw--stock-status-pill stockstatus_0">No Stock</span>
+        </div>
+    </td>
+    <td>5396318</td>
+    <td class="text-center">
+        <span data-tz-utc="2025-06-09T15:06:09-07:00" data-tz-format="L" class="js-tz-aware" title="America/Los_Angeles -07:00">06/09/2025</span>
+    </td>
+    <td class="text-center">
+        <span class=""><span data-tz-utc="2025-07-02T16:00:00-07:00" data-tz-format="L" class="js-tz-aware" title="America/Los_Angeles -07:00">07/02/2025</span></span>
+        
+        <div class="js-delivery-option">
+            TBD
+        </div>
+    </td>
+    <td class="text-right">
+        <span class="js-days-to-due-date"> 2 </span>
+    </td>
+    <td>
+    </td>
+</tr>
+<tr id="jobStatusListRow_50948" class="js-jobstatus-row" data-jobnumber="50948">
+    <td>
+        <a href="https://intranet.decopress.com/Jobs/job.aspx?ID=50948" target="_blank">50948</a>
+    </td>
+    <td>Canary LLC<div class="jobtag-container js-jobtag-container tag-container js-tag-container" data-id="50948" data-tag-type="JOB"><ul><li>
+    <span class="jobtag tag showtag " data-tag="supacolor job# 540712" data-tag-code="" data-when-entered-utc="2025-06-24T19:18:48.32+00:00" data-tooltip="from @karencu at [whenentered]">
+        <span class="tag-text">supacolor job# 540712</span>
+                <a class="far fa-times ew-datatag-remove js-datatag-remove" aria-hidden="true"></a>
+    </span>
+</li>
+<li class="hidden js-tag-pending"><i class="far fa-circle-notch fa-spin opacity-20"></i></li>
+<li>
+    <span class="jobtag tag addtag">
+        <a class="far fa-plus js-datatag-add hot" aria-hidden="true"></a>
+    </span>
+</li>
+</ul></div></td>
+    <td>
+        PRESIDENT'S CLUB 2025 - POLOS
+        <div class="ew-badge-container process-codes">
+            <div class="ew-badge static" style="" data-code="Bagging" data-id="50948_badge_Bagging" data-jobnumber="50948" data-suggestedmachineid="0"><div class="process-code-badge " style="background-color: #0D40D9; color: #FFFFFF; font-weight:normal;">Bagging</div><div class="process-qty">117</div></div>
+            <div class="ew-badge static" style="" data-code="Misc" data-id="50948_badge_Misc" data-jobnumber="50948" data-suggestedmachineid="0"><div class="process-code-badge " style="background-color: #B4B4B4; color: #FFFFFF; font-weight:normal;">Misc</div><div class="process-qty">58</div></div>
+            <div class="ew-badge static" style="" data-code="SC" data-id="50948_badge_SC" data-jobnumber="50948" data-suggestedmachineid="0"><div class="process-code-badge " style="background-color: #2b86f9; color: #FFFFFF; font-weight:normal;">SC</div><div class="process-qty">116</div></div>
+        </div>
+    </td>
+
+    <td class="js-jobstatus-container">
+        <div class="cw--job-list-job-status-line">
+            <span class="cw--master-status-pill jobstatus_5">Approved</span> - <span class="cw--stock-status-pill stockstatus_0">No Stock</span>
+        </div>
+    </td>
+    <td>5396318</td>
+    <td class="text-center">
+        <span data-tz-utc="2025-06-09T21:45:06-07:00" data-tz-format="L" class="js-tz-aware" title="America/Los_Angeles -07:00">06/09/2025</span>
+    </td>
+    <td class="text-center">
+        <span class=""><span data-tz-utc="2025-07-02T16:00:00-07:00" data-tz-format="L" class="js-tz-aware" title="America/Los_Angeles -07:00">07/02/2025</span></span>
+        
+        <div class="js-delivery-option">
+            TBD
+        </div>
+    </td>
+    <td class="text-right">
+        <span class="js-days-to-due-date"> 2 </span>
+    </td>
+    <td>
+    </td>
+</tr>
+<tr id="jobStatusListRow_50966" class="js-jobstatus-row" data-jobnumber="50966">
+    <td>
+        <a href="https://intranet.decopress.com/Jobs/job.aspx?ID=50966" target="_blank">50966</a>
+    </td>
+    <td>BAMKO, LLC<div class="jobtag-container js-jobtag-container tag-container js-tag-container" data-id="50966" data-tag-type="JOB"><ul><li>
+    <span class="jobtag tag showtag " data-tag="emb files ready" data-tag-code="" data-when-entered-utc="2025-06-24T23:13:10.74+00:00" data-tooltip="from @alfiec at [whenentered]">
+        <span class="tag-text">emb files ready</span>
+                <a class="far fa-times ew-datatag-remove js-datatag-remove" aria-hidden="true"></a>
+    </span>
+</li>
+<li>
+    <span class="jobtag tag showtag " data-tag="sample not done yet" data-tag-code="" data-when-entered-utc="2025-06-25T20:17:50.99+00:00" data-tooltip="from @shay at [whenentered]">
+        <span class="tag-text">sample not done yet</span>
+                <a class="far fa-times ew-datatag-remove js-datatag-remove" aria-hidden="true"></a>
+    </span>
+</li>
+<li>
+    <span class="jobtag tag showtag " data-tag="supacolor:sample dispatched" data-tag-code="EXTERNAL_SUPPLIER_ORDER_SUPACO" data-when-entered-utc="2025-06-25T23:53:34.323+00:00" data-tooltip="[whenentered]">
+        <span class="tag-text">supacolor:sample dispatched</span>
+    </span>
+</li>
+<li>
+    <span class="jobtag tag showtag " data-tag="gamma" data-tag-code="" data-when-entered-utc="2025-06-26T18:10:48.47+00:00" data-tooltip="from @juliol at [whenentered]">
+        <span class="tag-text">gamma</span>
+                <a class="far fa-times ew-datatag-remove js-datatag-remove" aria-hidden="true"></a>
+    </span>
+</li>
+<li class="hidden js-tag-pending"><i class="far fa-circle-notch fa-spin opacity-20"></i></li>
+<li>
+    <span class="jobtag tag addtag">
+        <a class="far fa-plus js-datatag-add hot" aria-hidden="true"></a>
+    </span>
+</li>
+</ul></div></td>
+    <td>
+        ROCKET LAB BACKPACK &amp; TOTE - SAMPLE 
+        <div class="ew-badge-container process-codes">
+            <div class="ew-badge static" style="" data-code="AP" data-id="50966_badge_AP" data-jobnumber="50966" data-suggestedmachineid="0"><div class="process-code-badge " style="background-color: #ccc0da; color: #FFFFFF; font-weight:normal;">AP</div><div class="process-qty">2</div></div>
+            <div class="ew-badge static" style="" data-code="EM" data-id="50966_badge_EM" data-jobnumber="50966" data-suggestedmachineid="0"><div class="process-code-badge " style="background-color: #9aad6c; color: #FFFFFF; font-weight:normal;">EM</div><div class="process-qty">1</div></div>
+            <div class="ew-badge static" style="" data-code="Misc" data-id="50966_badge_Misc" data-jobnumber="50966" data-suggestedmachineid="0"><div class="process-code-badge " style="background-color: #B4B4B4; color: #FFFFFF; font-weight:normal;">Misc</div><div class="process-qty">2</div></div>
+            <div class="ew-badge static" style="" data-code="SC" data-id="50966_badge_SC" data-jobnumber="50966" data-suggestedmachineid="0"><div class="process-code-badge " style="background-color: #2b86f9; color: #FFFFFF; font-weight:normal;">SC</div><div class="process-qty">2</div></div>
+            <div class="ew-badge static" style="" data-code="SW" data-id="50966_badge_SW" data-jobnumber="50966" data-suggestedmachineid="0"><div class="process-code-badge " style="background-color: #9DCF30; color: #FFFFFF; font-weight:normal;">SW</div><div class="process-qty">2</div></div>
+        </div>
+    </td>
+
+    <td class="js-jobstatus-container">
+        <div class="cw--job-list-job-status-line">
+            <span class="cw--master-status-pill jobstatus_5">Approved</span> - <span class="cw--stock-status-pill stockstatus_2">Stock Complete</span>
+        </div>
+    </td>
+    <td>SPO281895L</td>
+    <td class="text-center">
+        <span data-tz-utc="2025-06-10T16:39:11-07:00" data-tz-format="L" class="js-tz-aware" title="America/Los_Angeles -07:00">06/10/2025</span>
+    </td>
+    <td class="text-center">
+        <span class=""><span data-tz-utc="2025-07-02T14:00:00-07:00" data-tz-format="L" class="js-tz-aware" title="America/Los_Angeles -07:00">07/02/2025</span></span>
+        
+        <div class="js-delivery-option">
+            GND
+        </div>
+    </td>
+    <td class="text-right">
+        <span class="js-days-to-due-date"> 2 </span>
+        <br>
+        <a href="#" class="js-schedule-it schedule-link" data-jobnumber="50966" data-datedue-utc="2025-07-02T21:00:00+00:00" data-datedue="07/02/2025" data-toggle="popover" data-placement="left">Schedule</a>
+        <div class="job-location-codes"></div>
+    </td>
+    <td>
+        <button class="print-labels-btn btn btn-link fal fa-print" title="Print Labels"></button>
+    </td>
+</tr>
+</tbody>
+					<tfoot>
+					</tfoot>
+				</table>
+				
+					<div class="page-load-status overlay">
+						<div class="loader-ellips infinite-scroll-request">
+							<span class="loader-ellips__dot"></span>
+							<span class="loader-ellips__dot"></span>
+							<span class="loader-ellips__dot"></span>
+							<span class="loader-ellips__dot"></span>
+						</div>
+						<p class="infinite-scroll-last"></p>
+						<p class="infinite-scroll-error"></p>
+					</div>
+				
+			</div>
+		</div>
+
+		
+            </div>
+        </div>
+    </div>
+
+    <!-- userData Render -->
+<script type="text/javascript">
+var userData = new Object({"ProfilePictures":{"ProfileFull":"","Profile250":"","Profile150":"","Profile50":"","Profile25":""},"AppConfig":{"EnableProfilePics":true},"UnreadNotifications":0,"Source":"Lookup","Guid":"8f2d089b-10df-4cff-895e-403fcc904f16","AddTagPermissions":["asset","inwards","job","quote"],"RemoveTagPermissions":["asset","inwards","job","quote"],"TagName":"@laser","UserRelatedTagCounts":[{"value":"0","Value":"0","label":"ASSET","Text":"ASSET","Selected":false},{"value":"0","Value":"0","label":"INWARDS","Text":"INWARDS","Selected":false},{"value":"8","Value":"8","label":"JOB","Text":"JOB","Selected":false},{"value":"0","Value":"0","label":"QUOTE","Text":"QUOTE","Selected":false},{"value":"0","Value":"0","label":"STOCK","Text":"STOCK","Selected":false}],"UserTheme":"standard","Name":{"FirstName":"","LastName":"","FirstNamePossessive":"","FullNamePossessive":"","FullName":"","Initials":""},"LatestNotification":null})
+</script>
+<!-- /userData Render -->
+<!-- Script Files Render -->
+<script src="../bundles/common/js/footer?v=1.0.20250624.023235"></script>
+<script src="../signalr/hubs?v=1.0.20250624.023235"></script>
+<!-- /Script Files Render -->
+
+    
+
+	<!--================================-->
+	<!--Scheduler Functionality-->
+	
+
+		<!-- Modal -->
+		<div id="myModal" class="modal" role="dialog">
+			<div class="modal-dialog">
+			<!-- Modal content-->
+			<div class="modal-content">
+			</div>
+			</div>
+		</div>
+
+		<div id="worksheetModal" class="modal worksheet-modal" role="dialog">
+			<div class="modal-dialog modal-lg" style="height:95%;">
+			<!-- Modal content-->
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title">Worksheet</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+				</div>
+				<iframe id="worksheetContainer"></iframe>
+			</div>
+			</div>
+		</div>
+
+	
+	<!--================================-->
+
+	<!--================================-->
+	<!--SetDueDate-->
+	
+	<!--================================-->
+
+	<!-- pageData Render -->
+<script type="text/javascript">
+var pageData = new Object({"UserG":"8f2d089b-10df-4cff-895e-403fcc904f16","DefaultCriteria":"{\"text-filter\":\"\",\"location\":\"-1\",\"job-status-codes\":\"approved,ontime,runninglate,problem\",\"sort-by\":\"\",\"sort-direction\":\"\",\"job-status\":\"5,6,7,8\",\"due-date\":\"1,2,3\",\"stock-status\":\"0,1,2\",\"process-filter\":\"HW,AP,TC,MP,PR,NA,CR,DS,ES,PP,PA,EM,SW,SC,DF,Misc,Sewing,Dispatch,Stock,Bagging\",\"machine-filter\":\"US,1,2,4,8,16,32,64,128,256,512,1024,2048,4096,8192,16384\"}","CriteriaLocked":false,"UserIsScheduler":true,"CanSuggestMachines":false,"ToggleRights":"16","CanChangeDates":false,"InwardsEnabled":true,"ProcessFilterButtons":[{"Value":"HW","Text":"HW S","Selected":false,"Aux1":"1","Aux2":"","Aux3":"","Aux4":"","Enabled":true,"ClassName":""},{"Value":"AP","Text":"AP S","Selected":false,"Aux1":"2","Aux2":"","Aux3":"","Aux4":"","Enabled":true,"ClassName":""},{"Value":"TC","Text":"TC S","Selected":false,"Aux1":"4","Aux2":"","Aux3":"","Aux4":"","Enabled":true,"ClassName":""},{"Value":"MP","Text":"MP S","Selected":false,"Aux1":"32","Aux2":"","Aux3":"","Aux4":"","Enabled":true,"ClassName":""},{"Value":"PR","Text":"PR S","Selected":false,"Aux1":"64","Aux2":"","Aux3":"","Aux4":"","Enabled":true,"ClassName":""},{"Value":"NA","Text":"NA S","Selected":false,"Aux1":"8388608","Aux2":"","Aux3":"","Aux4":"","Enabled":true,"ClassName":""},{"Value":"CR","Text":"CR","Selected":false,"Aux1":"16777216","Aux2":"","Aux3":"","Aux4":"","Enabled":true,"ClassName":""},{"Value":"DS","Text":"DS S","Selected":false,"Aux1":"131072","Aux2":"","Aux3":"","Aux4":"","Enabled":true,"ClassName":""},{"Value":"ES","Text":"ES S","Selected":false,"Aux1":"512","Aux2":"","Aux3":"","Aux4":"","Enabled":true,"ClassName":""},{"Value":"PP","Text":"PP S","Selected":false,"Aux1":"256","Aux2":"","Aux3":"","Aux4":"","Enabled":true,"ClassName":""},{"Value":"PA","Text":"PA","Selected":false,"Aux1":"128","Aux2":"","Aux3":"","Aux4":"","Enabled":true,"ClassName":""},{"Value":"EM","Text":"EM","Selected":false,"Aux1":"2048","Aux2":"","Aux3":"","Aux4":"","Enabled":true,"ClassName":""},{"Value":"SW","Text":"SW","Selected":false,"Aux1":"8192","Aux2":"","Aux3":"","Aux4":"","Enabled":true,"ClassName":""},{"Value":"SC","Text":"SC","Selected":false,"Aux1":"16384","Aux2":"","Aux3":"","Aux4":"","Enabled":true,"ClassName":""},{"Value":"DF","Text":"DF","Selected":false,"Aux1":"65536","Aux2":"","Aux3":"","Aux4":"","Enabled":true,"ClassName":""},{"Value":"Misc","Text":"MISC","Selected":false,"Aux1":"262144","Aux2":"","Aux3":"","Aux4":"","Enabled":true,"ClassName":""},{"Value":"Sewing","Text":"SEW","Selected":false,"Aux1":"524288","Aux2":"","Aux3":"","Aux4":"","Enabled":true,"ClassName":""},{"Value":"Dispatch","Text":"DISP","Selected":false,"Aux1":"1048576","Aux2":"","Aux3":"","Aux4":"","Enabled":true,"ClassName":""},{"Value":"Stock","Text":"STOCK","Selected":false,"Aux1":"2097152","Aux2":"","Aux3":"","Aux4":"","Enabled":true,"ClassName":""},{"Value":"Bagging","Text":"BAG","Selected":false,"Aux1":"4194304","Aux2":"","Aux3":"","Aux4":"","Enabled":true,"ClassName":""}],"ListMode":"PAGED","DefaultTheme":"standard","TawkEnabled":false,"SecureJobLink":"https://intranet.decopress.com/Jobs/job.aspx?ID={0}","EnableUserFavourites":true,"CanPrintJobLineLabels":true,"JobStatusFilters":[{"Label":"Entered","Statuses":[1,17],"StatusCsv":"1,17","ValuesCsv":"1,17","Rank":20,"Enabled":false,"Code":"entered","DisplayBadgeCount":true,"DisplayInControlDashboard":false},{"Label":"Sent to Proof","Statuses":[2],"StatusCsv":"2","ValuesCsv":"2","Rank":40,"Enabled":true,"Code":"awaitingproof","DisplayBadgeCount":true,"DisplayInControlDashboard":true},{"Label":"Change Req","Statuses":[18],"StatusCsv":"18","ValuesCsv":"18","Rank":60,"Enabled":true,"Code":"changerequested","DisplayBadgeCount":true,"DisplayInControlDashboard":true},{"Label":"Proofed","Statuses":[3,4,11],"StatusCsv":"3,4,11","ValuesCsv":"3,4,11","Rank":80,"Enabled":true,"Code":"proofed","DisplayBadgeCount":true,"DisplayInControlDashboard":true},{"Label":"Approved","Statuses":[5],"StatusCsv":"5","ValuesCsv":"5","Rank":100,"Enabled":true,"Code":"approved","DisplayBadgeCount":true,"DisplayInControlDashboard":true},{"Label":"On Time","Statuses":[6],"StatusCsv":"6","ValuesCsv":"6","Rank":120,"Enabled":true,"Code":"ontime","DisplayBadgeCount":true,"DisplayInControlDashboard":true},{"Label":"Running Late","Statuses":[7],"StatusCsv":"7","ValuesCsv":"7","Rank":140,"Enabled":true,"Code":"runninglate","DisplayBadgeCount":true,"DisplayInControlDashboard":true},{"Label":"Problem","Statuses":[8],"StatusCsv":"8","ValuesCsv":"8","Rank":160,"Enabled":true,"Code":"problem","DisplayBadgeCount":true,"DisplayInControlDashboard":true},{"Label":"Completed","Statuses":[9],"StatusCsv":"9","ValuesCsv":"9","Rank":180,"Enabled":true,"Code":"completed","DisplayBadgeCount":true,"DisplayInControlDashboard":true},{"Label":"Dispatched","Statuses":[10],"StatusCsv":"10","ValuesCsv":"10","Rank":200,"Enabled":true,"Code":"dispatched","DisplayBadgeCount":true,"DisplayInControlDashboard":true},{"Label":"Return","Statuses":[13],"StatusCsv":"13","ValuesCsv":"13","Rank":220,"Enabled":false,"Code":"return","DisplayBadgeCount":true,"DisplayInControlDashboard":false},{"Label":"Closed","Statuses":[12],"StatusCsv":"12","ValuesCsv":"12","Rank":240,"Enabled":true,"Code":"closed","DisplayBadgeCount":true,"DisplayInControlDashboard":false}],"StockFilters":{"Meta":{},"FromCache":false,"Item":{"Filters":[{"Label":"All","Values":["ALL"],"ValuesCsv":"ALL","Rank":0,"Enabled":true,"Code":"ALL","DisplayBadgeCount":false},{"Label":"None","Values":["0"],"ValuesCsv":"0","Rank":10,"Enabled":true,"Code":"NOSTOCK","DisplayBadgeCount":false},{"Label":"Partial","Values":["1"],"ValuesCsv":"1","Rank":20,"Enabled":true,"Code":"PARTIALSTOCK","DisplayBadgeCount":false},{"Label":"Complete","Values":["2"],"ValuesCsv":"2","Rank":30,"Enabled":true,"Code":"STOCKCOMPLETE","DisplayBadgeCount":false}]},"Key":"JobStatusListStockFilters_0_0"},"DueDateFilters":{"Meta":{},"FromCache":false,"Item":{"Filters":[{"Label":"All","Values":["0"],"ValuesCsv":"0","Rank":0,"Enabled":true,"Code":"ALL","DisplayBadgeCount":false},{"Label":"Late","Values":["1"],"ValuesCsv":"1","Rank":10,"Enabled":true,"Code":"LATE","DisplayBadgeCount":false},{"Label":"Today","Values":["2"],"ValuesCsv":"2","Rank":20,"Enabled":true,"Code":"TODAY","DisplayBadgeCount":false},{"Label":"Tomorrow","Values":["3"],"ValuesCsv":"3","Rank":30,"Enabled":true,"Code":"TOMORROW","DisplayBadgeCount":false}]},"Key":"JobStatusListDueDateFilters_0_0"},"UserFavourites":[{"Label":"EMB PATCHES","Rank":10,"Id":"55ba0be9-6c4b-4951-9de0-3c1e7244eb02","Criteria":{"text-filter":"","location":"-1","job-status-codes":"approved,ontime,completed,dispatched","job-status":"2,18,3,4,11,5,6,7,8,9,10,12","tagged-only":"1","stock-status":"0,1,2","process-filter":"EM","machine-filter":"US,1,2,4,8,16,32,64,128,256,512,1024,2048","due-date":"1,2,3"}},{"Label":"ETCHING ORDERS","Rank":20,"Id":"a59a309b-13c1-4e0c-b032-7a6150274bda","Criteria":{"text-filter":"ETCHING","location":"-1","job-status-codes":"approved,ontime,completed,dispatched","job-status":"2,18,3,4,11,5,6,7,8,9,10,12","tagged-only":"1","stock-status":"0,1,2","process-filter":"HW,AP,TC,MP,PR,DS,ES,PP,PA,EM,SC,DF,Misc,Sewing,Dispatch,Stock,Bagging","machine-filter":"US,1,2,4,8,16,32,64,128,256,512,1024,2048","due-date":"1,2,3"}},{"Label":"ALL TAGGED ORDERS","Rank":50,"Id":"6659d7ba-2cda-4a63-8af0-81fae3e4ecff","Criteria":{"text-filter":"","location":"-1","job-status-codes":"approved,ontime,completed,dispatched","job-status":"2,18,3,4,11,5,6,7,8,9,10,12","tagged-only":"1","stock-status":"0,1,2","process-filter":"HW,AP,TC,MP,PR,DS,ES,PP,PA,EM,SC,DF,Misc,Sewing,Dispatch,Stock,Bagging","machine-filter":"US,1,2,4,8,16,32,64,128,256,512,1024,2048","due-date":"1,2,3"}},{"Label":"@laser","Rank":60,"Id":"adeb04f1-5a73-477c-bf73-ab614a809058","Criteria":{"text-filter":"@laser","location":"-1","job-status-codes":"approved,ontime,runninglate,problem","job-status":"2,18,3,4,11,5,6,7,8,9,10,12","tagged-only":"1","stock-status":"0,1,2","process-filter":"HW,AP,TC,MP,PR,NA,CR,DS,ES,PP,PA,EM,SC,DF,Misc,Sewing,Dispatch,Stock,Bagging","machine-filter":"US,1,2,4,8,16,32,64,128,256,512,1024,2048","due-date":"1,2,3"}},{"Label":"FILL INS","Rank":90,"Id":"0f5ecbf3-db67-4d0d-87cf-81d92aa76e24","Criteria":{"text-filter":"fill ins","location":"-1","job-status-codes":"approved,ontime,runninglate,problem","job-status":"5,6,7,8","stock-status":"0,1,2","process-filter":"HW,AP,TC,MP,PR,NA,CR,DS,ES,PP,PA,EM,SC,DF,Misc,Sewing,Dispatch,Stock,Bagging","due-date":"1,2,3"}},{"Label":"RFP","Rank":110,"Id":"b3c16a45-e3b0-4238-8fb8-34e423106867","Criteria":{"text-filter":"RFP","location":"-1","job-status-codes":"approved,ontime,runninglate,problem","job-status":"5,6,7,8","due-date":"1,2,3","stock-status":"0,1,2","process-filter":"HW,AP,TC,MP,PR,NA,CR,DS,PP,PA,DF"}},{"Label":"@printer","Rank":130,"Id":"d1b78cdf-e018-4e99-b589-980021569aed","Criteria":{"text-filter":"@printer","location":"-1","job-status-codes":"approved,ontime,runninglate,problem","sort-by":"","sort-direction":"","job-status":"5,6,7,8","due-date":"1,2,3","stock-status":"0,1,2","process-filter":"HW,AP,TC,MP,PR,NA,CR,DS,PP,PA,DF"}},{"Label":"@sub","Rank":140,"Id":"84759318-771a-428e-9042-c6fdac0836b7","Criteria":{"text-filter":"@sub","location":"-1","job-status-codes":"approved,ontime,runninglate,problem","sort-by":"","sort-direction":"","job-status":"5,6,7,8","due-date":"1,2,3","stock-status":"0,1,2","process-filter":"HW,AP,TC,MP,PR,NA,CR,DS,PP,PA,DF","machine-filter":"US,1,2,4,8,16,32,64,128,256,512,1024,2048,4096,8192,16384"}},{"Label":"PATCH SUPPLY -PS - GAMMA","Rank":150,"Id":"6699e45c-7880-4fb2-9c60-ac8a6ad19de1","Criteria":{"text-filter":"-ps -gamma","location":"-1","job-status-codes":"approved,ontime,runninglate,problem","sort-by":"","sort-direction":"","job-status":"5,6,7,8","due-date":"1,2,3","stock-status":"0,1,2","process-filter":"HW,AP,TC,MP,PR,NA,CR,DS,PP,PA,DF"}},{"Label":"QC","Rank":160,"Id":"3b3a9dfe-6748-4169-9583-24fd86c40d43","Criteria":{"text-filter":"QC","location":"-1","job-status-codes":"approved,ontime,runninglate,problem","sort-by":"","sort-direction":"","job-status":"5,6,7,8","due-date":"1,2,3","stock-status":"0,1,2","process-filter":"HW,AP,TC,MP,PR,NA,CR,DS,PP,PA,DF"}},{"Label":"rts","Rank":170,"Id":"f826343b-6964-42b0-83d5-6052991f6ccd","Criteria":{"text-filter":"rts","location":"-1","job-status-codes":"approved,ontime,runninglate,problem","sort-by":"","sort-direction":"","job-status":"5,6,7,8","due-date":"1,2,3","stock-status":"0,1,2","process-filter":"HW,AP,TC,MP,PR,NA,CR,DS,PP,PA,DF","machine-filter":"US,1,2,4,8,16,32,64,128,256,512,1024,2048,4096,8192,16384"}}],"ActiveTour":null,"UserHasCompletedTour":false,"LocationFilters":{"Meta":{},"FromCache":false,"Item":{"Filters":[{"Label":"All","Values":["ALL"],"ValuesCsv":"ALL","Rank":-20,"Enabled":true,"Code":"ALL","DisplayBadgeCount":false},{"Label":"None","Values":["0"],"ValuesCsv":"0","Rank":-10,"Enabled":true,"Code":"NOT_SET","DisplayBadgeCount":false},{"Label":"Decopress","Values":["100"],"ValuesCsv":"100","Rank":0,"Enabled":true,"Code":"DP","DisplayBadgeCount":false}]},"Key":"GetLocationFilters_False_True_True_True_"},"StatusSortDef":"status,stockstatus","ClickGangNumberToOpenMondayEnabled":false,"CanAddTags":true,"CanRemoveTags":true,"DefaultTags":{"JOB":[{"TagType":2,"Active":true,"Tag":"@ivanm needs sample"},{"TagType":2,"Active":true,"Tag":"@tammyr proof please"},{"TagType":2,"Active":true,"Tag":"inproduction"},{"TagType":2,"Active":true,"Tag":"setupproduction"},{"TagType":2,"Active":true,"Tag":"withshipping"}]},"UserRelatedTagCounts":[{"value":"0","Value":"0","label":"ASSET","Text":"ASSET","Selected":false},{"value":"0","Value":"0","label":"INWARDS","Text":"INWARDS","Selected":false},{"value":"8","Value":"8","label":"JOB","Text":"JOB","Selected":false},{"value":"0","Value":"0","label":"QUOTE","Text":"QUOTE","Selected":false},{"value":"0","Value":"0","label":"STOCK","Text":"STOCK","Selected":false}],"UserTagName":"@laser","GroupName":"JOB","TaggedOnly":false,"MyJobsOnly":false,"Machines":[{"BitVal":1,"JobTypes":["EM","ES"],"MachineId":1,"MachineCode":"E1","Code":"E1","Description":"E1"},{"BitVal":2,"JobTypes":["EM","ES"],"MachineId":2,"MachineCode":"E2","Code":"E2","Description":"E2"},{"BitVal":4,"JobTypes":["DT"],"MachineId":11,"MachineCode":"D1","Code":"D1","Description":"D1"},{"BitVal":8,"JobTypes":["PA","EA","SC","DF"],"MachineId":12,"MachineCode":"H1","Code":"H1","Description":"H1"},{"BitVal":16,"JobTypes":["PA","EA","SC","DF"],"MachineId":13,"MachineCode":"H2","Code":"H2","Description":"H2"},{"BitVal":32,"JobTypes":["PA","EA","SC","DF"],"MachineId":14,"MachineCode":"H3","Code":"H3","Description":"H3"},{"BitVal":64,"JobTypes":["PA","EA","SC","DF"],"MachineId":15,"MachineCode":"H4","Code":"H4","Description":"H4"},{"BitVal":128,"JobTypes":["PA","EA","SC","DF"],"MachineId":16,"MachineCode":"H5","Code":"H5","Description":"H5"},{"BitVal":256,"JobTypes":["PA","EA","SC","DF"],"MachineId":17,"MachineCode":"H6","Code":"H6","Description":"H6"},{"BitVal":512,"JobTypes":["EM","ES"],"MachineId":18,"MachineCode":"E3","Code":"E3","Description":"E3"},{"BitVal":1024,"JobTypes":["EM","ES"],"MachineId":19,"MachineCode":"E4","Code":"E4","Description":"E4"},{"BitVal":2048,"JobTypes":["PA","EA","SC","DF"],"MachineId":20,"MachineCode":"H7","Code":"H7","Description":"H7"},{"BitVal":4096,"JobTypes":["EM","ES","SW"],"MachineId":21,"MachineCode":"S1","Code":"S1","Description":"S1"},{"BitVal":8192,"JobTypes":["EM","ES","SW"],"MachineId":22,"MachineCode":"S2","Code":"S2","Description":"S2"},{"BitVal":16384,"JobTypes":["EM","ES"],"MachineId":23,"MachineCode":"E5","Code":"E5","Description":"E5"}],"BadgeDefinitions":[{"ProcessCode":"HW","BadgeExclusion":false,"CssInline":"background-color: #b7dee8; color: #FFFFFF; font-weight:normal;","CssClassNames":"","BadgeText":"HW","BitVal":1,"Rank":10,"BadgeContainerCssClasses":"static","BadgeContainerCssInline":"","ListModule":"ALL"},{"ProcessCode":"AP","BadgeExclusion":false,"CssInline":"background-color: #ccc0da; color: #FFFFFF; font-weight:normal;","CssClassNames":"","BadgeText":"AP","BitVal":2,"Rank":20,"BadgeContainerCssClasses":"static","BadgeContainerCssInline":"","ListModule":"ALL"},{"ProcessCode":"TC","BadgeExclusion":false,"CssInline":"background-color: #d8e4bc; color: #FFFFFF; font-weight:normal;","CssClassNames":"","BadgeText":"TC","BitVal":4,"Rank":30,"BadgeContainerCssClasses":"static","BadgeContainerCssInline":"","ListModule":"ALL"},{"ProcessCode":"MP","BadgeExclusion":false,"CssInline":"background-color: #29c515; color: #FFFFFF; font-weight:normal;","CssClassNames":"","BadgeText":"MP","BitVal":32,"Rank":60,"BadgeContainerCssClasses":"static","BadgeContainerCssInline":"","ListModule":"ALL"},{"ProcessCode":"PR","BadgeExclusion":false,"CssInline":"background-color: #c4bd97; color: #FFFFFF; font-weight:normal;","CssClassNames":"","BadgeText":"PR","BitVal":64,"Rank":70,"BadgeContainerCssClasses":"static","BadgeContainerCssInline":"","ListModule":"ALL"},{"ProcessCode":"NA","BadgeExclusion":false,"CssInline":"background-color: #ccc0da; color: #FFFFFF; font-weight:normal;","CssClassNames":"","BadgeText":"NA","BitVal":8388608,"Rank":72,"BadgeContainerCssClasses":"static","BadgeContainerCssInline":"","ListModule":"ALL"},{"ProcessCode":"CR","BadgeExclusion":false,"CssInline":"background-color: #fc8003; color: #FFFFFF; font-weight:normal;","CssClassNames":"","BadgeText":"CR","BitVal":16777216,"Rank":73,"BadgeContainerCssClasses":"static","BadgeContainerCssInline":"","ListModule":"ALL"},{"ProcessCode":"DS","BadgeExclusion":false,"CssInline":"background-color: #E0A189; color: #FFFFFF; font-weight:normal;","CssClassNames":"","BadgeText":"DS","BitVal":131072,"Rank":73,"BadgeContainerCssClasses":"static","BadgeContainerCssInline":"","ListModule":"ALL"},{"ProcessCode":"ES","BadgeExclusion":false,"CssInline":"background-color: #ac9a1b; color: #FFFFFF; font-weight:normal;","CssClassNames":"","BadgeText":"ES","BitVal":512,"Rank":74,"BadgeContainerCssClasses":"static","BadgeContainerCssInline":"","ListModule":"ALL"},{"ProcessCode":"PP","BadgeExclusion":false,"CssInline":"background-color: #6abbbb; color: #FFFFFF; font-weight:normal;","CssClassNames":"","BadgeText":"PP","BitVal":256,"Rank":75,"BadgeContainerCssClasses":"static","BadgeContainerCssInline":"","ListModule":"ALL"},{"ProcessCode":"PA","BadgeExclusion":false,"CssInline":"background-color: #ddd9c4; color: #FFFFFF; font-weight:normal;","CssClassNames":"","BadgeText":"PA","BitVal":128,"Rank":80,"BadgeContainerCssClasses":"static","BadgeContainerCssInline":"","ListModule":"ALL"},{"ProcessCode":"EM","BadgeExclusion":false,"CssInline":"background-color: #9aad6c; color: #FFFFFF; font-weight:normal;","CssClassNames":"","BadgeText":"EM","BitVal":2048,"Rank":115,"BadgeContainerCssClasses":"static","BadgeContainerCssInline":"","ListModule":"ALL"},{"ProcessCode":"SW","BadgeExclusion":false,"CssInline":"background-color: #9DCF30; color: #FFFFFF; font-weight:normal;","CssClassNames":"","BadgeText":"SW","BitVal":8192,"Rank":120,"BadgeContainerCssClasses":"static","BadgeContainerCssInline":"","ListModule":"ALL"},{"ProcessCode":"SC","BadgeExclusion":false,"CssInline":"background-color: #2b86f9; color: #FFFFFF; font-weight:normal;","CssClassNames":"","BadgeText":"SC","BitVal":16384,"Rank":150,"BadgeContainerCssClasses":"static","BadgeContainerCssInline":"","ListModule":"ALL"},{"ProcessCode":"DF","BadgeExclusion":false,"CssInline":"background-color: #937b72; color: #FFFFFF; font-weight:normal;","CssClassNames":"","BadgeText":"DF","BitVal":65536,"Rank":170,"BadgeContainerCssClasses":"static","BadgeContainerCssInline":"","ListModule":"ALL"},{"ProcessCode":"Misc","BadgeExclusion":false,"CssInline":"background-color: #B4B4B4; color: #FFFFFF; font-weight:normal;","CssClassNames":"","BadgeText":"Misc","BitVal":262144,"Rank":180,"BadgeContainerCssClasses":"static","BadgeContainerCssInline":"","ListModule":"ALL"},{"ProcessCode":"Sewing","BadgeExclusion":false,"CssInline":"background-color: #9DCF30; color: #FFFFFF; font-weight:normal;","CssClassNames":"","BadgeText":"Sewing","BitVal":524288,"Rank":190,"BadgeContainerCssClasses":"static","BadgeContainerCssInline":"","ListModule":"ALL"},{"ProcessCode":"Dispatch","BadgeExclusion":false,"CssInline":"background-color: #35DB56; color: #FFFFFF; font-weight:normal;","CssClassNames":"","BadgeText":"Dispatch","BitVal":1048576,"Rank":200,"BadgeContainerCssClasses":"static","BadgeContainerCssInline":"","ListModule":"ALL"},{"ProcessCode":"Stock","BadgeExclusion":false,"CssInline":"background-color: #DB3564; color: #FFFFFF; font-weight:normal;","CssClassNames":"","BadgeText":"Stock","BitVal":2097152,"Rank":210,"BadgeContainerCssClasses":"static","BadgeContainerCssInline":"","ListModule":"ALL"},{"ProcessCode":"Bagging","BadgeExclusion":false,"CssInline":"background-color: #0D40D9; color: #FFFFFF; font-weight:normal;","CssClassNames":"","BadgeText":"Bagging","BitVal":4194304,"Rank":220,"BadgeContainerCssClasses":"static","BadgeContainerCssInline":"","ListModule":"ALL"}],"MachineDayDateFormat":"ddd MMM D","DisplayMinimized":false,"JobConfig":{"EnableGangs":false,"EnableLocations":false,"NoLocToken":"[NOLOC]","StatusFormat":"[MASTERJOBSTATUS] - [STOCKSTATUS]","JobListFilters":{"LocationCodeOrLabel":"LABEL","ShowLocationFilter":false,"ShowStockFilter":true,"ShowDueDateFilter":true},"JobListColumns":{"ShowGangs":false,"ShowLocation":false},"JobFormJobLineColumns":{"ShowGang":false,"ShowPdf":true,"ShowStatus":true,"HidePricing":false},"JobFormCustomerInfoSection":{"ShowTerms":false,"TermText_PaymentDueBeforeDispatch":"Payment due before dispatch","CustomerAccountOnCreditHoldText":"Account on Credit Hold - Contact accounts dept"}},"StockFilterConfig":{"Filters":[{"Label":"All","Values":["ALL"],"ValuesCsv":"ALL","Rank":0,"Enabled":true,"Code":"ALL","DisplayBadgeCount":false},{"Label":"None","Values":["0"],"ValuesCsv":"0","Rank":10,"Enabled":true,"Code":"NOSTOCK","DisplayBadgeCount":false},{"Label":"Partial","Values":["1"],"ValuesCsv":"1","Rank":20,"Enabled":true,"Code":"PARTIALSTOCK","DisplayBadgeCount":false},{"Label":"Complete","Values":["2"],"ValuesCsv":"2","Rank":30,"Enabled":true,"Code":"STOCKCOMPLETE","DisplayBadgeCount":false}]},"DueDateFilterConfig":{"Filters":[{"Label":"All","Values":["0"],"ValuesCsv":"0","Rank":0,"Enabled":true,"Code":"ALL","DisplayBadgeCount":false},{"Label":"Late","Values":["1"],"ValuesCsv":"1","Rank":10,"Enabled":true,"Code":"LATE","DisplayBadgeCount":false},{"Label":"Today","Values":["2"],"ValuesCsv":"2","Rank":20,"Enabled":true,"Code":"TODAY","DisplayBadgeCount":false},{"Label":"Tomorrow","Values":["3"],"ValuesCsv":"3","Rank":30,"Enabled":true,"Code":"TOMORROW","DisplayBadgeCount":false}]},"DefaultTimeZone":{"CultureInfo":"en-US","TimeZone":{"Id":"America/Los_Angeles","MinOffset":"-08","MaxOffset":"-07"},"TimeZoneAbbreviation":"PDT","TimeZoneAbbreviationStandard":"PT","LocalNow":"2025-06-30T21:10:46.4815609","Now":"2025-07-01T04:10:46.4815609Z"},"Locations":[{"Id":100,"Guid":"04f32f80-169c-4b06-b883-fa867c25abbe","Code":"DP","Name":"Decopress","Notes":"","Active":true,"Rank":0,"IsDefault":true,"TimeZone":"America/Los_Angeles","CutOffTime":"18:00:00","AccountingSystemInvoiceTrackingOption":"","Ts":"AAAAAAHlqgM=","SignUpCountryCodeIso2":null,"SignUpStates":null,"IsVirtual":false,"OverrideItemCode":false,"ItemCode":null}],"ActiveNav":"jobs"})
+</script>
+<!-- /pageData Render -->
+<!-- Script Files Render -->
+<script src="/bundles/common/js/filterpanel?v=cEwsPWLXpN_bqqpdvwIp9ZpIgfrTLqIpN5E92HAUH441&amp;cwv=1.0.20250624.023235"></script>
+<script src="/bundles/common/js/tagging?v=MLgqhNy-Y65s1W9ZSB_ndiUmXKy1ZSIBS9L7ntybPeY1&amp;cwv=1.0.20250624.023235"></script>
+<script src="/bundles/js/jobstatuslist?v=u_nHkl7u0_VdESEi42Q8AQlKBIHr8dPFezrpedrb8041&amp;cwv=1.0.20250624.023235"></script>
+<script src="/bundles/js/jobstatuslist-scheduler?v=j6aTl5V0KRi5BBDwSskaaGXyhJXaT9nkkNdMYYNbdig1&amp;cwv=1.0.20250624.023235"></script>
+<!-- /Script Files Render -->
+
+
+
+    
+<!--Google Tags Not Configured-->
+
+    
+  
+
+
+</body></html>
