@@ -214,8 +214,9 @@ class DataUpdater {
   }
 
   // Get nested object value
-  private getNestedValue(obj: Record<string, unknown>, path: string): unknown {
-    return path.split(".").reduce((current, key) => current?.[key], obj);
+  private getNestedValue(obj: Order, path: string): unknown {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return path.split(".").reduce((current: any, key) => current?.[key], obj);
   }
 
   // Check if current time is during business hours

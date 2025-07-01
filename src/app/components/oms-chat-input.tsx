@@ -3,15 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import {
-  Send,
-  TrendingUp,
-  Search,
-  Users,
-  FileText,
-  Lightbulb,
-  Calendar,
-} from "lucide-react";
+import { Send } from "lucide-react";
 import {
   filterSuggestions,
   QUICK_ACTIONS,
@@ -111,35 +103,37 @@ export default function OMSChatInput({
     }
   };
 
-  const getCategoryIcon = (category: string) => {
-    switch (category) {
-      case "financial":
-        return <TrendingUp className="w-4 h-4" />;
-      case "operational":
-        return <Search className="w-4 h-4" />;
-      case "customer":
-        return <Users className="w-4 h-4" />;
-      case "date":
-        return <Calendar className="w-4 h-4" />;
-      default:
-        return <Lightbulb className="w-4 h-4" />;
-    }
-  };
+  // Function kept for potential future use
+  // const getCategoryIcon = (category: string) => {
+  //   switch (category) {
+  //     case "financial":
+  //       return <TrendingUp className="w-4 h-4" />;
+  //     case "operational":
+  //       return <Search className="w-4 h-4" />;
+  //     case "customer":
+  //       return <Users className="w-4 h-4" />;
+  //     case "date":
+  //       return <Calendar className="w-4 h-4" />;
+  //     default:
+  //       return <Lightbulb className="w-4 h-4" />;
+  //   }
+  // };
 
-  const getCategoryColor = (category: string) => {
-    switch (category) {
-      case "financial":
-        return "text-green-600 bg-green-50 border-green-200";
-      case "operational":
-        return "text-blue-600 bg-blue-50 border-blue-200";
-      case "customer":
-        return "text-purple-600 bg-purple-50 border-purple-200";
-      case "date":
-        return "text-orange-600 bg-orange-50 border-orange-200";
-      default:
-        return "text-gray-600 bg-gray-50 border-gray-200";
-    }
-  };
+  // Function kept for potential future use
+  // const getCategoryColor = (category: string) => {
+  //   switch (category) {
+  //     case "financial":
+  //       return "text-green-600 bg-green-50 border-green-200";
+  //     case "operational":
+  //       return "text-blue-600 bg-blue-50 border-blue-200";
+  //     case "customer":
+  //       return "text-purple-600 bg-purple-50 border-purple-200";
+  //     case "date":
+  //       return "text-orange-600 bg-orange-50 border-orange-200";
+  //     default:
+  //       return "text-gray-600 bg-gray-50 border-gray-200";
+  //   }
+  // };
 
   return (
     <div className="relative w-full">

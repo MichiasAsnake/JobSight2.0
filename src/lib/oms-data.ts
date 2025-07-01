@@ -88,6 +88,7 @@ export interface OrdersData {
 class OMSDataService {
   private ordersData: OrdersData | null = null;
   private dataPath: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private cache = new Map<string, { data: any; expiry: number }>();
   private readonly CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
   private fileStats: fs.Stats | null = null;
@@ -107,13 +108,14 @@ class OMSDataService {
         this.cache.clear(); // Clear all cache if file changed
         return false;
       }
-    } catch (error) {
+    } catch {
       return false;
     }
 
     return Date.now() < cached.expiry;
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private setCache(key: string, data: any): void {
     this.cache.set(key, {
       data,
@@ -121,6 +123,7 @@ class OMSDataService {
     });
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private getCache(key: string): any | null {
     if (this.isCacheValid(key)) {
       return this.cache.get(key)!.data;
@@ -146,8 +149,8 @@ class OMSDataService {
       this.setCache(cacheKey, this.ordersData);
 
       return this.ordersData!;
-    } catch (error) {
-      console.error("Error loading orders data:", error);
+    } catch (loadError) {
+      console.error("Error loading orders data:", loadError);
       throw new Error("Failed to load orders data");
     }
   }
@@ -228,10 +231,10 @@ class OMSDataService {
           return false;
         }
         return orderDate >= start && orderDate <= end;
-      } catch (error) {
+      } catch (parseError) {
         console.warn(
           `Error parsing dateEntered for order ${order.jobNumber}:`,
-          error
+          parseError
         );
         return false;
       }
@@ -261,10 +264,10 @@ class OMSDataService {
         return (
           orderDate.getFullYear() === year && orderDate.getMonth() === month
         );
-      } catch (error) {
+      } catch (parseError) {
         console.warn(
           `Error parsing dateEntered for order ${order.jobNumber}:`,
-          error
+          parseError
         );
         return false;
       }
@@ -323,7 +326,7 @@ class OMSDataService {
         try {
           const date = new Date(order.dateEntered);
           return !isNaN(date.getTime());
-        } catch (error) {
+        } catch {
           console.warn(
             `Invalid dateEntered for order ${order.jobNumber}:`,
             order.dateEntered
@@ -336,8 +339,8 @@ class OMSDataService {
           const dateA = new Date(a.dateEntered).getTime();
           const dateB = new Date(b.dateEntered).getTime();
           return dateB - dateA;
-        } catch (error) {
-          console.warn("Error sorting orders by date:", error);
+        } catch (sortError) {
+          console.warn("Error sorting orders by date:", sortError);
           return 0;
         }
       })
@@ -370,10 +373,10 @@ class OMSDataService {
           return false;
         }
         return shipDate < today && order.status !== "Closed";
-      } catch (error) {
+      } catch (parseError) {
         console.warn(
           `Error parsing requestedShipDate for order ${order.jobNumber}:`,
-          error
+          parseError
         );
         return false;
       }

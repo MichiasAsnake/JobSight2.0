@@ -8,18 +8,14 @@ import {
   ChevronDown,
   ChevronRight,
   User,
-  Phone,
-  Mail,
   DollarSign,
   Package,
   FileText,
-  Calendar,
   AlertTriangle,
   CheckCircle,
   Clock,
   Truck,
   TrendingUp,
-  Building2,
 } from "lucide-react";
 
 interface MessageProps {

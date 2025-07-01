@@ -42,31 +42,31 @@ function getPacificDateString(date: Date = new Date()): string {
   });
 }
 
-// Function to get Pacific Time date object
-function getPacificDate(date: Date = new Date()): Date {
-  try {
-    if (isNaN(date.getTime())) {
-      console.warn("Invalid date passed to getPacificDate, using current date");
-      date = new Date();
-    }
+// Function to get Pacific Time date object (currently unused but kept for future use)
+// function getPacificDate(date: Date = new Date()): Date {
+//   try {
+//     if (isNaN(date.getTime())) {
+//       console.warn("Invalid date passed to getPacificDate, using current date");
+//       date = new Date();
+//     }
 
-    const pacificTime = new Date(
-      date.toLocaleString("en-US", { timeZone: "America/Los_Angeles" })
-    );
+//     const pacificTime = new Date(
+//       date.toLocaleString("en-US", { timeZone: "America/Los_Angeles" })
+//     );
 
-    if (isNaN(pacificTime.getTime())) {
-      console.warn(
-        "Failed to convert to Pacific time, returning original date"
-      );
-      return date;
-    }
+//     if (isNaN(pacificTime.getTime())) {
+//       console.warn(
+//         "Failed to convert to Pacific time, returning original date"
+//       );
+//       return date;
+//     }
 
-    return pacificTime;
-  } catch (error) {
-    console.error("Error in getPacificDate:", error);
-    return new Date();
-  }
-}
+//     return pacificTime;
+//   } catch (error) {
+//     console.error("Error in getPacificDate:", error);
+//     return new Date();
+//   }
+// }
 
 // Simple, direct response function - no complex classification
 function generateSimpleResponse(orders: Order[], query: string): string {
@@ -86,7 +86,7 @@ function generateSimpleResponse(orders: Order[], query: string): string {
       try {
         const shipDateStr = order.requestedShipDate.split("T")[0]; // Handle both "2025-06-28" and ISO formats
         return shipDateStr === today;
-      } catch (error) {
+      } catch {
         return false;
       }
     });
@@ -124,7 +124,7 @@ function generateSimpleResponse(orders: Order[], query: string): string {
       try {
         const shipDate = new Date(order.requestedShipDate);
         return shipDate < today && order.status.toLowerCase() !== "closed";
-      } catch (error) {
+      } catch {
         return false;
       }
     });

@@ -187,7 +187,7 @@ export function ChatInput({
     );
 
     // Add pattern-based suggestions
-    PATTERN_SUGGESTIONS.forEach(({ pattern, suggestion, example }) => {
+    PATTERN_SUGGESTIONS.forEach(({ pattern, example }) => {
       if (pattern.test(input)) {
         filtered.unshift(example);
       }
@@ -359,7 +359,8 @@ export function ChatInput({
           {/* Input Helper Text */}
           {message.length === 0 && (
             <div className="absolute top-full left-0 mt-1 text-xs text-gray-400">
-              Try: "orders due today", "revenue this month", or "job 12345"
+              Try: &quot;orders due today&quot;, &quot;revenue this month&quot;,
+              or &quot;job 12345&quot;
             </div>
           )}
         </div>
@@ -381,8 +382,9 @@ export function ChatInput({
       {/* Suggestion Examples */}
       {message.length === 0 && (
         <div className="mt-2 text-xs text-gray-500">
-          <strong>Popular queries:</strong> "What orders are due today?" • "Show
-          me rush orders" • "Revenue this month"
+          <strong>Popular queries:</strong> &quot;What orders are due
+          today?&quot; • &quot;Show me rush orders&quot; • &quot;Revenue this
+          month&quot;
         </div>
       )}
     </div>

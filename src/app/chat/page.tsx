@@ -1,13 +1,13 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import OMSChatInput from "../components/oms-chat-input";
 import { OMSMessage } from "../components/oms-message";
 import { Button } from "@/components/ui/button";
 import { useChat } from "../components/chat-context";
 
-export default function ChatPage() {
+function ChatPageContent() {
   const [isLoading, setIsLoading] = useState(false);
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -15,15 +15,6 @@ export default function ChatPage() {
   const { getCurrentChat, addMessage, currentChatId } = useChat();
 
   const currentChat = getCurrentChat();
-
-  // Handle initial message from URL parameter
-  useEffect(() => {
-    const initialMessage = searchParams.get("message");
-    if (initialMessage && !hasInitialized.current) {
-      hasInitialized.current = true;
-      handleSendMessage(initialMessage);
-    }
-  }, [searchParams]);
 
   const handleSendMessage = useCallback(
     async (content: string) => {
@@ -100,6 +91,15 @@ export default function ChatPage() {
     [addMessage, currentChatId, currentChat?.messages]
   );
 
+  // Handle initial message from URL parameter
+  useEffect(() => {
+    const initialMessage = searchParams.get("message");
+    if (initialMessage && !hasInitialized.current) {
+      hasInitialized.current = true;
+      handleSendMessage(initialMessage);
+    }
+  }, [searchParams, handleSendMessage]);
+
   return (
     <div className="flex flex-col h-full">
       {/* Chat Header */}
@@ -171,5 +171,19 @@ export default function ChatPage() {
       {/* Chat Input */}
       <OMSChatInput onSendMessage={handleSendMessage} disabled={isLoading} />
     </div>
+  );
+}
+
+export default function ChatPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex items-center justify-center h-full">
+          Loading...
+        </div>
+      }
+    >
+      <ChatPageContent />
+    </Suspense>
   );
 }
