@@ -81,7 +81,6 @@ class DataUpdater {
 
   // Perform smart incremental update
   async performUpdate(): Promise<UpdateStats> {
-    const startTime = Date.now();
     console.log("🔄 Starting smart data update...");
 
     try {
@@ -93,7 +92,7 @@ class DataUpdater {
       const currentOrders = currentData.orders || [];
 
       // Run scraper to get fresh data
-      const { scrapeOrders } = await import("../scrape.js");
+      const { scrapeOrders } = await import("../../scrape.js");
       const freshOrders = await scrapeOrders();
 
       // Compare and merge data
@@ -148,7 +147,7 @@ class DataUpdater {
     );
 
     // Find new orders
-    for (const [jobNumber, freshOrder] of freshOrderMap) {
+    for (const [jobNumber] of freshOrderMap) {
       if (!currentOrderMap.has(jobNumber)) {
         stats.newOrders++;
         console.log(`🆕 New order detected: Job ${jobNumber}`);
@@ -170,7 +169,7 @@ class DataUpdater {
     }
 
     // Find deleted orders (orders that exist in current but not in fresh)
-    for (const [jobNumber, currentOrder] of currentOrderMap) {
+    for (const [jobNumber] of currentOrderMap) {
       if (!freshOrderMap.has(jobNumber)) {
         stats.deletedOrders++;
         console.log(`🗑️ Order deleted: Job ${jobNumber}`);
@@ -215,7 +214,7 @@ class DataUpdater {
   }
 
   // Get nested object value
-  private getNestedValue(obj: any, path: string): any {
+  private getNestedValue(obj: Record<string, unknown>, path: string): unknown {
     return path.split(".").reduce((current, key) => current?.[key], obj);
   }
 

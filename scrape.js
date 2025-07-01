@@ -1222,8 +1222,10 @@ async function run() {
     await saveOrdersToFile(orders);
 
     console.log("✅ Scraping complete! Orders saved to data/orders.json");
+    return orders;
   } catch (error) {
     console.error("Error during scraping:", error);
+    throw error;
   } finally {
     if (browser) {
       try {

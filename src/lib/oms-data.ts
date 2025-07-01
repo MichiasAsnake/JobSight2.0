@@ -88,19 +88,63 @@ export interface OrdersData {
 class OMSDataService {
   private ordersData: OrdersData | null = null;
   private dataPath: string;
+  private cache = new Map<string, { data: any; expiry: number }>();
+  private readonly CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
+  private fileStats: fs.Stats | null = null;
 
   constructor() {
     this.dataPath = path.join(process.cwd(), "data", "orders.json");
   }
 
+  private isCacheValid(key: string): boolean {
+    const cached = this.cache.get(key);
+    if (!cached) return false;
+
+    try {
+      const currentStats = fs.statSync(this.dataPath);
+      if (!this.fileStats || currentStats.mtime > this.fileStats.mtime) {
+        this.fileStats = currentStats;
+        this.cache.clear(); // Clear all cache if file changed
+        return false;
+      }
+    } catch (error) {
+      return false;
+    }
+
+    return Date.now() < cached.expiry;
+  }
+
+  private setCache(key: string, data: any): void {
+    this.cache.set(key, {
+      data,
+      expiry: Date.now() + this.CACHE_DURATION,
+    });
+  }
+
+  private getCache(key: string): any | null {
+    if (this.isCacheValid(key)) {
+      return this.cache.get(key)!.data;
+    }
+    return null;
+  }
+
   async loadOrders(): Promise<OrdersData> {
-    if (this.ordersData) {
-      return this.ordersData;
+    const cacheKey = "orders_data";
+    const cached = this.getCache(cacheKey);
+
+    if (cached) {
+      this.ordersData = cached;
+      return cached;
     }
 
     try {
       const data = fs.readFileSync(this.dataPath, "utf8");
       this.ordersData = JSON.parse(data);
+
+      this.fileStats = fs.statSync(this.dataPath);
+
+      this.setCache(cacheKey, this.ordersData);
+
       return this.ordersData!;
     } catch (error) {
       console.error("Error loading orders data:", error);
@@ -118,11 +162,18 @@ class OMSDataService {
     return orders.find((order) => order.jobNumber === jobNumber) || null;
   }
 
-  async searchOrders(query: string): Promise<Order[]> {
+  async searchOrdersByQuery(query: string): Promise<Order[]> {
+    const cacheKey = `search_${query.toLowerCase()}`;
+    const cached = this.getCache(cacheKey);
+
+    if (cached) {
+      return cached;
+    }
+
     const orders = await this.getOrders();
     const searchTerm = query.toLowerCase();
 
-    return orders.filter(
+    const results = orders.filter(
       (order) =>
         order.jobNumber.toLowerCase().includes(searchTerm) ||
         order.orderNumber.toLowerCase().includes(searchTerm) ||
@@ -131,6 +182,9 @@ class OMSDataService {
         order.description.toLowerCase().includes(searchTerm) ||
         order.status.toLowerCase().includes(searchTerm)
     );
+
+    this.setCache(cacheKey, results);
+    return results;
   }
 
   async getOrdersByStatus(status: string): Promise<Order[]> {
@@ -163,9 +217,61 @@ class OMSDataService {
     const end = new Date(endDate);
 
     return orders.filter((order) => {
-      const orderDate = new Date(order.dateEntered);
-      return orderDate >= start && orderDate <= end;
+      if (!order.dateEntered) return false;
+      try {
+        const orderDate = new Date(order.dateEntered);
+        if (isNaN(orderDate.getTime())) {
+          console.warn(
+            `Invalid dateEntered for order ${order.jobNumber}:`,
+            order.dateEntered
+          );
+          return false;
+        }
+        return orderDate >= start && orderDate <= end;
+      } catch (error) {
+        console.warn(
+          `Error parsing dateEntered for order ${order.jobNumber}:`,
+          error
+        );
+        return false;
+      }
     });
+  }
+
+  async getOrdersByMonth(year: number, month: number): Promise<Order[]> {
+    const cacheKey = `month_${year}_${month}`;
+    const cached = this.getCache(cacheKey);
+
+    if (cached) {
+      return cached;
+    }
+
+    const orders = await this.getOrders();
+    const results = orders.filter((order) => {
+      if (!order.dateEntered) return false;
+      try {
+        const orderDate = new Date(order.dateEntered);
+        if (isNaN(orderDate.getTime())) {
+          console.warn(
+            `Invalid dateEntered for order ${order.jobNumber}:`,
+            order.dateEntered
+          );
+          return false;
+        }
+        return (
+          orderDate.getFullYear() === year && orderDate.getMonth() === month
+        );
+      } catch (error) {
+        console.warn(
+          `Error parsing dateEntered for order ${order.jobNumber}:`,
+          error
+        );
+        return false;
+      }
+    });
+
+    this.setCache(cacheKey, results);
+    return results;
   }
 
   async getSummaryStats() {
@@ -212,10 +318,29 @@ class OMSDataService {
   async getRecentOrders(limit: number = 10): Promise<Order[]> {
     const orders = await this.getOrders();
     return orders
-      .sort(
-        (a, b) =>
-          new Date(b.dateEntered).getTime() - new Date(a.dateEntered).getTime()
-      )
+      .filter((order) => {
+        if (!order.dateEntered) return false;
+        try {
+          const date = new Date(order.dateEntered);
+          return !isNaN(date.getTime());
+        } catch (error) {
+          console.warn(
+            `Invalid dateEntered for order ${order.jobNumber}:`,
+            order.dateEntered
+          );
+          return false;
+        }
+      })
+      .sort((a, b) => {
+        try {
+          const dateA = new Date(a.dateEntered).getTime();
+          const dateB = new Date(b.dateEntered).getTime();
+          return dateB - dateA;
+        } catch (error) {
+          console.warn("Error sorting orders by date:", error);
+          return 0;
+        }
+      })
       .slice(0, limit);
   }
 
@@ -235,9 +360,30 @@ class OMSDataService {
 
     return orders.filter((order) => {
       if (!order.requestedShipDate) return false;
-      const shipDate = new Date(order.requestedShipDate);
-      return shipDate < today && order.status !== "Closed";
+      try {
+        const shipDate = new Date(order.requestedShipDate);
+        if (isNaN(shipDate.getTime())) {
+          console.warn(
+            `Invalid requestedShipDate for order ${order.jobNumber}:`,
+            order.requestedShipDate
+          );
+          return false;
+        }
+        return shipDate < today && order.status !== "Closed";
+      } catch (error) {
+        console.warn(
+          `Error parsing requestedShipDate for order ${order.jobNumber}:`,
+          error
+        );
+        return false;
+      }
     });
+  }
+
+  clearCache(): void {
+    this.cache.clear();
+    this.ordersData = null;
+    this.fileStats = null;
   }
 }
 

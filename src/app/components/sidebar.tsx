@@ -3,14 +3,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import {
-  Plus,
-  Search,
-  MessageSquare,
-  Trash2,
-  MoreVertical,
-  Sparkles,
-} from "lucide-react";
+import { MessageSquare, Database, Settings, Plus, X } from "lucide-react";
 
 interface ChatHistory {
   id: string;

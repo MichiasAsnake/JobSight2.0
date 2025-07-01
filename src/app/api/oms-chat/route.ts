@@ -1,9 +1,36 @@
 import { NextRequest, NextResponse } from "next/server";
-import { omsDataService } from "@/lib/oms-data";
-import OpenAI from "openai";
+import { omsDataService, Order } from "@/lib/oms-data";
 
-const openaiApiKey = process.env.OPENAI_API_KEY;
-const openai = openaiApiKey ? new OpenAI({ apiKey: openaiApiKey }) : null;
+// Store conversations in memory (in production, use Redis or database)
+interface ConversationMessage {
+  role: string;
+  content: string;
+  timestamp: number;
+}
+
+const conversations: Record<
+  string,
+  { messages: ConversationMessage[]; lastActivity: number }
+> = {};
+
+// Clean up old conversations (older than 1 hour)
+function cleanupOldConversations() {
+  const oneHour = 60 * 60 * 1000;
+  const now = Date.now();
+  Object.keys(conversations).forEach((sessionId) => {
+    if (now - conversations[sessionId].lastActivity > oneHour) {
+      delete conversations[sessionId];
+    }
+  });
+}
+
+// Function to get or create conversation session
+function getConversationSession(sessionId: string) {
+  if (!conversations[sessionId]) {
+    conversations[sessionId] = { messages: [], lastActivity: Date.now() };
+  }
+  return conversations[sessionId];
+}
 
 // Function to get Pacific Time date string
 function getPacificDateString(date: Date = new Date()): string {
@@ -17,465 +44,353 @@ function getPacificDateString(date: Date = new Date()): string {
 
 // Function to get Pacific Time date object
 function getPacificDate(date: Date = new Date()): Date {
-  const pacificTime = new Date(
-    date.toLocaleString("en-US", { timeZone: "America/Los_Angeles" })
-  );
-  return pacificTime;
+  try {
+    if (isNaN(date.getTime())) {
+      console.warn("Invalid date passed to getPacificDate, using current date");
+      date = new Date();
+    }
+
+    const pacificTime = new Date(
+      date.toLocaleString("en-US", { timeZone: "America/Los_Angeles" })
+    );
+
+    if (isNaN(pacificTime.getTime())) {
+      console.warn(
+        "Failed to convert to Pacific time, returning original date"
+      );
+      return date;
+    }
+
+    return pacificTime;
+  } catch (error) {
+    console.error("Error in getPacificDate:", error);
+    return new Date();
+  }
 }
 
-// Function to search and filter orders based on user query
-function searchOrders(orders: any[], query: string) {
-  const searchTerm = query.toLowerCase();
-  const todayPacific = getPacificDate();
-  const todayStr = getPacificDateString();
+// Simple, direct response function - no complex classification
+function generateSimpleResponse(orders: Order[], query: string): string {
+  const searchTerm = query.toLowerCase().trim();
 
-  // Check for specific query patterns
+  // Handle "due today" queries
   if (
-    searchTerm.includes("overdue") ||
-    searchTerm.includes("late") ||
-    searchTerm.includes("past due")
+    searchTerm.includes("due today") ||
+    searchTerm.includes("whats due") ||
+    searchTerm.includes("what's due")
   ) {
-    return orders.filter((order) => {
+    const today = getPacificDateString();
+    console.log(`Looking for orders due today: ${today}`);
+
+    const dueToday = orders.filter((order) => {
       if (!order.requestedShipDate) return false;
-      const shipDate = new Date(order.requestedShipDate);
-      return shipDate < todayPacific && order.status !== "Closed";
+      try {
+        const shipDateStr = order.requestedShipDate.split("T")[0]; // Handle both "2025-06-28" and ISO formats
+        return shipDateStr === today;
+      } catch (error) {
+        return false;
+      }
     });
+
+    console.log(`Found ${dueToday.length} orders due today`);
+
+    if (dueToday.length === 0) {
+      return `## Orders Due Today\n\nNo orders are due today (${today}).\n\n**Recent upcoming orders:**\n${orders
+        .slice(0, 5)
+        .map(
+          (o) =>
+            `- Job ${o.jobNumber}: ${o.customer?.company} - Due ${o.requestedShipDate}`
+        )
+        .join("\n")}`;
+    }
+
+    let response = `## Orders Due Today (${today})\n\n`;
+    dueToday.forEach((order, index) => {
+      response += `${index + 1}. **Job ${order.jobNumber}** - ${
+        order.customer?.company
+      }\n`;
+      response += `   ${order.description} | Status: ${order.status} | $${(
+        order.pricing?.totalDue || 0
+      ).toLocaleString()}\n\n`;
+    });
+
+    return response;
   }
 
-  if (searchTerm.includes("due today") || searchTerm.includes("due now")) {
-    return orders.filter((order) => {
+  // Handle "overdue" queries
+  if (searchTerm.includes("overdue") || searchTerm.includes("late")) {
+    const today = new Date();
+    const overdue = orders.filter((order) => {
       if (!order.requestedShipDate) return false;
-      const shipDate = new Date(order.requestedShipDate);
-      const shipDateStr = getPacificDateString(shipDate);
-      return shipDateStr === todayStr;
+      try {
+        const shipDate = new Date(order.requestedShipDate);
+        return shipDate < today && order.status.toLowerCase() !== "closed";
+      } catch (error) {
+        return false;
+      }
     });
+
+    if (overdue.length === 0) {
+      return `## Overdue Orders\n\nNo orders are currently overdue.\n\n**Recent orders:**\n${orders
+        .slice(0, 5)
+        .map(
+          (o) => `- Job ${o.jobNumber}: ${o.customer?.company} - ${o.status}`
+        )
+        .join("\n")}`;
+    }
+
+    let response = `## Overdue Orders\n\n`;
+    overdue.slice(0, 10).forEach((order, index) => {
+      response += `${index + 1}. **Job ${order.jobNumber}** - ${
+        order.customer?.company
+      }\n`;
+      response += `   Due: ${order.requestedShipDate} | Status: ${
+        order.status
+      } | $${(order.pricing?.totalDue || 0).toLocaleString()}\n\n`;
+    });
+
+    return response;
   }
 
-  if (searchTerm.includes("due tomorrow") || searchTerm.includes("due tmrw")) {
-    const tomorrow = new Date(todayPacific);
-    tomorrow.setDate(tomorrow.getDate() + 1);
-    const tomorrowStr = getPacificDateString(tomorrow);
-
-    return orders.filter((order) => {
-      if (!order.requestedShipDate) return false;
-      const shipDate = new Date(order.requestedShipDate);
-      const shipDateStr = getPacificDateString(shipDate);
-      return shipDateStr === tomorrowStr;
-    });
-  }
-
+  // Handle "top customers" queries
   if (
-    searchTerm.includes("rush") ||
-    searchTerm.includes("priority") ||
-    searchTerm.includes("urgent")
+    searchTerm.includes("top customer") ||
+    searchTerm.includes("best customer")
   ) {
-    return orders.filter(
+    const customerRevenue = new Map<
+      string,
+      { revenue: number; orderCount: number }
+    >();
+    orders.forEach((order) => {
+      const customerName = order.customer?.company || "Unknown Customer";
+      const revenue = order.pricing?.totalDue || 0;
+
+      if (customerRevenue.has(customerName)) {
+        const existing = customerRevenue.get(customerName)!;
+        customerRevenue.set(customerName, {
+          revenue: existing.revenue + revenue,
+          orderCount: existing.orderCount + 1,
+        });
+      } else {
+        customerRevenue.set(customerName, { revenue, orderCount: 1 });
+      }
+    });
+
+    const topCustomers = Array.from(customerRevenue.entries())
+      .map(([name, data]) => ({
+        name,
+        revenue: data.revenue,
+        orderCount: data.orderCount,
+      }))
+      .sort((a, b) => b.revenue - a.revenue)
+      .slice(0, 10);
+
+    let response = "## Top Customers by Revenue\n\n";
+    topCustomers.forEach((customer, index) => {
+      response += `${index + 1}. **${
+        customer.name
+      }** - $${customer.revenue.toLocaleString()} (${
+        customer.orderCount
+      } orders)\n`;
+    });
+
+    return response;
+  }
+
+  // Handle "revenue" queries
+  if (searchTerm.includes("revenue") || searchTerm.includes("total")) {
+    const totalRevenue = orders.reduce(
+      (sum, order) => sum + (order.pricing?.totalDue || 0),
+      0
+    );
+    return `## Revenue Summary\n\n**Total Revenue:** $${totalRevenue.toLocaleString()}\n**Total Orders:** ${
+      orders.length
+    }\n**Average Order:** $${Math.round(
+      totalRevenue / orders.length
+    ).toLocaleString()}`;
+  }
+
+  // Handle "rush" queries
+  if (searchTerm.includes("rush") || searchTerm.includes("urgent")) {
+    const rushOrders = orders.filter(
       (order) =>
         order.priority === "MUST" ||
-        order.workflow?.isRush ||
-        order.status.toLowerCase().includes("rush")
+        order.status.toLowerCase().includes("rush") ||
+        order.workflow?.isRush
     );
-  }
 
-  if (searchTerm.includes("job") || searchTerm.includes("order")) {
-    const jobMatch = query.match(/(?:job|order)\s*(?:number\s*)?(\d+)/i);
-    if (jobMatch) {
-      const jobNumber = jobMatch[1];
-      return orders.filter((order) => order.jobNumber === jobNumber);
+    if (rushOrders.length === 0) {
+      return "## Rush Orders\n\nNo rush orders found.";
     }
+
+    let response = `## Rush Orders\n\n`;
+    rushOrders.slice(0, 10).forEach((order, index) => {
+      response += `${index + 1}. **Job ${order.jobNumber}** - ${
+        order.customer?.company
+      }\n`;
+      response += `   ${order.description} | Due: ${
+        order.requestedShipDate
+      } | $${(order.pricing?.totalDue || 0).toLocaleString()}\n\n`;
+    });
+
+    return response;
   }
 
-  if (searchTerm.includes("customer") || searchTerm.includes("company")) {
-    const customerMatch = query.match(/(?:customer|company)\s+(.+)/i);
-    if (customerMatch) {
-      const customerName = customerMatch[1].trim();
-      return orders.filter((order) =>
-        order.customer.company
-          .toLowerCase()
-          .includes(customerName.toLowerCase())
-      );
+  // Handle job number queries
+  const jobMatch = searchTerm.match(/job\s*(\d+)/i);
+  if (jobMatch) {
+    const jobNumber = jobMatch[1];
+    const order = orders.find((o) => o.jobNumber === jobNumber);
+
+    if (!order) {
+      return `## Job Search\n\nJob ${jobNumber} not found.`;
     }
+
+    return `## Job ${order.jobNumber} Details\n\n**Customer:** ${
+      order.customer?.company
+    }\n**Description:** ${order.description}\n**Status:** ${
+      order.status
+    }\n**Due Date:** ${order.requestedShipDate}\n**Value:** $${(
+      order.pricing?.totalDue || 0
+    ).toLocaleString()}`;
   }
 
-  if (searchTerm.includes("status") || searchTerm.includes("recent")) {
-    // Return recent orders (last 10)
-    return orders
-      .sort(
-        (a, b) =>
-          new Date(b.dateEntered).getTime() - new Date(a.dateEntered).getTime()
-      )
-      .slice(0, 10);
+  // Handle customer queries
+  const customerMatch = searchTerm.match(/(?:orders?\s+for|customer)\s+(.+)/i);
+  if (customerMatch) {
+    const customerName = customerMatch[1].trim();
+    const customerOrders = orders.filter((order) =>
+      order.customer.company.toLowerCase().includes(customerName.toLowerCase())
+    );
+
+    if (customerOrders.length === 0) {
+      return `## Customer Search\n\nNo orders found for "${customerName}".`;
+    }
+
+    const totalValue = customerOrders.reduce(
+      (sum, order) => sum + (order.pricing?.totalDue || 0),
+      0
+    );
+
+    let response = `## Orders for ${customerOrders[0].customer?.company}\n\n`;
+    response += `**Total Orders:** ${customerOrders.length}\n`;
+    response += `**Total Value:** $${totalValue.toLocaleString()}\n\n`;
+
+    customerOrders.slice(0, 10).forEach((order, index) => {
+      response += `${index + 1}. Job ${order.jobNumber}: ${
+        order.description
+      } - ${order.status} ($${(
+        order.pricing?.totalDue || 0
+      ).toLocaleString()})\n`;
+    });
+
+    return response;
   }
 
-  // Default: return all orders if no specific pattern matches
-  return orders;
-}
+  // Default: show recent orders
+  const totalRevenue = orders.reduce(
+    (sum, order) => sum + (order.pricing?.totalDue || 0),
+    0
+  );
+  let response = `## Recent Orders\n\n`;
+  response += `**Total Orders:** ${orders.length}\n`;
+  response += `**Total Value:** $${totalRevenue.toLocaleString()}\n\n`;
 
-// Function to format order data for inclusion in prompt
-function formatOrdersForPrompt(orders: any[]) {
-  if (orders.length === 0) return "No orders found matching your query.";
+  orders.slice(0, 10).forEach((order, index) => {
+    response += `${index + 1}. Job ${order.jobNumber}: ${
+      order.customer?.company
+    } - ${order.status} ($${(
+      order.pricing?.totalDue || 0
+    ).toLocaleString()})\n`;
+  });
 
-  return orders
-    .map(
-      (order) => `
-Job ${order.jobNumber}:
-- Order: ${order.orderNumber}
-- Status: ${order.status}
-- Priority: ${order.priority}
-- Customer: ${order.customer.company}
-- Contact: ${order.customer.contactPerson}
-- Description: ${order.description}
-- Requested Ship Date: ${order.requestedShipDate || "Not set"}
-- Total Due: $${order.pricing.totalDue.toLocaleString()}
-- Line Items: ${order.lineItems.length} items
-- Shipments: ${order.shipments.length} shipments
-`
-    )
-    .join("\n");
+  return response;
 }
 
 export async function POST(request: NextRequest) {
+  let sessionId = "default";
+
   try {
-    const { message, context } = await request.json();
+    const body = await request.json();
+    const { message } = body;
+    sessionId = body.sessionId || "default";
 
-    // Load OMS data
-    const orders = await omsDataService.getOrders();
-    const stats = await omsDataService.getSummaryStats();
-
-    // Search for relevant orders based on the query
-    const relevantOrders = searchOrders(orders, message);
-    const orderDetails = formatOrdersForPrompt(relevantOrders);
-
-    // Create context-rich prompt for ChatGPT
-    const systemPrompt = `You are an intelligent OMS (Order Management System) assistant for DecoPress, a custom apparel and promotional products company. 
-
-You have access to the following order data:
-- Total Orders: ${stats.totalOrders}
-- Total Value: $${stats.totalValue.toLocaleString()}
-- Average Order Value: $${stats.averageOrderValue.toLocaleString()}
-- Last Updated: ${stats.lastUpdated}
-
-RELEVANT ORDER DETAILS:
-${orderDetails}
-
-Key Order Information Available:
-- Job Numbers, Order Numbers, Status, Priority
-- Customer details (company, contact person, phone, email)
-- Order descriptions, comments, pricing
-- Shipment information and addresses
-- Line items with SKUs, quantities, prices
-- Workflow status (files, proofs, packing slips)
-- Production information and tags
-
-Your capabilities:
-1. Answer questions about specific orders by job number or order number
-2. Provide customer information and order history
-3. Analyze order patterns and trends
-4. Help with order status and workflow questions
-5. Provide pricing and financial insights
-6. Help with shipping and logistics questions
-7. Identify rush orders, late orders, and priority items
-
-Always be helpful, professional, and provide specific information when available. Use the order details provided above to give accurate, specific answers.`;
-
-    // Create user message with context
-    const userMessage = `User Query: ${message}
-
-Available Context: ${context || "No specific context provided"}
-
-Please provide a helpful response based on the OMS data available.`;
-
-    // If OpenAI API key is set, use real API
-    if (openai) {
-      const chatCompletion = await openai.chat.completions.create({
-        model: "gpt-4o",
-        messages: [
-          { role: "system", content: systemPrompt },
-          { role: "user", content: userMessage },
-        ],
-        temperature: 0.2,
-        max_tokens: 800,
-      });
-      const response =
-        chatCompletion.choices[0]?.message?.content ||
-        "No response from OpenAI.";
-      return NextResponse.json({
-        response,
-        timestamp: new Date().toISOString(),
-      });
+    if (
+      !message ||
+      typeof message !== "string" ||
+      message.trim().length === 0
+    ) {
+      return NextResponse.json(
+        {
+          error: "Please provide a valid message",
+          suggestions: ["Try asking about orders", "Search for a job number"],
+        },
+        { status: 400 }
+      );
     }
 
-    // Fallback: Simulated response
-    const response = await simulateChatGPTResponse(
-      systemPrompt,
-      userMessage,
-      orders,
-      stats
-    );
+    cleanupOldConversations();
+    const session = getConversationSession(sessionId);
+    session.lastActivity = Date.now();
+
+    // Load OMS data
+    let orders;
+    try {
+      orders = await omsDataService.getOrders();
+    } catch (error) {
+      console.error("Error loading OMS data:", error);
+      return NextResponse.json(
+        {
+          error: "Unable to access order data",
+          message:
+            "I'm having trouble accessing the order data right now. Please try again in a moment.",
+        },
+        { status: 500 }
+      );
+    }
+
+    // Generate simple, direct response
+    const response = generateSimpleResponse(orders, message);
+
+    // Update conversation history
+    session.messages.push({
+      role: "user",
+      content: message.substring(0, 200),
+      timestamp: Date.now(),
+    });
+    session.messages.push({
+      role: "assistant",
+      content: response.substring(0, 200),
+      timestamp: Date.now(),
+    });
+
+    // Keep only last 4 messages
+    if (session.messages.length > 4) {
+      session.messages = session.messages.slice(-4);
+    }
+
     return NextResponse.json({
-      response,
-      timestamp: new Date().toISOString(),
+      message: response,
+      data: {
+        orderCount: orders.length,
+        queryType: "direct",
+      },
+      suggestions: ["Due today", "Top customers", "Rush orders"],
+      metadata: {
+        timestamp: new Date().toISOString(),
+        sessionId,
+        conversationLength: session.messages.length,
+      },
     });
   } catch (error) {
-    console.error("Error in OMS chat API:", error);
+    console.error("Error in OMS chat:", error);
+
     return NextResponse.json(
       {
-        error: "Failed to process chat request",
-        details: error instanceof Error ? error.message : "Unknown error",
+        error: "Unable to process request",
+        message:
+          "I'm experiencing technical difficulties. Please try a simpler query.",
       },
       { status: 500 }
     );
   }
-}
-
-async function simulateChatGPTResponse(
-  systemPrompt: string,
-  userMessage: string,
-  orders: any[],
-  stats: any
-): Promise<string> {
-  // Simulate processing time
-  await new Promise((resolve) => setTimeout(resolve, 1000));
-
-  const message = userMessage.toLowerCase();
-
-  // Handle different types of queries
-  if (message.includes("job") || message.includes("order")) {
-    const jobMatch = message.match(/(?:job|order)\s*(?:number\s*)?(\d+)/i);
-    if (jobMatch) {
-      const jobNumber = jobMatch[1];
-      const order = orders.find((o) => o.jobNumber === jobNumber);
-      if (order) {
-        return `Here's information about Job ${jobNumber}:
-
-**Order Details:**
-- Order Number: ${order.orderNumber}
-- Status: ${order.status}
-- Priority: ${order.priority}
-- Description: ${order.description}
-
-**Customer:**
-- Company: ${order.customer.company}
-- Contact: ${order.customer.contactPerson}
-- Phone: ${order.customer.phone}
-- Email: ${order.customer.email}
-
-**Financial:**
-- Total Due: $${order.pricing.totalDue.toLocaleString()}
-- Subtotal: $${order.pricing.subtotal.toLocaleString()}
-- Tax: $${order.pricing.salesTax.toLocaleString()}
-
-**Line Items:** ${order.lineItems.length} items
-**Shipments:** ${order.shipments.length} shipments
-
-Would you like more specific details about any aspect of this order?`;
-      } else {
-        return `I couldn't find Job ${jobNumber} in the current order data. The system contains ${orders.length} orders. Would you like me to search for similar job numbers or help you with something else?`;
-      }
-    }
-  }
-
-  if (message.includes("customer") || message.includes("company")) {
-    const customerMatch = message.match(/(?:customer|company)\s+(.+)/i);
-    if (customerMatch) {
-      const customerName = customerMatch[1].trim();
-      const customerOrders = orders.filter((o) =>
-        o.customer.company.toLowerCase().includes(customerName.toLowerCase())
-      );
-
-      if (customerOrders.length > 0) {
-        const totalValue = customerOrders.reduce(
-          (sum, o) => sum + o.pricing.totalDue,
-          0
-        );
-        return `I found ${customerOrders.length} orders for ${
-          customerOrders[0].customer.company
-        }:
-
-**Summary:**
-- Total Orders: ${customerOrders.length}
-- Total Value: $${totalValue.toLocaleString()}
-- Average Order Value: $${(totalValue / customerOrders.length).toLocaleString()}
-
-**Recent Orders:**
-${customerOrders
-  .slice(0, 3)
-  .map(
-    (o) =>
-      `- Job ${o.jobNumber}: ${o.description} (${
-        o.status
-      }) - $${o.pricing.totalDue.toLocaleString()}`
-  )
-  .join("\n")}
-
-Would you like details about a specific order or more information about this customer?`;
-      }
-    }
-  }
-
-  if (message.includes("rush") || message.includes("priority")) {
-    const rushOrders = orders.filter(
-      (o) =>
-        o.priority === "MUST" ||
-        o.workflow.isRush ||
-        o.status.toLowerCase().includes("rush")
-    );
-
-    if (rushOrders.length > 0) {
-      return `I found ${rushOrders.length} rush/priority orders:
-
-${rushOrders
-  .slice(0, 5)
-  .map(
-    (o) =>
-      `- Job ${o.jobNumber}: ${o.customer.company} - ${o.description} (${o.status})`
-  )
-  .join("\n")}
-
-${
-  rushOrders.length > 5
-    ? `... and ${rushOrders.length - 5} more rush orders.`
-    : ""
-}
-
-Would you like details about any specific rush order?`;
-    } else {
-      return "Currently there are no rush or priority orders in the system.";
-    }
-  }
-
-  if (
-    message.includes("overdue") ||
-    message.includes("late") ||
-    message.includes("past due")
-  ) {
-    const todayPacific = getPacificDate();
-    const lateOrders = orders.filter((o) => {
-      if (!o.requestedShipDate) return false;
-      const shipDate = new Date(o.requestedShipDate);
-      return shipDate < todayPacific && o.status !== "Closed";
-    });
-
-    if (lateOrders.length > 0) {
-      return `I found ${lateOrders.length} overdue orders (Pacific Time):
-
-${lateOrders
-  .slice(0, 5)
-  .map((o) => {
-    const shipDate = new Date(o.requestedShipDate);
-    const daysLate = Math.floor(
-      (todayPacific.getTime() - shipDate.getTime()) / (1000 * 60 * 60 * 24)
-    );
-    return `- Job ${o.jobNumber}: ${o.customer.company} - ${o.description} (${daysLate} days late)`;
-  })
-  .join("\n")}
-
-${
-  lateOrders.length > 5
-    ? `... and ${lateOrders.length - 5} more overdue orders.`
-    : ""
-}
-
-Would you like details about any specific overdue order?`;
-    } else {
-      return "Currently there are no overdue orders in the system.";
-    }
-  }
-
-  if (message.includes("due today")) {
-    const todayStr = getPacificDateString();
-    const dueTodayOrders = orders.filter((o) => {
-      if (!o.requestedShipDate) return false;
-      const shipDate = new Date(o.requestedShipDate);
-      const shipDateStr = getPacificDateString(shipDate);
-      return shipDateStr === todayStr;
-    });
-
-    if (dueTodayOrders.length > 0) {
-      return `I found ${dueTodayOrders.length} orders due today (Pacific Time):
-
-${dueTodayOrders
-  .map(
-    (o) =>
-      `- Job ${o.jobNumber}: ${o.customer.company} - ${o.description} (${o.status})`
-  )
-  .join("\n")}
-
-Would you like details about any specific order due today?`;
-    } else {
-      return "No orders are due today (Pacific Time).";
-    }
-  }
-
-  if (message.includes("due tomorrow") || message.includes("due tmrw")) {
-    const todayPacific = getPacificDate();
-    const tomorrow = new Date(todayPacific);
-    tomorrow.setDate(tomorrow.getDate() + 1);
-    const tomorrowStr = getPacificDateString(tomorrow);
-
-    const dueTomorrowOrders = orders.filter((o) => {
-      if (!o.requestedShipDate) return false;
-      const shipDate = new Date(o.requestedShipDate);
-      const shipDateStr = getPacificDateString(shipDate);
-      return shipDateStr === tomorrowStr;
-    });
-
-    if (dueTomorrowOrders.length > 0) {
-      return `I found ${
-        dueTomorrowOrders.length
-      } orders due tomorrow (Pacific Time):
-
-${dueTomorrowOrders
-  .map(
-    (o) =>
-      `- Job ${o.jobNumber}: ${o.customer.company} - ${o.description} (${o.status})`
-  )
-  .join("\n")}
-
-Would you like details about any specific order due tomorrow?`;
-    } else {
-      return "No orders are due tomorrow (Pacific Time).";
-    }
-  }
-
-  if (
-    message.includes("stats") ||
-    message.includes("summary") ||
-    message.includes("overview")
-  ) {
-    return `Here's an overview of the OMS data:
-
-**General Statistics:**
-- Total Orders: ${stats.totalOrders}
-- Total Value: $${stats.totalValue.toLocaleString()}
-- Average Order Value: $${stats.averageOrderValue.toLocaleString()}
-
-**Status Breakdown:**
-${Object.entries(stats.statusBreakdown)
-  .map(([status, count]) => `- ${status}: ${count} orders`)
-  .join("\n")}
-
-**Top Customers:**
-${stats.topCustomers
-  .map((c: any) => `- ${c.customer}: ${c.count} orders`)
-  .join("\n")}
-
-**Last Updated:** ${new Date(stats.lastUpdated).toLocaleDateString()}
-
-Is there anything specific you'd like to know about the orders?`;
-  }
-
-  // Default response
-  return `I'm your OMS assistant! I can help you with:
-
-• **Order Information**: Ask about specific jobs by number (e.g., "Tell me about job 51094")
-• **Customer Data**: Get customer details and order history
-• **Rush Orders**: Find priority and rush orders
-• **Overdue Orders**: Find orders past their ship date (Pacific Time)
-• **Due Today**: Find orders due today (Pacific Time)
-• **Due Tomorrow**: Find orders due tomorrow (Pacific Time)
-• **Statistics**: Get overview and summary data
-• **Search**: Find orders by customer, status, or description
-
-What would you like to know about the orders?`;
 }

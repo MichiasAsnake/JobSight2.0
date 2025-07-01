@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import { Badge as ShadcnBadge } from "@/components/ui/badge";
 import {
   ChevronDown,
   ChevronRight,
@@ -19,6 +19,7 @@ import {
   Clock,
   Truck,
   TrendingUp,
+  Building2,
 } from "lucide-react";
 
 interface MessageProps {
@@ -30,18 +31,43 @@ interface MessageProps {
 export function OMSMessage({ content, isUser, timestamp }: MessageProps) {
   const [isExpanded, setIsExpanded] = useState(false);
 
+  // Safely handle content validation
+  const safeContent = content || "";
+
   // Check if content contains order data patterns
-  const hasOrderData = content.includes("Job") && content.includes("Customer:");
+  const hasOrderData =
+    safeContent.includes("Job") && safeContent.includes("Customer:");
   const hasMultipleOrders =
-    content.includes("orders for") || content.includes("rush/priority orders");
+    safeContent.includes("orders for") ||
+    safeContent.includes("rush/priority orders");
   const hasStats =
-    content.includes("Statistics:") || content.includes("overview");
+    safeContent.includes("Statistics:") || safeContent.includes("overview");
 
   const formatTimestamp = (timestamp: string) => {
-    return new Date(timestamp).toLocaleTimeString([], {
-      hour: "2-digit",
-      minute: "2-digit",
-    });
+    try {
+      if (!timestamp)
+        return new Date().toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+        });
+      const date = new Date(timestamp);
+      if (isNaN(date.getTime())) {
+        return new Date().toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+        });
+      }
+      return date.toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+    } catch (error) {
+      console.warn("Error formatting timestamp:", error);
+      return new Date().toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+    }
   };
 
   const getStatusIcon = (status: string) => {
@@ -81,7 +107,7 @@ export function OMSMessage({ content, isUser, timestamp }: MessageProps) {
     return (
       <div className="flex justify-end mb-4">
         <div className="bg-primary text-primary-foreground rounded-lg px-4 py-2 max-w-[80%]">
-          <p className="text-sm">{content}</p>
+          <p className="text-sm">{safeContent}</p>
           <p className="text-xs opacity-70 mt-1">
             {formatTimestamp(timestamp)}
           </p>
@@ -93,8 +119,8 @@ export function OMSMessage({ content, isUser, timestamp }: MessageProps) {
   // Enhanced AI response with structured data display
   if (hasOrderData && !hasMultipleOrders) {
     // Single order display
-    const lines = content.split("\n");
-    const orderInfo: any = {};
+    const lines = safeContent.split("\n");
+    const orderInfo: Record<string, string | undefined> = {};
 
     lines.forEach((line) => {
       if (line.includes("Job Number:")) {
@@ -140,13 +166,13 @@ export function OMSMessage({ content, isUser, timestamp }: MessageProps) {
                 <div className="flex items-center gap-2">
                   {orderInfo.status && getStatusIcon(orderInfo.status)}
                   {orderInfo.priority && (
-                    <Badge
+                    <ShadcnBadge
                       className={`text-xs ${getPriorityColor(
                         orderInfo.priority
                       )}`}
                     >
                       {orderInfo.priority}
-                    </Badge>
+                    </ShadcnBadge>
                   )}
                 </div>
               </div>
@@ -212,7 +238,7 @@ export function OMSMessage({ content, isUser, timestamp }: MessageProps) {
 
           {isExpanded && (
             <div className="mt-3 p-3 bg-background rounded border">
-              <pre className="text-xs whitespace-pre-wrap">{content}</pre>
+              <pre className="text-xs whitespace-pre-wrap">{safeContent}</pre>
             </div>
           )}
         </div>
@@ -246,7 +272,7 @@ export function OMSMessage({ content, isUser, timestamp }: MessageProps) {
           <Card>
             <CardContent className="pt-4">
               <div className="text-sm space-y-2">
-                {content.split("\n").map((line, index) => {
+                {safeContent.split("\n").map((line, index) => {
                   if (line.startsWith("**") && line.endsWith("**")) {
                     return (
                       <h5
@@ -295,7 +321,7 @@ export function OMSMessage({ content, isUser, timestamp }: MessageProps) {
             {formatTimestamp(timestamp)}
           </span>
         </div>
-        <div className="text-sm whitespace-pre-wrap">{content}</div>
+        <div className="text-sm whitespace-pre-wrap">{safeContent}</div>
       </div>
     </div>
   );
