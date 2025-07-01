@@ -2,7 +2,8 @@
 
 import { useState, useEffect, useRef } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-import { ChatInput } from "../components/chat-input";
+import { OMSChatInput } from "../components/oms-chat-input";
+import { OMSMessage } from "../components/oms-message";
 import { Button } from "@/components/ui/button";
 import { useLayout } from "../components/layout-wrapper";
 import { useChat } from "../components/chat-context";
@@ -37,18 +38,51 @@ export default function ChatPage() {
     addMessage(currentChatId, userMessage);
     setIsLoading(true);
 
-    // Simulate AI response
-    setTimeout(() => {
+    try {
+      // Call OMS chat API
+      const response = await fetch("/api/oms-chat", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          message: content,
+          context: currentChat?.messages
+            .slice(-3)
+            .map((m) => m.content)
+            .join(" | "),
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to get response from OMS API");
+      }
+
+      const data = await response.json();
+
       const assistantMessage = {
         id: (Date.now() + 1).toString(),
-        content: `I received your message: "${content}". This is a simulated response.`,
+        content: data.response,
+        role: "assistant" as const,
+        timestamp: new Date(data.timestamp),
+      };
+
+      addMessage(currentChatId, assistantMessage);
+    } catch (error) {
+      console.error("Error sending message:", error);
+
+      const errorMessage = {
+        id: (Date.now() + 1).toString(),
+        content:
+          "Sorry, I'm having trouble accessing the OMS data right now. Please try again later.",
         role: "assistant" as const,
         timestamp: new Date(),
       };
 
-      addMessage(currentChatId, assistantMessage);
+      addMessage(currentChatId, errorMessage);
+    } finally {
       setIsLoading(false);
-    }, 1000);
+    }
   };
 
   return (
@@ -66,25 +100,12 @@ export default function ChatPage() {
       {/* Messages Area */}
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
         {currentChat?.messages.map((message) => (
-          <div
+          <OMSMessage
             key={message.id}
-            className={`flex ${
-              message.role === "user" ? "justify-end" : "justify-start"
-            }`}
-          >
-            <div
-              className={`max-w-[70%] rounded-lg px-4 py-2 ${
-                message.role === "user"
-                  ? "bg-primary text-primary-foreground"
-                  : "bg-muted"
-              }`}
-            >
-              <p className="text-sm">{message.content}</p>
-              <p className="text-xs opacity-70 mt-1">
-                {message.timestamp.toLocaleTimeString()}
-              </p>
-            </div>
-          </div>
+            content={message.content}
+            isUser={message.role === "user"}
+            timestamp={message.timestamp.toISOString()}
+          />
         ))}
 
         {isLoading && (
@@ -107,11 +128,7 @@ export default function ChatPage() {
       </div>
 
       {/* Chat Input */}
-      <ChatInput
-        onSendMessage={handleSendMessage}
-        disabled={isLoading}
-        placeholder="Type your message here..."
-      />
+      <OMSChatInput onSendMessage={handleSendMessage} isLoading={isLoading} />
     </div>
   );
 }

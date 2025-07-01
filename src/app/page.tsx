@@ -16,23 +16,23 @@ import {
 const commonQuestions = [
   {
     icon: <MessageCircle className="h-5 w-5" />,
-    title: "Write a professional email",
-    description: "Help me draft a business email",
+    title: "Order Status",
+    description: "Show me recent orders and their status",
   },
   {
     icon: <Lightbulb className="h-5 w-5" />,
-    title: "Brainstorm ideas",
-    description: "Generate creative ideas for my project",
+    title: "Rush Orders",
+    description: "Show me all rush and priority orders",
   },
   {
     icon: <Code className="h-5 w-5" />,
-    title: "Explain code",
-    description: "Help me understand this code snippet",
+    title: "Customer Info",
+    description: "Show me customer information and order history",
   },
   {
     icon: <BookOpen className="h-5 w-5" />,
-    title: "Study help",
-    description: "Explain a complex topic simply",
+    title: "Order Statistics",
+    description: "Give me an overview of order statistics",
   },
 ];
 
@@ -60,11 +60,16 @@ export default function Home() {
           <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
             <Sparkles className="h-5 w-5 text-primary-foreground" />
           </div>
-          <h1 className="text-xl font-bold">AI Assistant</h1>
+          <h1 className="text-xl font-bold">OMS AI Assistant</h1>
         </div>
-        <Button variant="ghost" onClick={() => router.push("/chat")}>
-          View Chat History
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button variant="ghost" onClick={() => router.push("/data")}>
+            Data Management
+          </Button>
+          <Button variant="ghost" onClick={() => router.push("/chat")}>
+            View Chat History
+          </Button>
+        </div>
       </header>
 
       {/* Main Content */}
@@ -73,11 +78,11 @@ export default function Home() {
           {/* Hero Section */}
           <div className="space-y-4">
             <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
-              How can I help you today?
+              How can I help with your orders?
             </h1>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Ask me anything. I'm here to help with writing, analysis, coding,
-              and much more.
+              Ask me about orders, customers, rush jobs, or get insights from
+              your OMS data.
             </p>
           </div>
 
@@ -87,7 +92,7 @@ export default function Home() {
               <Textarea
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
-                placeholder="Describe what you need help with..."
+                placeholder="Ask about orders, customers, or get OMS insights..."
                 className="min-h-[120px] text-lg p-6 pr-16 resize-none border-2 focus:border-primary/50 transition-colors"
                 style={{ minHeight: "120px" }}
               />
@@ -105,7 +110,7 @@ export default function Home() {
           {/* Common Questions */}
           <div className="space-y-6">
             <h2 className="text-xl font-semibold text-muted-foreground">
-              Popular questions
+              Quick OMS Actions
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-3xl mx-auto">
               {commonQuestions.map((question, index) => (
@@ -135,8 +140,9 @@ export default function Home() {
           {/* Footer Info */}
           <div className="text-sm text-muted-foreground max-w-2xl mx-auto">
             <p>
-              AI Assistant can help with writing, analysis, coding, and more.
-              Your conversations are private and secure.
+              OMS AI Assistant can help with order management, customer
+              insights, and data analysis. Your conversations are private and
+              secure.
             </p>
           </div>
         </div>
