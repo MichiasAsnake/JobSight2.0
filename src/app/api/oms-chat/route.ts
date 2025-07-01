@@ -5,10 +5,29 @@ import OpenAI from "openai";
 const openaiApiKey = process.env.OPENAI_API_KEY;
 const openai = openaiApiKey ? new OpenAI({ apiKey: openaiApiKey }) : null;
 
+// Function to get Pacific Time date string
+function getPacificDateString(date: Date = new Date()): string {
+  return date.toLocaleDateString("en-CA", {
+    timeZone: "America/Los_Angeles",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  });
+}
+
+// Function to get Pacific Time date object
+function getPacificDate(date: Date = new Date()): Date {
+  const pacificTime = new Date(
+    date.toLocaleString("en-US", { timeZone: "America/Los_Angeles" })
+  );
+  return pacificTime;
+}
+
 // Function to search and filter orders based on user query
 function searchOrders(orders: any[], query: string) {
   const searchTerm = query.toLowerCase();
-  const today = new Date();
+  const todayPacific = getPacificDate();
+  const todayStr = getPacificDateString();
 
   // Check for specific query patterns
   if (
@@ -19,17 +38,29 @@ function searchOrders(orders: any[], query: string) {
     return orders.filter((order) => {
       if (!order.requestedShipDate) return false;
       const shipDate = new Date(order.requestedShipDate);
-      return shipDate < today && order.status !== "Closed";
+      return shipDate < todayPacific && order.status !== "Closed";
     });
   }
 
   if (searchTerm.includes("due today") || searchTerm.includes("due now")) {
-    const todayStr = today.toISOString().split("T")[0];
     return orders.filter((order) => {
       if (!order.requestedShipDate) return false;
       const shipDate = new Date(order.requestedShipDate);
-      const shipDateStr = shipDate.toISOString().split("T")[0];
+      const shipDateStr = getPacificDateString(shipDate);
       return shipDateStr === todayStr;
+    });
+  }
+
+  if (searchTerm.includes("due tomorrow") || searchTerm.includes("due tmrw")) {
+    const tomorrow = new Date(todayPacific);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    const tomorrowStr = getPacificDateString(tomorrow);
+
+    return orders.filter((order) => {
+      if (!order.requestedShipDate) return false;
+      const shipDate = new Date(order.requestedShipDate);
+      const shipDateStr = getPacificDateString(shipDate);
+      return shipDateStr === tomorrowStr;
     });
   }
 
@@ -318,22 +349,22 @@ Would you like details about any specific rush order?`;
     message.includes("late") ||
     message.includes("past due")
   ) {
-    const today = new Date();
+    const todayPacific = getPacificDate();
     const lateOrders = orders.filter((o) => {
       if (!o.requestedShipDate) return false;
       const shipDate = new Date(o.requestedShipDate);
-      return shipDate < today && o.status !== "Closed";
+      return shipDate < todayPacific && o.status !== "Closed";
     });
 
     if (lateOrders.length > 0) {
-      return `I found ${lateOrders.length} overdue orders:
+      return `I found ${lateOrders.length} overdue orders (Pacific Time):
 
 ${lateOrders
   .slice(0, 5)
   .map((o) => {
     const shipDate = new Date(o.requestedShipDate);
     const daysLate = Math.floor(
-      (today.getTime() - shipDate.getTime()) / (1000 * 60 * 60 * 24)
+      (todayPacific.getTime() - shipDate.getTime()) / (1000 * 60 * 60 * 24)
     );
     return `- Job ${o.jobNumber}: ${o.customer.company} - ${o.description} (${daysLate} days late)`;
   })
@@ -352,17 +383,16 @@ Would you like details about any specific overdue order?`;
   }
 
   if (message.includes("due today")) {
-    const today = new Date();
-    const todayStr = today.toISOString().split("T")[0];
+    const todayStr = getPacificDateString();
     const dueTodayOrders = orders.filter((o) => {
       if (!o.requestedShipDate) return false;
       const shipDate = new Date(o.requestedShipDate);
-      const shipDateStr = shipDate.toISOString().split("T")[0];
+      const shipDateStr = getPacificDateString(shipDate);
       return shipDateStr === todayStr;
     });
 
     if (dueTodayOrders.length > 0) {
-      return `I found ${dueTodayOrders.length} orders due today:
+      return `I found ${dueTodayOrders.length} orders due today (Pacific Time):
 
 ${dueTodayOrders
   .map(
@@ -373,7 +403,38 @@ ${dueTodayOrders
 
 Would you like details about any specific order due today?`;
     } else {
-      return "No orders are due today.";
+      return "No orders are due today (Pacific Time).";
+    }
+  }
+
+  if (message.includes("due tomorrow") || message.includes("due tmrw")) {
+    const todayPacific = getPacificDate();
+    const tomorrow = new Date(todayPacific);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    const tomorrowStr = getPacificDateString(tomorrow);
+
+    const dueTomorrowOrders = orders.filter((o) => {
+      if (!o.requestedShipDate) return false;
+      const shipDate = new Date(o.requestedShipDate);
+      const shipDateStr = getPacificDateString(shipDate);
+      return shipDateStr === tomorrowStr;
+    });
+
+    if (dueTomorrowOrders.length > 0) {
+      return `I found ${
+        dueTomorrowOrders.length
+      } orders due tomorrow (Pacific Time):
+
+${dueTomorrowOrders
+  .map(
+    (o) =>
+      `- Job ${o.jobNumber}: ${o.customer.company} - ${o.description} (${o.status})`
+  )
+  .join("\n")}
+
+Would you like details about any specific order due tomorrow?`;
+    } else {
+      return "No orders are due tomorrow (Pacific Time).";
     }
   }
 
@@ -410,8 +471,9 @@ Is there anything specific you'd like to know about the orders?`;
 • **Order Information**: Ask about specific jobs by number (e.g., "Tell me about job 51094")
 • **Customer Data**: Get customer details and order history
 • **Rush Orders**: Find priority and rush orders
-• **Overdue Orders**: Find orders past their ship date
-• **Due Today**: Find orders due today
+• **Overdue Orders**: Find orders past their ship date (Pacific Time)
+• **Due Today**: Find orders due today (Pacific Time)
+• **Due Tomorrow**: Find orders due tomorrow (Pacific Time)
 • **Statistics**: Get overview and summary data
 • **Search**: Find orders by customer, status, or description
 
