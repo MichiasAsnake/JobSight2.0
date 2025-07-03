@@ -7,20 +7,23 @@ export async function POST(request: NextRequest) {
     const { message } = await request.json();
 
     if (!message) {
+      console.warn("[OMS-CHAT] No message provided in request body");
       return NextResponse.json(
         { error: "Message is required" },
         { status: 400 }
       );
     }
 
-    console.log(`🎯 Processing enriched query: "${message}"`);
+    console.log(`[OMS-CHAT] Incoming message: '${message}'`);
 
     // Use the existing router but also get enriched data
     const routerResult = await intelligentQueryRouter.routeQuery(message);
+    console.log("[OMS-CHAT] Router result:", JSON.stringify(routerResult, null, 2));
 
     // Additionally, get enriched order data for better context
     let enrichedOrders: any[] = [];
     let enrichedSummary = "";
+    let triedEnriched = false;
 
     try {
       // Get enriched data based on query type
@@ -28,6 +31,7 @@ export async function POST(request: NextRequest) {
         // Extract job number from message
         const jobMatch = message.match(/\d+/);
         if (jobMatch) {
+          triedEnriched = true;
           const enrichedOrder =
             await enrichedOMSDataService.getEnrichedOrderByJobNumber(
               jobMatch[0]
@@ -35,9 +39,12 @@ export async function POST(request: NextRequest) {
           if (enrichedOrder) {
             enrichedOrders = [enrichedOrder];
             enrichedSummary = generateDetailedOrderSummary(enrichedOrder);
+          } else {
+            console.warn(`[OMS-CHAT] No enriched order found for job number: ${jobMatch[0]}`);
           }
         }
       } else {
+        triedEnriched = true;
         // Search for orders using enriched service
         const searchResults = await enrichedOMSDataService.searchEnrichedOrders(
           message
@@ -46,6 +53,8 @@ export async function POST(request: NextRequest) {
 
         if (enrichedOrders.length > 0) {
           enrichedSummary = generateEnrichedSummary(enrichedOrders, message);
+        } else {
+          console.warn(`[OMS-CHAT] No enriched orders found for query: '${message}'`);
         }
       }
     } catch (enrichedError) {
@@ -63,6 +72,10 @@ export async function POST(request: NextRequest) {
         ? enrichedOrders
         : routerResult.results?.orders || [];
 
+    if (finalOrders.length === 0) {
+      console.warn(`[OMS-CHAT] No orders found for message: '${message}'. Router strategy: ${routerResult.strategy}, Enriched tried: ${triedEnriched}`);
+    }
+
     // Enhanced response with analytics
     const analytics = {
       totalResults: finalOrders.length,
@@ -76,7 +89,10 @@ export async function POST(request: NextRequest) {
 
     const response = {
       success: true,
-      message: finalSummary,
+      message:
+        finalOrders.length === 0
+          ? "No jobs/orders found for your query. Please check your job number, spelling, or try a different search."
+          : finalSummary,
       orders: finalOrders,
       analytics: analytics,
       metadata: {
@@ -86,11 +102,7 @@ export async function POST(request: NextRequest) {
       },
     };
 
-    console.log(`✅ Enriched query processed successfully:`, {
-      ordersFound: finalOrders.length,
-      strategy: analytics.searchStrategy,
-      processingTime: routerResult.processingTime,
-    });
+    console.log(`[OMS-CHAT] Query processed. Orders found: ${finalOrders.length}, Strategy: ${analytics.searchStrategy}, Processing time: ${routerResult.processingTime}`);
 
     return NextResponse.json(response);
   } catch (error) {

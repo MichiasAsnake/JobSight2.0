@@ -278,7 +278,7 @@ class EnrichedOMSDataService {
       },
       location: {
         code: job.LocationCode || "",
-        name: job.JobLocationName || "",
+        name: "", // TODO: Add location name if available in future APIJob fields
       },
       jobLines:
         jobLines?.map((line) => ({
@@ -496,15 +496,17 @@ class EnrichedOMSDataService {
     const cached = this.getCache(cacheKey);
 
     if (cached) {
+      console.log(`[ENRICHED-OMS] Cache hit for job ${jobNumber}`);
       return cached;
     }
 
     try {
-      console.log(`🔍 Fetching enriched data for job ${jobNumber}...`);
+      console.log(`[ENRICHED-OMS] Fetching enriched data for job ${jobNumber}...`);
 
       const enrichedData = await omsAPIClient.getEnrichedJobData(jobNumber);
 
       if (!enrichedData.job) {
+        console.warn(`[ENRICHED-OMS] No job found for job number: ${jobNumber}`);
         return null;
       }
 
@@ -521,11 +523,11 @@ class EnrichedOMSDataService {
 
       // Cache the individual order
       this.setCache(cacheKey, enrichedOrder, this.BASIC_CACHE_DURATION);
-      console.log(`✅ Successfully enriched job ${jobNumber}`);
+      console.log(`[ENRICHED-OMS] Successfully enriched job ${jobNumber}`);
 
       return enrichedOrder;
     } catch (error) {
-      console.error(`❌ Failed to fetch enriched order ${jobNumber}:`, error);
+      console.error(`[ENRICHED-OMS] Failed to fetch enriched order ${jobNumber}:`, error);
       return null;
     }
   }
@@ -533,9 +535,10 @@ class EnrichedOMSDataService {
   // Search enriched orders
   async searchEnrichedOrders(query: string): Promise<EnrichedOrder[]> {
     const allOrders = await this.getEnrichedOrders();
+    console.log(`[ENRICHED-OMS] Total orders loaded for search: ${allOrders.orders.length}`);
     const queryLower = query.toLowerCase();
 
-    return allOrders.orders.filter((order) => {
+    const filtered = allOrders.orders.filter((order) => {
       // Search across multiple fields
       const searchableText = [
         order.jobNumber,
@@ -554,6 +557,11 @@ class EnrichedOMSDataService {
 
       return searchableText.includes(queryLower);
     });
+    console.log(`[ENRICHED-OMS] Orders found after filtering for query '${query}': ${filtered.length}`);
+    if (filtered.length === 0) {
+      console.warn(`[ENRICHED-OMS] No orders matched for query: '${query}'`);
+    }
+    return filtered;
   }
 
   // Get orders by specific criteria with rich data
