@@ -9,6 +9,7 @@ import {
 import { embeddingService } from "./embeddings";
 import { HybridOMSDataService } from "./hybrid-data-service";
 import { enrichedOMSDataService, EnrichedOrder } from "./enhanced-data-service";
+import { ModernHybridDataService } from "./modern-hybrid-data-service";
 
 export interface QueryIntent {
   type: "specific" | "semantic" | "analytical" | "hybrid";
@@ -131,10 +132,10 @@ export class IntelligentQueryRouter {
     successfulQueries: 0,
     successRate: 0,
   };
-  private hybridService: HybridDataService;
+  private hybridService: ModernHybridDataService;
 
   constructor() {
-    this.hybridService = new HybridDataService();
+    this.hybridService = new ModernHybridDataService();
     // Clean up old cache entries every 10 minutes
     setInterval(() => this.cleanupCache(), 10 * 60 * 1000);
   }
