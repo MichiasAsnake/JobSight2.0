@@ -511,8 +511,119 @@ class APIFirstDataService {
         pageSize: 500, // Get more results for better search coverage
       });
 
-      // Basic text matching (can be enhanced with vector search later)
-      const searchTerms = query.toLowerCase().split(" ");
+      // Smart search logic with stop word filtering and semantic analysis
+      const stopWords = new Set([
+        "what",
+        "where",
+        "when",
+        "who",
+        "how",
+        "why",
+        "the",
+        "a",
+        "an",
+        "and",
+        "or",
+        "but",
+        "in",
+        "on",
+        "at",
+        "to",
+        "for",
+        "of",
+        "with",
+        "by",
+        "i",
+        "you",
+        "he",
+        "she",
+        "it",
+        "we",
+        "they",
+        "me",
+        "him",
+        "her",
+        "us",
+        "them",
+        "my",
+        "your",
+        "his",
+        "her",
+        "its",
+        "our",
+        "their",
+        "this",
+        "that",
+        "these",
+        "those",
+        "is",
+        "are",
+        "was",
+        "were",
+        "be",
+        "been",
+        "being",
+        "have",
+        "has",
+        "had",
+        "do",
+        "does",
+        "did",
+        "will",
+        "would",
+        "could",
+        "should",
+        "may",
+        "might",
+        "must",
+        "can",
+        "get",
+        "need",
+        "want",
+        "focus",
+        "today",
+        "orders",
+      ]);
+
+      // Extract meaningful terms and special patterns
+      const searchTerms = query
+        .toLowerCase()
+        .split(/\s+/)
+        .filter((term) => term.length > 2 && !stopWords.has(term));
+
+      // Look for value patterns (like 10k, $1000, etc.)
+      const valuePattern = /(\d+k|\$\d+|dollar|revenue|value|profit|sales)/gi;
+      const valueMatches = query.match(valuePattern) || [];
+
+      // Look for job/order number patterns
+      const jobPattern = /(?:job|order|#)\s*(\d+)/gi;
+      const jobMatches = Array.from(query.matchAll(jobPattern)).map(
+        (m) => m[1]
+      );
+
+      // Look for customer patterns
+      const customerPattern = /(?:customer|client|company)\s+([a-zA-Z\s&]+)/gi;
+      const customerMatches = Array.from(query.matchAll(customerPattern)).map(
+        (m) => m[1].trim()
+      );
+
+      // Look for status patterns
+      const statusPattern =
+        /(urgent|rush|late|overdue|approved|completed|running\s+late|on\s+time|problem|critical)/gi;
+      const statusMatches = query.match(statusPattern) || [];
+
+      // If we have specific job numbers, search for those first
+      if (jobMatches.length > 0) {
+        const jobResults = allOrders.orders.filter((order) =>
+          jobMatches.some((jobNum) => order.jobNumber === jobNum)
+        );
+        if (jobResults.length > 0) {
+          console.log(`✅ Found ${jobResults.length} orders by job number`);
+          return jobResults;
+        }
+      }
+
+      // Filter orders based on meaningful criteria
       const filteredOrders = allOrders.orders.filter((order) => {
         const searchableText = [
           order.description,
@@ -520,13 +631,88 @@ class APIFirstDataService {
           order.orderNumber,
           order.jobNumber,
           order.comments,
+          order.status.master,
           ...order.tags.map((t) => t.tag),
           ...order.lineItems.map((l) => l.description),
         ]
           .join(" ")
           .toLowerCase();
 
-        return searchTerms.every((term) => searchableText.includes(term));
+        // Check for value-related queries (10k = looking for high-value orders)
+        if (valueMatches.length > 0) {
+          const orderValue = order.lineItems.reduce(
+            (sum, item) => sum + (item.totalPrice || 0),
+            0
+          );
+
+          // If looking for "10k" type queries, prioritize higher value orders
+          if (valueMatches.some((v) => v.includes("10k") || v.includes("10"))) {
+            if (orderValue >= 1000) return true; // $1000+ orders for "10k" goals
+          }
+          if (
+            valueMatches.some((v) => v.includes("dollar") || v.includes("$"))
+          ) {
+            if (orderValue > 500) return true; // Medium+ value orders
+          }
+        }
+
+        // Check for customer matches
+        if (customerMatches.length > 0) {
+          if (
+            customerMatches.some((customer) =>
+              searchableText.includes(customer.toLowerCase())
+            )
+          )
+            return true;
+        }
+
+        // Check for status matches
+        if (statusMatches.length > 0) {
+          if (
+            statusMatches.some((status) =>
+              searchableText.includes(status.toLowerCase())
+            )
+          )
+            return true;
+        }
+
+        // Check for meaningful search terms (only need SOME, not ALL)
+        if (searchTerms.length > 0) {
+          const matchCount = searchTerms.filter((term) =>
+            searchableText.includes(term)
+          ).length;
+
+          // Return true if at least 30% of meaningful terms match
+          const matchRatio = matchCount / searchTerms.length;
+          if (matchRatio >= 0.3) return true;
+        }
+
+        // Special handling for analytical queries
+        if (
+          query.toLowerCase().includes("focus") ||
+          query.toLowerCase().includes("priority")
+        ) {
+          // Return high-value, urgent, or due-soon orders
+          const orderValue = order.lineItems.reduce(
+            (sum, item) => sum + (item.totalPrice || 0),
+            0
+          );
+
+          return (
+            orderValue >= 500 || // High value
+            order.production.timeSensitive || // Time sensitive
+            order.production.mustDate || // Must date
+            order.dates.daysToDueDate <= 3 || // Due soon
+            order.status.master.includes("Late") || // Running late
+            order.tags.some(
+              (t) =>
+                t.tag.toLowerCase().includes("urgent") ||
+                t.tag.toLowerCase().includes("rush")
+            )
+          );
+        }
+
+        return false;
       });
 
       console.log(
