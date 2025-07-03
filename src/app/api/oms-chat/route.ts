@@ -1,6 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { intelligentQueryRouter } from "../../../lib/query-router";
 import { enrichedOMSDataService } from "../../../lib/enhanced-data-service";
+import { RAGPipeline } from "../../../lib/rag-pipeline";
+
+// Initialize RAG pipeline for intelligent responses
+const ragPipeline = new RAGPipeline();
 
 export async function POST(request: NextRequest) {
   try {
@@ -16,11 +20,14 @@ export async function POST(request: NextRequest) {
 
     console.log(`[OMS-CHAT] Incoming message: '${message}'`);
 
-    // Use the existing router but also get enriched data
+    // Step 1: Use intelligent query router to get data
     const routerResult = await intelligentQueryRouter.routeQuery(message);
-    console.log("[OMS-CHAT] Router result:", JSON.stringify(routerResult, null, 2));
+    console.log(
+      "[OMS-CHAT] Router result:",
+      JSON.stringify(routerResult, null, 2)
+    );
 
-    // Additionally, get enriched order data for better context
+    // Step 2: Get enriched data for additional context
     let enrichedOrders: any[] = [];
     let enrichedSummary = "";
     let triedEnriched = false;
@@ -38,9 +45,10 @@ export async function POST(request: NextRequest) {
             );
           if (enrichedOrder) {
             enrichedOrders = [enrichedOrder];
-            enrichedSummary = generateDetailedOrderSummary(enrichedOrder);
           } else {
-            console.warn(`[OMS-CHAT] No enriched order found for job number: ${jobMatch[0]}`);
+            console.warn(
+              `[OMS-CHAT] No enriched order found for job number: ${jobMatch[0]}`
+            );
           }
         }
       } else {
@@ -51,10 +59,10 @@ export async function POST(request: NextRequest) {
         );
         enrichedOrders = searchResults.slice(0, 10);
 
-        if (enrichedOrders.length > 0) {
-          enrichedSummary = generateEnrichedSummary(enrichedOrders, message);
-        } else {
-          console.warn(`[OMS-CHAT] No enriched orders found for query: '${message}'`);
+        if (enrichedOrders.length === 0) {
+          console.warn(
+            `[OMS-CHAT] No enriched orders found for query: '${message}'`
+          );
         }
       }
     } catch (enrichedError) {
@@ -64,47 +72,106 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Combine results - prefer enriched data if available
-    const finalSummary =
-      enrichedSummary || routerResult.results?.summary || "No results found.";
-    const finalOrders =
-      enrichedOrders.length > 0
-        ? enrichedOrders
-        : routerResult.results?.orders || [];
+    // Step 3: Use RAG pipeline for intelligent response generation
+    try {
+      console.log("🧠 Generating intelligent response using RAG pipeline...");
 
-    if (finalOrders.length === 0) {
-      console.warn(`[OMS-CHAT] No orders found for message: '${message}'. Router strategy: ${routerResult.strategy}, Enriched tried: ${triedEnriched}`);
+      // Combine all available data for context
+      const allOrders = [
+        ...(enrichedOrders || []),
+        ...(routerResult.results?.orders || []),
+      ];
+
+      // Use RAG pipeline for intelligent analysis
+      const ragResult = await ragPipeline.queryWithEnhancedContext({
+        userQuery: message,
+        context: {
+          includeLineItems: true,
+          includeShipments: true,
+          includeFiles: true,
+          maxOrders: 10,
+          preferFreshData: true,
+        },
+      });
+
+      // Step 4: Prepare enhanced response
+      const response = {
+        success: true,
+        message: ragResult.answer,
+        orders: allOrders.slice(0, 10), // Include relevant orders for context
+        analytics: {
+          totalResults: allOrders.length,
+          dataSource:
+            enrichedOrders.length > 0 ? "enriched_api" : routerResult.strategy,
+          processingTime:
+            routerResult.processingTime + ragResult.processingTime,
+          confidence: ragResult.confidence,
+          searchStrategy:
+            enrichedOrders.length > 0
+              ? "enriched_search"
+              : routerResult.strategy,
+          ragAnalysis: {
+            contextQuality: ragResult.contextQuality,
+            llmTokensUsed: ragResult.metadata?.llmTokensUsed || 0,
+            reasoning: ragResult.metadata?.reasoning,
+          },
+        },
+        metadata: {
+          queryProcessed: message,
+          timestamp: new Date().toISOString(),
+          strategy: "rag_enhanced",
+          dataFreshness: ragResult.dataFreshness,
+          recommendations: ragResult.metadata?.recommendations,
+        },
+      };
+
+      console.log(
+        `[OMS-CHAT] RAG response generated. Orders: ${allOrders.length}, Confidence: ${ragResult.confidence}, Processing time: ${ragResult.processingTime}ms`
+      );
+
+      return NextResponse.json(response);
+    } catch (ragError) {
+      console.warn(
+        "⚠️ RAG pipeline failed, falling back to basic response:",
+        ragError
+      );
+
+      // Fallback to basic response if RAG fails
+      const finalOrders =
+        enrichedOrders.length > 0
+          ? enrichedOrders
+          : routerResult.results?.orders || [];
+      const basicSummary = generateBasicSummary(finalOrders, message);
+
+      const fallbackResponse = {
+        success: true,
+        message: basicSummary,
+        orders: finalOrders,
+        analytics: {
+          totalResults: finalOrders.length,
+          dataSource:
+            enrichedOrders.length > 0 ? "enriched_api" : routerResult.strategy,
+          processingTime: routerResult.processingTime,
+          confidence: routerResult.confidence,
+          searchStrategy:
+            enrichedOrders.length > 0
+              ? "enriched_search"
+              : routerResult.strategy,
+        },
+        metadata: {
+          queryProcessed: message,
+          timestamp: new Date().toISOString(),
+          strategy: "basic_fallback",
+          fallbackReason: "RAG pipeline unavailable",
+        },
+      };
+
+      console.log(
+        `[OMS-CHAT] Basic fallback response. Orders found: ${finalOrders.length}, Strategy: ${fallbackResponse.analytics.searchStrategy}, Processing time: ${routerResult.processingTime}`
+      );
+
+      return NextResponse.json(fallbackResponse);
     }
-
-    // Enhanced response with analytics
-    const analytics = {
-      totalResults: finalOrders.length,
-      dataSource:
-        enrichedOrders.length > 0 ? "enriched_api" : routerResult.strategy,
-      processingTime: routerResult.processingTime,
-      confidence: routerResult.confidence,
-      searchStrategy:
-        enrichedOrders.length > 0 ? "enriched_search" : routerResult.strategy,
-    };
-
-    const response = {
-      success: true,
-      message:
-        finalOrders.length === 0
-          ? "No jobs/orders found for your query. Please check your job number, spelling, or try a different search."
-          : finalSummary,
-      orders: finalOrders,
-      analytics: analytics,
-      metadata: {
-        queryProcessed: message,
-        timestamp: new Date().toISOString(),
-        strategy: enrichedOrders.length > 0 ? "enriched" : "standard",
-      },
-    };
-
-    console.log(`[OMS-CHAT] Query processed. Orders found: ${finalOrders.length}, Strategy: ${analytics.searchStrategy}, Processing time: ${routerResult.processingTime}`);
-
-    return NextResponse.json(response);
   } catch (error) {
     console.error("❌ OMS chat API error:", error);
 
@@ -123,6 +190,43 @@ export async function POST(request: NextRequest) {
       { status: 500 }
     );
   }
+}
+
+// Basic fallback summary generation when RAG is unavailable
+function generateBasicSummary(orders: any[], query: string): string {
+  if (orders.length === 0) {
+    return `No jobs/orders found for your query "${query}". Please check your job number, spelling, or try a different search.`;
+  }
+
+  if (orders.length === 1) {
+    const order = orders[0];
+    return `Found job ${order.jobNumber || order.metadata?.jobNumber} - ${
+      order.description || order.metadata?.description
+    }. Status: ${order.status || order.metadata?.status}. Due: ${
+      order.dateDue ? new Date(order.dateDue).toLocaleDateString() : "TBD"
+    }.`;
+  }
+
+  const statusCounts: Record<string, number> = {};
+  let totalValue = 0;
+
+  orders.forEach((order) => {
+    const status = order.status || order.metadata?.status || "Unknown";
+    statusCounts[status] = (statusCounts[status] || 0) + 1;
+
+    const value = order.pricing?.total || order.metadata?.totalDue || 0;
+    totalValue += value;
+  });
+
+  const statusSummary = Object.entries(statusCounts)
+    .map(([status, count]) => `${count} ${status}`)
+    .join(", ");
+
+  return `Found ${
+    orders.length
+  } orders matching "${query}". Status breakdown: ${statusSummary}. ${
+    totalValue > 0 ? `Total value: $${totalValue.toLocaleString()}.` : ""
+  }`;
 }
 
 // Generate detailed summary for a single enriched order

@@ -691,19 +691,68 @@ export class EnhancedOMSAPIClient {
     });
   }
 
+  async getCustomerById(customerId: string): Promise<unknown> {
+    const params = new URLSearchParams({
+      customerId,
+      bit: "get-customer-by-id",
+    });
+
+    return this.makeRequest(`/Jobs/ajax/JobHandler.ashx`, {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: params,
+    });
+  }
+
+  async getDeliveryOptions(customerId: string): Promise<unknown> {
+    const params = new URLSearchParams({
+      "customer-id": customerId,
+      bit: "get-delivery-options",
+    });
+
+    return this.makeRequest(`/Jobs/ajax/jobhandler.ashx?${params}`, {
+      method: "GET",
+    });
+  }
+
+  async getAllInwardsAndStockItems(jobNumber: string): Promise<unknown> {
+    const params = new URLSearchParams({
+      jobNumber,
+      bit: "get-all-inwards-and-stock-items",
+    });
+
+    return this.makeRequest(`/Jobs/ajax/JobHandler.ashx`, {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: params,
+    });
+  }
+
+  async getJobLinesCostDetails(jobNumber: string): Promise<unknown> {
+    const params = new URLSearchParams({
+      jobNumber,
+      bit: "get-joblines-cost-details",
+    });
+
+    return this.makeRequest(`/Jobs/ajax/JobHandler.ashx`, {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: params,
+    });
+  }
+
   // ===== SECONDARY API ENDPOINTS =====
 
   async getAllCategoryUnits(): Promise<APICategoryUnits> {
     const params = new URLSearchParams({
       bit: "get-all-category-units",
+      "no-cache": "0",
     });
 
     return this.makeRequest<APICategoryUnits>(
-      `/ajax/GeneralHandler.ashx`,
+      `/assetmanager/ajax/assetbit.ashx?${params}`,
       {
-        method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: params,
+        method: "GET",
       },
       { skipCache: false } // Cache this as it changes rarely
     );
@@ -722,13 +771,19 @@ export class EnhancedOMSAPIClient {
     });
   }
 
-  async getPriceQuantityBands(assetId: string): Promise<unknown> {
+  async getPriceQuantityBands(
+    categoryUnitId: string,
+    priceTier: string,
+    priceCode: string
+  ): Promise<unknown> {
     const params = new URLSearchParams({
-      assetId,
+      "category-unit-id": categoryUnitId,
+      "price-tier": priceTier,
+      "price-code": priceCode,
       bit: "get-price-quantity-bands",
     });
 
-    return this.makeRequest(`/Assets/ajax/AssetHandler.ashx`, {
+    return this.makeRequest(`/assetmanager/ajax/assetbit.ashx`, {
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
       body: params,
@@ -1041,6 +1096,29 @@ export class EnhancedOMSAPIClient {
   }
 }
 
+// ===== AUTHENTICATION HELPERS =====
+
+function loadAuthCookiesFromEnv(): string {
+  // Load authentication cookies from environment variables
+  const cookieString =
+    process.env.OMS_AUTH_COOKIES ||
+    process.env.OMS_AUTH_COOKIE ||
+    process.env.AUTH_COOKIES ||
+    process.env.AUTH_COOKIE ||
+    "";
+
+  if (!cookieString) {
+    console.warn("⚠️ No authentication cookies found in environment variables");
+    console.warn(
+      "💡 Set OMS_AUTH_COOKIES or OMS_AUTH_COOKIE environment variable with your session cookies"
+    );
+    return "";
+  }
+
+  console.log("🔐 Authentication cookie loaded from environment");
+  return cookieString;
+}
+
 // ===== SINGLETON INSTANCE =====
 
 export const enhancedAPIClient = new EnhancedOMSAPIClient({
@@ -1050,10 +1128,20 @@ export const enhancedAPIClient = new EnhancedOMSAPIClient({
   connectionPoolSize: 10,
 });
 
-// Auto-warmup cache
+// Set authentication cookies on initialization
 if (typeof window === "undefined") {
-  // Server-side only
-  setTimeout(() => {
-    enhancedAPIClient.warmupCache().catch(console.error);
-  }, 1000);
+  // Server-side only - load auth cookies from environment
+  const authCookies = loadAuthCookiesFromEnv();
+  if (authCookies) {
+    enhancedAPIClient.setAuthCookies(authCookies);
+    console.log("🔐 Authentication cookies updated");
+  }
+
+  // Skip cache warmup during build to avoid expired cookie errors
+  // Cache will warm up during actual runtime requests
+  if (process.env.NODE_ENV !== "production") {
+    setTimeout(() => {
+      enhancedAPIClient.warmupCache().catch(console.error);
+    }, 1000);
+  }
 }

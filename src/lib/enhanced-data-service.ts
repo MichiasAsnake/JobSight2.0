@@ -330,28 +330,28 @@ class EnrichedOMSDataService {
       shipments:
         shipments?.JobShipments?.map((shipment) => ({
           id: shipment.Id,
-          title: shipment.Title,
+          title: shipment.Title || "",
           method: {
-            label: shipment.ShipmentMethod.label,
-            value: shipment.ShipmentMethod.value,
-            isCollection: shipment.ShipmentMethod.iscollection,
-            rank: shipment.ShipmentMethod.rank,
+            label: shipment.ShipmentMethod?.label || "Unknown",
+            value: shipment.ShipmentMethod?.value || "",
+            isCollection: shipment.ShipmentMethod?.iscollection || false,
+            rank: shipment.ShipmentMethod?.rank || 0,
           },
           address: {
-            contactName: shipment.Address.ContactName,
-            organization: shipment.Address.Organisation,
-            street: shipment.Address.StreetAddress,
-            city: shipment.Address.City,
-            state: shipment.Address.AdministrativeArea,
-            zipCode: shipment.Address.ZipCode,
-            phone: shipment.Address.Phone,
-            email: shipment.Address.EmailAddress,
+            contactName: shipment.Address?.ContactName || "",
+            organization: shipment.Address?.Organisation || "",
+            street: shipment.Address?.StreetAddress || "",
+            city: shipment.Address?.City || "",
+            state: shipment.Address?.AdministrativeArea || "",
+            zipCode: shipment.Address?.ZipCode || "",
+            phone: shipment.Address?.Phone || "",
+            email: shipment.Address?.EmailAddress || "",
           },
-          shipped: shipment.Shipped,
-          dateShipped: shipment.DateShipped,
-          trackingDetails: shipment.TrackingDetails,
-          canShip: shipment.CanShip,
-          notes: shipment.ShipmentNotes,
+          shipped: shipment.Shipped || false,
+          dateShipped: shipment.DateShipped || "",
+          trackingDetails: shipment.TrackingDetails || {},
+          canShip: shipment.CanShip || false,
+          notes: shipment.ShipmentNotes || "",
         })) || [],
       history:
         history?.map((entry) => ({
@@ -501,12 +501,16 @@ class EnrichedOMSDataService {
     }
 
     try {
-      console.log(`[ENRICHED-OMS] Fetching enriched data for job ${jobNumber}...`);
+      console.log(
+        `[ENRICHED-OMS] Fetching enriched data for job ${jobNumber}...`
+      );
 
       const enrichedData = await omsAPIClient.getEnrichedJobData(jobNumber);
 
       if (!enrichedData.job) {
-        console.warn(`[ENRICHED-OMS] No job found for job number: ${jobNumber}`);
+        console.warn(
+          `[ENRICHED-OMS] No job found for job number: ${jobNumber}`
+        );
         return null;
       }
 
@@ -527,7 +531,10 @@ class EnrichedOMSDataService {
 
       return enrichedOrder;
     } catch (error) {
-      console.error(`[ENRICHED-OMS] Failed to fetch enriched order ${jobNumber}:`, error);
+      console.error(
+        `[ENRICHED-OMS] Failed to fetch enriched order ${jobNumber}:`,
+        error
+      );
       return null;
     }
   }
@@ -535,7 +542,9 @@ class EnrichedOMSDataService {
   // Search enriched orders
   async searchEnrichedOrders(query: string): Promise<EnrichedOrder[]> {
     const allOrders = await this.getEnrichedOrders();
-    console.log(`[ENRICHED-OMS] Total orders loaded for search: ${allOrders.orders.length}`);
+    console.log(
+      `[ENRICHED-OMS] Total orders loaded for search: ${allOrders.orders.length}`
+    );
     const queryLower = query.toLowerCase();
 
     const filtered = allOrders.orders.filter((order) => {
@@ -557,7 +566,9 @@ class EnrichedOMSDataService {
 
       return searchableText.includes(queryLower);
     });
-    console.log(`[ENRICHED-OMS] Orders found after filtering for query '${query}': ${filtered.length}`);
+    console.log(
+      `[ENRICHED-OMS] Orders found after filtering for query '${query}': ${filtered.length}`
+    );
     if (filtered.length === 0) {
       console.warn(`[ENRICHED-OMS] No orders matched for query: '${query}'`);
     }
