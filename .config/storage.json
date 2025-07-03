@@ -11,16 +11,6 @@
       "sameSite": "Lax"
     },
     {
-      "name": ".ASPXAUTH",
-      "value": "A1828F915F6B963E0D97E61C6C56589216C1525BBDF4C6265A910FFDB52FD0AF104C78E8CB19431A699B34E4BDD02BAEB7BC8EB8946CE9A2F242F1AA2991D4B9C8A163A87A9F258FDA1FD55E4C6D6BADF29CEDDA",
-      "domain": "intranet.decopress.com",
-      "path": "/",
-      "expires": 1751384775.999684,
-      "httpOnly": true,
-      "secure": true,
-      "sameSite": "Lax"
-    },
-    {
       "name": "User",
       "value": "Guid=8f2d089b-10df-4cff-895e-403fcc904f16&tag_permissions_add=asset,inwards,job,quote&tag_permissions_remove=asset,inwards,job,quote",
       "domain": "intranet.decopress.com",
@@ -67,6 +57,16 @@
       "path": "/",
       "expires": -1,
       "httpOnly": false,
+      "secure": true,
+      "sameSite": "Lax"
+    },
+    {
+      "name": ".ASPXAUTH",
+      "value": "B41F807A9A651E980724C4B32A3E431B2778E5B0A735803EB81DFFC2F4E18194AFDBCCE29A24E4D92A9A8737F3614F8C1D2C6E5E144416B7BCBCC075700D5706DB43BC771F589B6A79C3DE27CBBA7D5C83D5D8D7",
+      "domain": "intranet.decopress.com",
+      "path": "/",
+      "expires": 1751515032.70046,
+      "httpOnly": true,
       "secure": true,
       "sameSite": "Lax"
     }

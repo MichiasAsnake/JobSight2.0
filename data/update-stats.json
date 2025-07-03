@@ -1,0 +1,15 @@
+{
+  "totalOrders": 81,
+  "newOrders": 0,
+  "updatedOrders": 0,
+  "deletedOrders": 0,
+  "unchangedOrders": 81,
+  "lastUpdate": "2025-07-03T01:13:39.707Z",
+  "updateDuration": 12,
+  "vectorUpdateTriggered": false,
+  "vectorUpdateStatus": "skipped",
+  "hybridDataUsed": true,
+  "apiOrdersCount": 0,
+  "scrapedOrdersCount": 81,
+  "hybridOrdersCount": 0
+}

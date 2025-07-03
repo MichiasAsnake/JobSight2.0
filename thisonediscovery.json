@@ -1,0 +1,2824 @@
+{
+  "info": {
+    "_postman_id": "8d937cff-9be5-4b6a-b244-36864d1fd599",
+    "name": "OMS API Discovery",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "26807704"
+  },
+  "item": [
+    {
+      "name": "get-job-list : all active orders",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Cookie",
+            "value": "AspxAutoDetectCookieSupport=1; User=Guid=8f2d089b-10df-4cff-895e-403fcc904f16&tag_permissions_add=asset,inwards,job,quote&tag_permissions_remove=asset,inwards,job,quote; UserGuid=8f2d089b-10df-4cff-895e-403fcc904f16; TenantTz={\"TzId\":\"America%2fLos_Angeles\"}; localeinfo={%22Locale%22:%22en%22%2C%22CustomFormats%22:{%22DM%22:%22MM/DD%22}}; tz=America/Los_Angeles; jsl={%22SortCol%22:%22sortDateDue2%22%2C%22SortDir%22:%22asc%22}; .ASPXAUTH=982D13FDF3EF2A81D7DC8AF25281EF300F9B3446B0B73D5E19858FAFF499F3550298E7EE7629DB7489960DB96E26D9C2239C685728FCF941F2947D5F52EDE687137F7874B416804A0733F40DF8BAA8141DDF17B3",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "urlencoded",
+          "urlencoded": [
+            {
+              "key": "machine-filter",
+              "value": "US,1,2,4,8,16,32,64,128,256,512,1024,2048,4096,8192,16384",
+              "type": "text"
+            },
+            {
+              "key": "status-line-format",
+              "value": "[MASTERJOBSTATUS] - [STOCKSTATUS]",
+              "type": "text"
+            },
+            {
+              "key": "no-loc-token",
+              "value": "[NOLOC]",
+              "type": "text"
+            },
+            {
+              "key": "show-due-date-filter",
+              "value": "true",
+              "type": "text"
+            },
+            {
+              "key": "tagged-user",
+              "value": "@laser",
+              "type": "text"
+            },
+            {
+              "key": "app-timezone",
+              "value": "America/Los_Angeles",
+              "type": "text"
+            },
+            {
+              "key": "location",
+              "value": "-1",
+              "type": "text"
+            },
+            {
+              "key": "job-status-codes",
+              "value": "approved,ontime,runninglate,problem",
+              "type": "text"
+            },
+            {
+              "key": "sort-by",
+              "value": "dateduefactory",
+              "type": "text"
+            },
+            {
+              "key": "sort-direction",
+              "value": "asc",
+              "type": "text"
+            },
+            {
+              "key": "job-status",
+              "value": "5,6,7,8",
+              "type": "text"
+            },
+            {
+              "key": "due-date",
+              "value": "1,2,3",
+              "type": "text"
+            },
+            {
+              "key": "stock-status",
+              "value": "0,1,2",
+              "type": "text"
+            },
+            {
+              "key": "process-filter",
+              "value": "HW,AP,TC,MP,PR,NA,CR,DS,ES,PP,PA,EM,SW,SC,DF,Misc,Sewing,Dispatch,Stock,Bagging",
+              "type": "text"
+            },
+            {
+              "key": "bit",
+              "value": "get-job-list",
+              "type": "text"
+            },
+            {
+              "key": "page-size",
+              "value": "200",
+              "type": "text"
+            },
+            {
+              "key": "requested-page",
+              "value": "",
+              "type": "text"
+            },
+            {
+              "key": "user-def-sort-def",
+              "value": "status,stockstatus",
+              "type": "text"
+            },
+            {
+              "key": "get-job-counts",
+              "value": "true",
+              "type": "text"
+            }
+          ]
+        },
+        "url": {
+          "raw": "https://intranet.decopress.com/jobstatuslist/ajax/JobStatusQueryAsync.ashx",
+          "protocol": "https",
+          "host": ["intranet", "decopress", "com"],
+          "path": ["jobstatuslist", "ajax", "JobStatusQueryAsync.ashx"]
+        }
+      },
+      "response": [
+        {
+          "isSuccess": true,
+          "isError": false,
+          "data": {
+            "PageSize": 20,
+            "ReturnedResults": 20,
+            "TotalResults": 89,
+            "TotalPages": 5,
+            "CurrentPage": 1,
+            "HasNext": true,
+            "HasPrevious": false,
+            "Entities": [
+              {
+                "ProcessQuantities": [
+                  {
+                    "BitVal": 4194304,
+                    "Code": "Bagging",
+                    "DisplayCode": "Bagging",
+                    "Qty": 79,
+                    "SuggestedMachineId": 0,
+                    "SuggestedMachineLabel": "",
+                    "HasSuggestedMachine": false
+                  },
+                  {
+                    "BitVal": 1048576,
+                    "Code": "Dispatch",
+                    "DisplayCode": "Dispatch",
+                    "Qty": 1,
+                    "SuggestedMachineId": 0,
+                    "SuggestedMachineLabel": "",
+                    "HasSuggestedMachine": false
+                  },
+                  {
+                    "BitVal": 2048,
+                    "Code": "EM",
+                    "DisplayCode": "EM",
+                    "Qty": 276,
+                    "SuggestedMachineId": 0,
+                    "SuggestedMachineLabel": "",
+                    "HasSuggestedMachine": false
+                  },
+                  {
+                    "BitVal": 1,
+                    "Code": "HW",
+                    "DisplayCode": "HW",
+                    "Qty": 92,
+                    "SuggestedMachineId": 0,
+                    "SuggestedMachineLabel": "",
+                    "HasSuggestedMachine": false
+                  },
+                  {
+                    "BitVal": 262144,
+                    "Code": "Misc",
+                    "DisplayCode": "Misc",
+                    "Qty": 79,
+                    "SuggestedMachineId": 0,
+                    "SuggestedMachineLabel": "",
+                    "HasSuggestedMachine": false
+                  }
+                ],
+                "JobTags": [
+                  {
+                    "Tag": "ps done - gamma",
+                    "WhoEnteredUsername": "juliol",
+                    "WhenEntered": "2025-06-23T15:57:20.5630000+00:00",
+                    "WhenEnteredUtc": "2025-06-23T15:57:20.563+00:00",
+                    "Code": "",
+                    "Meta": null
+                  }
+                ],
+                "BitVal": 5507073,
+                "Client": "Jackalope",
+                "Comments": "",
+                "IsEligibleForDueDateChange": true,
+                "CustomerId": 798,
+                "DateDue": "2025-06-28T05:00:00+00:00",
+                "DateDueUtc": "2025-06-28T05:00:00+00:00",
+                "DateDueFactory": "2025-06-27T18:00:00-07:00",
+                "DateOut": null,
+                "DateOutUtc": null,
+                "EWDateOut": null,
+                "TimeDue": null,
+                "DateIn": "2025-06-18T23:13:22.2505764+00:00",
+                "DateInUtc": "2025-06-18T23:13:22.2505764+00:00",
+                "DaysToDueDate": -3,
+                "Description": "MICRON / INVENTOR APPAREL - SPLIT ",
+                "IsDupe": true,
+                "JobNumber": 51094,
+                "JobQuantity": 527,
+                "LocationCode": "A0",
+                "MasterJobStatus": "Approved",
+                "MasterJobStatusId": 5,
+                "MustDate": false,
+                "OrderNumber": "10979-4",
+                "SortBy": "dateduefactory",
+                "StockComplete": 2,
+                "StockCompleteStatus": "Stock Complete",
+                "StopCredit": "N",
+                "TimeSensitive": false,
+                "EWMasterJobStatusTimeStamp": null,
+                "DeliveryOption": "NDA",
+                "GangCodesCsv": "",
+                "GangCodes": [""],
+                "GangsInfo": [
+                  {
+                    "GangCode": "",
+                    "GangMondayLink": ""
+                  }
+                ],
+                "JobLocationCode": "DP",
+                "JobLocationName": "Decopress",
+                "CanSuggestMachines": true,
+                "CanPrintJobLineLabels": true,
+                "HasScheduleableJobLines": true,
+                "SortKey": "51094",
+                "StatusLine": "Approved - Stock Complete",
+                "StatusLineHtml": "<span class=\"cw--master-status-pill jobstatus_5\">Approved</span> - <span class=\"cw--stock-status-pill stockstatus_2\">Stock Complete</span>",
+                "IsReprint": false
+              },
+              {
+                "ProcessQuantities": [
+                  {
+                    "BitVal": 2048,
+                    "Code": "EM",
+                    "DisplayCode": "EM",
+                    "Qty": 1530,
+                    "SuggestedMachineId": 0,
+                    "SuggestedMachineLabel": "",
+                    "HasSuggestedMachine": false
+                  },
+                  {
+                    "BitVal": 262144,
+                    "Code": "Misc",
+                    "DisplayCode": "Misc",
+                    "Qty": 765,
+                    "SuggestedMachineId": 0,
+                    "SuggestedMachineLabel": "",
+                    "HasSuggestedMachine": false
+                  }
+                ],
+                "JobTags": [
+                  {
+                    "Tag": "jackets",
+                    "WhoEnteredUsername": "rumw",
+                    "WhenEntered": "2025-06-30T23:39:43.0330000+00:00",
+                    "WhenEnteredUtc": "2025-06-30T23:39:43.033+00:00",
+                    "Code": "",
+                    "Meta": null
+                  },
+                  {
+                    "Tag": "07/03 ship date",
+                    "WhoEnteredUsername": "dania",
+                    "WhenEntered": "2025-07-01T16:35:52.6130000+00:00",
+                    "WhenEnteredUtc": "2025-07-01T16:35:52.613+00:00",
+                    "Code": "",
+                    "Meta": null
+                  },
+                  {
+                    "Tag": "changed date - 7/3",
+                    "WhoEnteredUsername": "esmeh",
+                    "WhenEntered": "2025-07-01T16:36:03.0200000+00:00",
+                    "WhenEnteredUtc": "2025-07-01T16:36:03.02+00:00",
+                    "Code": "",
+                    "Meta": null
+                  },
+                  {
+                    "Tag": "emb polos done",
+                    "WhoEnteredUsername": "shay",
+                    "WhenEntered": "2025-07-01T21:59:46.2800000+00:00",
+                    "WhenEnteredUtc": "2025-07-01T21:59:46.28+00:00",
+                    "Code": "",
+                    "Meta": null
+                  }
+                ],
+                "BitVal": 264192,
+                "Client": "Family Industries",
+                "Comments": "",
+                "IsEligibleForDueDateChange": true,
+                "CustomerId": 319,
+                "DateDue": "2025-07-03T05:00:00+00:00",
+                "DateDueUtc": "2025-07-03T05:00:00+00:00",
+                "DateDueFactory": "2025-07-02T18:00:00-07:00",
+                "DateOut": null,
+                "DateOutUtc": null,
+                "EWDateOut": null,
+                "TimeDue": null,
+                "DateIn": "2025-05-22T16:10:59.1540035+00:00",
+                "DateInUtc": "2025-05-22T16:10:59.1540035+00:00",
+                "DaysToDueDate": 0,
+                "Description": "ROCKET LAB JACKETS ",
+                "IsDupe": true,
+                "JobNumber": 50717,
+                "JobQuantity": 2295,
+                "LocationCode": "E0,F2,J4",
+                "MasterJobStatus": "Running Late",
+                "MasterJobStatusId": 7,
+                "MustDate": false,
+                "OrderNumber": "05232025ROC",
+                "SortBy": "dateduefactory",
+                "StockComplete": 2,
+                "StockCompleteStatus": "Stock Complete",
+                "StopCredit": "N",
+                "TimeSensitive": false,
+                "EWMasterJobStatusTimeStamp": null,
+                "DeliveryOption": "TBD",
+                "GangCodesCsv": "",
+                "GangCodes": [""],
+                "GangsInfo": [
+                  {
+                    "GangCode": "",
+                    "GangMondayLink": ""
+                  }
+                ],
+                "JobLocationCode": "DP",
+                "JobLocationName": "Decopress",
+                "CanSuggestMachines": false,
+                "CanPrintJobLineLabels": false,
+                "HasScheduleableJobLines": false,
+                "SortKey": "50717",
+                "StatusLine": "Running Late - Stock Complete",
+                "StatusLineHtml": "<span class=\"cw--master-status-pill jobstatus_7\">Running Late</span> - <span class=\"cw--stock-status-pill stockstatus_2\">Stock Complete</span>",
+                "IsReprint": false
+              },
+              {
+                "ProcessQuantities": [
+                  {
+                    "BitVal": 1,
+                    "Code": "HW",
+                    "DisplayCode": "HW",
+                    "Qty": 350,
+                    "SuggestedMachineId": 0,
+                    "SuggestedMachineLabel": "",
+                    "HasSuggestedMachine": false
+                  }
+                ],
+                "JobTags": [
+                  {
+                    "Tag": "@laser  etching : black leather",
+                    "WhoEnteredUsername": "juliol",
+                    "WhenEntered": "2025-07-02T18:59:22.2130000+00:00",
+                    "WhenEnteredUtc": "2025-07-02T18:59:22.213+00:00",
+                    "Code": "",
+                    "Meta": null
+                  }
+                ],
+                "BitVal": 1,
+                "Client": "Acehigh Tech Corp",
+                "Comments": "PATCH SIZE 25\"W x 2\"H\r\n\r\nLOGO 2\"W",
+                "IsEligibleForDueDateChange": true,
+                "CustomerId": 2871,
+                "DateDue": "2025-07-02T23:00:00+00:00",
+                "DateDueUtc": "2025-07-02T23:00:00+00:00",
+                "DateDueFactory": "2025-07-02T18:00:00-07:00",
+                "DateOut": null,
+                "DateOutUtc": null,
+                "EWDateOut": null,
+                "TimeDue": null,
+                "DateIn": "2025-06-26T22:14:24.0655381+00:00",
+                "DateInUtc": "2025-06-26T22:14:24.0655381+00:00",
+                "DaysToDueDate": 0,
+                "Description": "OXFORD-FEM AI",
+                "IsDupe": false,
+                "JobNumber": 51190,
+                "JobQuantity": 350,
+                "LocationCode": "",
+                "MasterJobStatus": "Approved",
+                "MasterJobStatusId": 5,
+                "MustDate": true,
+                "OrderNumber": "DP-253432",
+                "SortBy": "dateduefactory",
+                "StockComplete": 2,
+                "StockCompleteStatus": "Stock Complete",
+                "StopCredit": "N",
+                "TimeSensitive": false,
+                "EWMasterJobStatusTimeStamp": null,
+                "DeliveryOption": "GND",
+                "GangCodesCsv": "",
+                "GangCodes": [""],
+                "GangsInfo": [
+                  {
+                    "GangCode": "",
+                    "GangMondayLink": ""
+                  }
+                ],
+                "JobLocationCode": "",
+                "JobLocationName": "",
+                "CanSuggestMachines": true,
+                "CanPrintJobLineLabels": true,
+                "HasScheduleableJobLines": false,
+                "SortKey": "51190",
+                "StatusLine": "Approved - Stock Complete",
+                "StatusLineHtml": "<span class=\"cw--master-status-pill jobstatus_5\">Approved</span> - <span class=\"cw--stock-status-pill stockstatus_2\">Stock Complete</span>",
+                "IsReprint": false
+              },
+              {
+                "ProcessQuantities": [
+                  {
+                    "BitVal": 2048,
+                    "Code": "EM",
+                    "DisplayCode": "EM",
+                    "Qty": 50,
+                    "SuggestedMachineId": 0,
+                    "SuggestedMachineLabel": "",
+                    "HasSuggestedMachine": false
+                  },
+                  {
+                    "BitVal": 262144,
+                    "Code": "Misc",
+                    "DisplayCode": "Misc",
+                    "Qty": 50,
+                    "SuggestedMachineId": 0,
+                    "SuggestedMachineLabel": "",
+                    "HasSuggestedMachine": false
+                  }
+                ],
+                "JobTags": [
+                  {
+                    "Tag": "emb files ready",
+                    "WhoEnteredUsername": "alfiec",
+                    "WhenEntered": "2025-06-26T19:05:00.1900000+00:00",
+                    "WhenEnteredUtc": "2025-06-26T19:05:00.19+00:00",
+                    "Code": "",
+                    "Meta": null
+                  }
+                ],
+                "BitVal": 264192,
+                "Client": "Family Industries",
+                "Comments": "https://ascolour.com/class-two-tone-cap-1154/",
+                "IsEligibleForDueDateChange": true,
+                "CustomerId": 319,
+                "DateDue": "2025-07-03T21:00:00+00:00",
+                "DateDueUtc": "2025-07-03T21:00:00+00:00",
+                "DateDueFactory": "2025-07-03T18:00:00-07:00",
+                "DateOut": null,
+                "DateOutUtc": null,
+                "EWDateOut": null,
+                "TimeDue": null,
+                "DateIn": "2025-06-23T21:52:15.5155575+00:00",
+                "DateInUtc": "2025-06-23T21:52:15.5155575+00:00",
+                "DaysToDueDate": 1,
+                "Description": "SOME COASTAL TOWN CAPS",
+                "IsDupe": false,
+                "JobNumber": 51132,
+                "JobQuantity": 100,
+                "LocationCode": "E2",
+                "MasterJobStatus": "On Time",
+                "MasterJobStatusId": 6,
+                "MustDate": false,
+                "OrderNumber": "06242025SOMECOASTALTOWN",
+                "SortBy": "dateduefactory",
+                "StockComplete": 2,
+                "StockCompleteStatus": "Stock Complete",
+                "StopCredit": "N",
+                "TimeSensitive": false,
+                "EWMasterJobStatusTimeStamp": null,
+                "DeliveryOption": "NDA",
+                "GangCodesCsv": "",
+                "GangCodes": [""],
+                "GangsInfo": [
+                  {
+                    "GangCode": "",
+                    "GangMondayLink": ""
+                  }
+                ],
+                "JobLocationCode": "DP",
+                "JobLocationName": "Decopress",
+                "CanSuggestMachines": false,
+                "CanPrintJobLineLabels": false,
+                "HasScheduleableJobLines": false,
+                "SortKey": "51132",
+                "StatusLine": "On Time - Stock Complete",
+                "StatusLineHtml": "<span class=\"cw--master-status-pill jobstatus_6\">On Time</span> - <span class=\"cw--stock-status-pill stockstatus_2\">Stock Complete</span>",
+                "IsReprint": false
+              },
+
+              {
+                "ProcessQuantities": [
+                  {
+                    "BitVal": 4194304,
+                    "Code": "Bagging",
+                    "DisplayCode": "Bagging",
+                    "Qty": 2748,
+                    "SuggestedMachineId": 0,
+                    "SuggestedMachineLabel": "",
+                    "HasSuggestedMachine": false
+                  },
+                  {
+                    "BitVal": 2048,
+                    "Code": "EM",
+                    "DisplayCode": "EM",
+                    "Qty": 916,
+                    "SuggestedMachineId": 0,
+                    "SuggestedMachineLabel": "",
+                    "HasSuggestedMachine": false
+                  },
+                  {
+                    "BitVal": 262144,
+                    "Code": "Misc",
+                    "DisplayCode": "Misc",
+                    "Qty": 916,
+                    "SuggestedMachineId": 0,
+                    "SuggestedMachineLabel": "",
+                    "HasSuggestedMachine": false
+                  },
+                  {
+                    "BitVal": 128,
+                    "Code": "PA",
+                    "DisplayCode": "PA",
+                    "Qty": 916,
+                    "SuggestedMachineId": 0,
+                    "SuggestedMachineLabel": "",
+                    "HasSuggestedMachine": false
+                  }
+                ],
+                "JobTags": [
+                  {
+                    "Tag": "ap check",
+                    "WhoEnteredUsername": "zairap",
+                    "WhenEntered": "2025-06-19T14:45:06.9370000+00:00",
+                    "WhenEnteredUtc": "2025-06-19T14:45:06.937+00:00",
+                    "Code": "",
+                    "Meta": null
+                  },
+                  {
+                    "Tag": "ps done",
+                    "WhoEnteredUsername": "juliol",
+                    "WhenEntered": "2025-06-19T16:00:46.3100000+00:00",
+                    "WhenEnteredUtc": "2025-06-19T16:00:46.31+00:00",
+                    "Code": "",
+                    "Meta": null
+                  }
+                ],
+                "BitVal": 4458624,
+                "Client": "BAMKO, LLC",
+                "Comments": "1Z20800A0350639371\n1Z20800A0333159449.\n",
+                "IsEligibleForDueDateChange": true,
+                "CustomerId": 226,
+                "DateDue": "2025-07-04T21:00:00+00:00",
+                "DateDueUtc": "2025-07-04T21:00:00+00:00",
+                "DateDueFactory": "2025-07-04T18:00:00-07:00",
+                "DateOut": null,
+                "DateOutUtc": null,
+                "EWDateOut": null,
+                "TimeDue": null,
+                "DateIn": "2025-06-16T22:39:49.4464274+00:00",
+                "DateInUtc": "2025-06-16T22:39:49.4464274+00:00",
+                "DaysToDueDate": 2,
+                "Description": "ANDURIL HOODIES - REORDER",
+                "IsDupe": true,
+                "JobNumber": 51053,
+                "JobQuantity": 5496,
+                "LocationCode": "G0,J3",
+                "MasterJobStatus": "On Time",
+                "MasterJobStatusId": 6,
+                "MustDate": false,
+                "OrderNumber": "PO292496B",
+                "SortBy": "dateduefactory",
+                "StockComplete": 2,
+                "StockCompleteStatus": "Stock Complete",
+                "StopCredit": "N",
+                "TimeSensitive": false,
+                "EWMasterJobStatusTimeStamp": null,
+                "DeliveryOption": "GND",
+                "GangCodesCsv": "",
+                "GangCodes": [""],
+                "GangsInfo": [
+                  {
+                    "GangCode": "",
+                    "GangMondayLink": ""
+                  }
+                ],
+                "JobLocationCode": "DP",
+                "JobLocationName": "Decopress",
+                "CanSuggestMachines": false,
+                "CanPrintJobLineLabels": false,
+                "HasScheduleableJobLines": false,
+                "SortKey": "51053",
+                "StatusLine": "On Time - Stock Complete",
+                "StatusLineHtml": "<span class=\"cw--master-status-pill jobstatus_6\">On Time</span> - <span class=\"cw--stock-status-pill stockstatus_2\">Stock Complete</span>",
+                "IsReprint": false
+              },
+              {
+                "ProcessQuantities": [
+                  {
+                    "BitVal": 4194304,
+                    "Code": "Bagging",
+                    "DisplayCode": "Bagging",
+                    "Qty": 189,
+                    "SuggestedMachineId": 0,
+                    "SuggestedMachineLabel": "",
+                    "HasSuggestedMachine": false
+                  },
+                  {
+                    "BitVal": 262144,
+                    "Code": "Misc",
+                    "DisplayCode": "Misc",
+                    "Qty": 94,
+                    "SuggestedMachineId": 0,
+                    "SuggestedMachineLabel": "",
+                    "HasSuggestedMachine": false
+                  },
+                  {
+                    "BitVal": 16384,
+                    "Code": "SC",
+                    "DisplayCode": "SC",
+                    "Qty": 188,
+                    "SuggestedMachineId": 0,
+                    "SuggestedMachineLabel": "",
+                    "HasSuggestedMachine": false
+                  }
+                ],
+                "JobTags": [
+                  {
+                    "Tag": "supacolor job# 540712",
+                    "WhoEnteredUsername": "karencu",
+                    "WhenEntered": "2025-06-24T19:19:27.1000000+00:00",
+                    "WhenEnteredUtc": "2025-06-24T19:19:27.1+00:00",
+                    "Code": "",
+                    "Meta": null
+                  },
+                  {
+                    "Tag": "mr",
+                    "WhoEnteredUsername": "h3",
+                    "WhenEntered": "2025-07-02T19:29:56.0770000+00:00",
+                    "WhenEnteredUtc": "2025-07-02T19:29:56.077+00:00",
+                    "Code": "",
+                    "Meta": null
+                  }
+                ],
+                "BitVal": 4472832,
+                "Client": "Canary LLC",
+                "Comments": "Touch tees 1Z9432470350988675, 1Z8A9Y400350827370, 1Z8118920339768300\nVests: 1Z20800A0333038598, 1Z8A9Y400334331604, 1Z8A9Y400350815918",
+                "IsEligibleForDueDateChange": true,
+                "CustomerId": 270,
+                "DateDue": "2025-07-08T00:00:00+00:00",
+                "DateDueUtc": "2025-07-08T00:00:00+00:00",
+                "DateDueFactory": "2025-07-07T18:00:00-07:00",
+                "DateOut": null,
+                "DateOutUtc": null,
+                "EWDateOut": null,
+                "TimeDue": null,
+                "DateIn": "2025-06-03T23:53:57.0755447+00:00",
+                "DateInUtc": "2025-06-03T23:53:57.0755447+00:00",
+                "DaysToDueDate": 3,
+                "Description": "PRESIDENT'S CLUB 2025 - VESTS & TEES",
+                "IsDupe": true,
+                "JobNumber": 50862,
+                "JobQuantity": 471,
+                "LocationCode": "",
+                "MasterJobStatus": "Approved",
+                "MasterJobStatusId": 5,
+                "MustDate": false,
+                "OrderNumber": "5396318",
+                "SortBy": "dateduefactory",
+                "StockComplete": 1,
+                "StockCompleteStatus": "Partial Stock",
+                "StopCredit": "N",
+                "TimeSensitive": false,
+                "EWMasterJobStatusTimeStamp": null,
+                "DeliveryOption": "GND",
+                "GangCodesCsv": "",
+                "GangCodes": [""],
+                "GangsInfo": [
+                  {
+                    "GangCode": "",
+                    "GangMondayLink": ""
+                  }
+                ],
+                "JobLocationCode": "DP",
+                "JobLocationName": "Decopress",
+                "CanSuggestMachines": true,
+                "CanPrintJobLineLabels": false,
+                "HasScheduleableJobLines": false,
+                "SortKey": "50862",
+                "StatusLine": "Approved - Partial Stock",
+                "StatusLineHtml": "<span class=\"cw--master-status-pill jobstatus_5\">Approved</span> - <span class=\"cw--stock-status-pill stockstatus_1\">Partial Stock</span>",
+                "IsReprint": false
+              },
+
+              {
+                "ProcessQuantities": [
+                  {
+                    "BitVal": 4194304,
+                    "Code": "Bagging",
+                    "DisplayCode": "Bagging",
+                    "Qty": 117,
+                    "SuggestedMachineId": 0,
+                    "SuggestedMachineLabel": "",
+                    "HasSuggestedMachine": false
+                  },
+                  {
+                    "BitVal": 262144,
+                    "Code": "Misc",
+                    "DisplayCode": "Misc",
+                    "Qty": 58,
+                    "SuggestedMachineId": 0,
+                    "SuggestedMachineLabel": "",
+                    "HasSuggestedMachine": false
+                  },
+                  {
+                    "BitVal": 16384,
+                    "Code": "SC",
+                    "DisplayCode": "SC",
+                    "Qty": 116,
+                    "SuggestedMachineId": 0,
+                    "SuggestedMachineLabel": "",
+                    "HasSuggestedMachine": false
+                  }
+                ],
+                "JobTags": [
+                  {
+                    "Tag": "supacolor job# 540712",
+                    "WhoEnteredUsername": "karencu",
+                    "WhenEntered": "2025-06-24T19:18:48.3200000+00:00",
+                    "WhenEnteredUtc": "2025-06-24T19:18:48.32+00:00",
+                    "Code": "",
+                    "Meta": null
+                  },
+                  {
+                    "Tag": "@zairap pls schedule",
+                    "WhoEnteredUsername": "tammy",
+                    "WhenEntered": "2025-07-02T17:53:50.3470000+00:00",
+                    "WhenEnteredUtc": "2025-07-02T17:53:50.347+00:00",
+                    "Code": "",
+                    "Meta": null
+                  }
+                ],
+                "BitVal": 4472832,
+                "Client": "Canary LLC",
+                "Comments": "",
+                "IsEligibleForDueDateChange": true,
+                "CustomerId": 270,
+                "DateDue": "2025-07-08T00:00:00+00:00",
+                "DateDueUtc": "2025-07-08T00:00:00+00:00",
+                "DateDueFactory": "2025-07-07T18:00:00-07:00",
+                "DateOut": null,
+                "DateOutUtc": null,
+                "EWDateOut": null,
+                "TimeDue": null,
+                "DateIn": "2025-06-10T04:45:06.7384436+00:00",
+                "DateInUtc": "2025-06-10T04:45:06.7384436+00:00",
+                "DaysToDueDate": 3,
+                "Description": "PRESIDENT'S CLUB 2025 - POLOS",
+                "IsDupe": false,
+                "JobNumber": 50948,
+                "JobQuantity": 291,
+                "LocationCode": "",
+                "MasterJobStatus": "Approved",
+                "MasterJobStatusId": 5,
+                "MustDate": false,
+                "OrderNumber": "5396318",
+                "SortBy": "dateduefactory",
+                "StockComplete": 2,
+                "StockCompleteStatus": "Stock Complete",
+                "StopCredit": "N",
+                "TimeSensitive": false,
+                "EWMasterJobStatusTimeStamp": null,
+                "DeliveryOption": "TBD",
+                "GangCodesCsv": "",
+                "GangCodes": [""],
+                "GangsInfo": [
+                  {
+                    "GangCode": "",
+                    "GangMondayLink": ""
+                  }
+                ],
+                "JobLocationCode": "DP",
+                "JobLocationName": "Decopress",
+                "CanSuggestMachines": true,
+                "CanPrintJobLineLabels": false,
+                "HasScheduleableJobLines": true,
+                "SortKey": "50948",
+                "StatusLine": "Approved - Stock Complete",
+                "StatusLineHtml": "<span class=\"cw--master-status-pill jobstatus_5\">Approved</span> - <span class=\"cw--stock-status-pill stockstatus_2\">Stock Complete</span>",
+                "IsReprint": false
+              },
+
+              {
+                "ProcessQuantities": [
+                  {
+                    "BitVal": 262144,
+                    "Code": "Misc",
+                    "DisplayCode": "Misc",
+                    "Qty": 10,
+                    "SuggestedMachineId": 0,
+                    "SuggestedMachineLabel": "",
+                    "HasSuggestedMachine": false
+                  },
+                  {
+                    "BitVal": 16384,
+                    "Code": "SC",
+                    "DisplayCode": "SC",
+                    "Qty": 10,
+                    "SuggestedMachineId": 0,
+                    "SuggestedMachineLabel": "",
+                    "HasSuggestedMachine": false
+                  }
+                ],
+                "JobTags": [
+                  {
+                    "Tag": "supacolor:dispatched",
+                    "WhoEnteredUsername": "",
+                    "WhenEntered": "2025-07-02T13:30:30.2830000+00:00",
+                    "WhenEnteredUtc": "2025-07-02T13:30:30.283+00:00",
+                    "Code": "EXTERNAL_SUPPLIER_ORDER",
+                    "Meta": {
+                      "IsProtected": "1",
+                      "OrderId": "542899",
+                      "SupplierName": "supacolor",
+                      "ClearTagsByCode": "EXTERNAL_SUPPLIER_ORDER"
+                    }
+                  },
+                  {
+                    "Tag": "we'll receive the blanks on 07.03",
+                    "WhoEnteredUsername": "tammy",
+                    "WhenEntered": "2025-07-02T18:12:09.7500000+00:00",
+                    "WhenEnteredUtc": "2025-07-02T18:12:09.75+00:00",
+                    "Code": "",
+                    "Meta": null
+                  }
+                ],
+                "BitVal": 278528,
+                "Client": "C & S SALES",
+                "Comments": "https://www.charlesriverapparel.com/product/9905/Classic-Solid-Pullover.html",
+                "IsEligibleForDueDateChange": true,
+                "CustomerId": 266,
+                "DateDue": "2025-07-08T05:00:00+00:00",
+                "DateDueUtc": "2025-07-08T05:00:00+00:00",
+                "DateDueFactory": "2025-07-07T18:00:00-07:00",
+                "DateOut": null,
+                "DateOutUtc": null,
+                "EWDateOut": null,
+                "TimeDue": null,
+                "DateIn": "2025-06-25T21:57:41.4859285+00:00",
+                "DateInUtc": "2025-06-25T21:57:41.4859285+00:00",
+                "DaysToDueDate": 3,
+                "Description": "TEAM ESSENCE PULLOVERS",
+                "IsDupe": false,
+                "JobNumber": 51180,
+                "JobQuantity": 20,
+                "LocationCode": "",
+                "MasterJobStatus": "Approved",
+                "MasterJobStatusId": 5,
+                "MustDate": false,
+                "OrderNumber": " DAV-280931",
+                "SortBy": "dateduefactory",
+                "StockComplete": 0,
+                "StockCompleteStatus": "No Stock",
+                "StopCredit": "N",
+                "TimeSensitive": false,
+                "EWMasterJobStatusTimeStamp": null,
+                "DeliveryOption": "COLLECTION",
+                "GangCodesCsv": "",
+                "GangCodes": [""],
+                "GangsInfo": [
+                  {
+                    "GangCode": "",
+                    "GangMondayLink": ""
+                  }
+                ],
+                "JobLocationCode": "DP",
+                "JobLocationName": "Decopress",
+                "CanSuggestMachines": true,
+                "CanPrintJobLineLabels": false,
+                "HasScheduleableJobLines": false,
+                "SortKey": "51180",
+                "StatusLine": "Approved - No Stock",
+                "StatusLineHtml": "<span class=\"cw--master-status-pill jobstatus_5\">Approved</span> - <span class=\"cw--stock-status-pill stockstatus_0\">No Stock</span>",
+                "IsReprint": false
+              },
+              {
+                "ProcessQuantities": [
+                  {
+                    "BitVal": 1,
+                    "Code": "HW",
+                    "DisplayCode": "HW",
+                    "Qty": 30,
+                    "SuggestedMachineId": 0,
+                    "SuggestedMachineLabel": "",
+                    "HasSuggestedMachine": false
+                  }
+                ],
+                "JobTags": [
+                  {
+                    "Tag": "@laser",
+                    "WhoEnteredUsername": "carlosp",
+                    "WhenEntered": "2025-07-01T15:31:26.3630000+00:00",
+                    "WhenEnteredUtc": "2025-07-01T15:31:26.363+00:00",
+                    "Code": "",
+                    "Meta": null
+                  },
+                  {
+                    "Tag": "etching: need apnels",
+                    "WhoEnteredUsername": "carlosp",
+                    "WhenEntered": "2025-07-01T15:31:52.2830000+00:00",
+                    "WhenEnteredUtc": "2025-07-01T15:31:52.283+00:00",
+                    "Code": "",
+                    "Meta": null
+                  }
+                ],
+                "BitVal": 1,
+                "Client": "Pine Printshop",
+                "Comments": "",
+                "IsEligibleForDueDateChange": true,
+                "CustomerId": 3071,
+                "DateDue": "2025-07-08T04:00:00+00:00",
+                "DateDueUtc": "2025-07-08T04:00:00+00:00",
+                "DateDueFactory": "2025-07-07T18:00:00-07:00",
+                "DateOut": null,
+                "DateOutUtc": null,
+                "EWDateOut": null,
+                "TimeDue": null,
+                "DateIn": "2025-06-30T18:21:17.1434102+00:00",
+                "DateInUtc": "2025-06-30T18:21:17.1434102+00:00",
+                "DaysToDueDate": 3,
+                "Description": "GRIDCO PATCHES",
+                "IsDupe": false,
+                "JobNumber": 51217,
+                "JobQuantity": 30,
+                "LocationCode": "",
+                "MasterJobStatus": "Approved",
+                "MasterJobStatusId": 5,
+                "MustDate": false,
+                "OrderNumber": "8285 ",
+                "SortBy": "dateduefactory",
+                "StockComplete": 2,
+                "StockCompleteStatus": "Stock Complete",
+                "StopCredit": "N",
+                "TimeSensitive": false,
+                "EWMasterJobStatusTimeStamp": null,
+                "DeliveryOption": "2DA",
+                "GangCodesCsv": "",
+                "GangCodes": [""],
+                "GangsInfo": [
+                  {
+                    "GangCode": "",
+                    "GangMondayLink": ""
+                  }
+                ],
+                "JobLocationCode": "DP",
+                "JobLocationName": "Decopress",
+                "CanSuggestMachines": true,
+                "CanPrintJobLineLabels": true,
+                "HasScheduleableJobLines": false,
+                "SortKey": "51217",
+                "StatusLine": "Approved - Stock Complete",
+                "StatusLineHtml": "<span class=\"cw--master-status-pill jobstatus_5\">Approved</span> - <span class=\"cw--stock-status-pill stockstatus_2\">Stock Complete</span>",
+                "IsReprint": false
+              },
+              {
+                "ProcessQuantities": [
+                  {
+                    "BitVal": 1,
+                    "Code": "HW",
+                    "DisplayCode": "HW",
+                    "Qty": 35,
+                    "SuggestedMachineId": 0,
+                    "SuggestedMachineLabel": "",
+                    "HasSuggestedMachine": false
+                  }
+                ],
+                "JobTags": [
+                  {
+                    "Tag": "@laser",
+                    "WhoEnteredUsername": "carlosp",
+                    "WhenEntered": "2025-07-01T15:28:09.2030000+00:00",
+                    "WhenEnteredUtc": "2025-07-01T15:28:09.203+00:00",
+                    "Code": "",
+                    "Meta": null
+                  },
+                  {
+                    "Tag": "@etching: need panels",
+                    "WhoEnteredUsername": "carlosp",
+                    "WhenEntered": "2025-07-01T15:28:19.2070000+00:00",
+                    "WhenEnteredUtc": "2025-07-01T15:28:19.207+00:00",
+                    "Code": "",
+                    "Meta": null
+                  }
+                ],
+                "BitVal": 1,
+                "Client": "Custom Images Inc.",
+                "Comments": "If they are able to ship any earlier, that is amazing! We need them asap. Thank you!!!!",
+                "IsEligibleForDueDateChange": true,
+                "CustomerId": 3137,
+                "DateDue": "2025-07-07T21:00:00+00:00",
+                "DateDueUtc": "2025-07-07T21:00:00+00:00",
+                "DateDueFactory": "2025-07-07T18:00:00-07:00",
+                "DateOut": null,
+                "DateOutUtc": null,
+                "EWDateOut": null,
+                "TimeDue": null,
+                "DateIn": "2025-07-01T14:03:57.1600161+00:00",
+                "DateInUtc": "2025-07-01T14:03:57.1600161+00:00",
+                "DaysToDueDate": 3,
+                "Description": "TEi Laser Etched Patch",
+                "IsDupe": true,
+                "JobNumber": 51235,
+                "JobQuantity": 35,
+                "LocationCode": "",
+                "MasterJobStatus": "Approved",
+                "MasterJobStatusId": 5,
+                "MustDate": true,
+                "OrderNumber": "48175-1",
+                "SortBy": "dateduefactory",
+                "StockComplete": 2,
+                "StockCompleteStatus": "Stock Complete",
+                "StopCredit": "N",
+                "TimeSensitive": false,
+                "EWMasterJobStatusTimeStamp": null,
+                "DeliveryOption": "2DA",
+                "GangCodesCsv": "",
+                "GangCodes": [""],
+                "GangsInfo": [
+                  {
+                    "GangCode": "",
+                    "GangMondayLink": ""
+                  }
+                ],
+                "JobLocationCode": "",
+                "JobLocationName": "",
+                "CanSuggestMachines": true,
+                "CanPrintJobLineLabels": true,
+                "HasScheduleableJobLines": false,
+                "SortKey": "51235",
+                "StatusLine": "Approved - Stock Complete",
+                "StatusLineHtml": "<span class=\"cw--master-status-pill jobstatus_5\">Approved</span> - <span class=\"cw--stock-status-pill stockstatus_2\">Stock Complete</span>",
+                "IsReprint": false
+              },
+              {
+                "ProcessQuantities": [
+                  {
+                    "BitVal": 2048,
+                    "Code": "EM",
+                    "DisplayCode": "EM",
+                    "Qty": 12,
+                    "SuggestedMachineId": 0,
+                    "SuggestedMachineLabel": "",
+                    "HasSuggestedMachine": false
+                  },
+                  {
+                    "BitVal": 1,
+                    "Code": "HW",
+                    "DisplayCode": "HW",
+                    "Qty": 12,
+                    "SuggestedMachineId": 0,
+                    "SuggestedMachineLabel": "",
+                    "HasSuggestedMachine": false
+                  }
+                ],
+                "JobTags": [
+                  {
+                    "Tag": "@juliol @carlosp prodfile ready",
+                    "WhoEnteredUsername": "mikeport",
+                    "WhenEntered": "2025-07-02T18:44:09.2800000+00:00",
+                    "WhenEnteredUtc": "2025-07-02T18:44:09.28+00:00",
+                    "Code": "",
+                    "Meta": null
+                  }
+                ],
+                "BitVal": 2049,
+                "Client": "MilesTshirts LLC",
+                "Comments": "",
+                "IsEligibleForDueDateChange": true,
+                "CustomerId": 3270,
+                "DateDue": "2025-07-07T21:00:00+00:00",
+                "DateDueUtc": "2025-07-07T21:00:00+00:00",
+                "DateDueFactory": "2025-07-07T18:00:00-07:00",
+                "DateOut": null,
+                "DateOutUtc": null,
+                "EWDateOut": null,
+                "TimeDue": null,
+                "DateIn": "2025-07-01T21:47:40.1460525+00:00",
+                "DateInUtc": "2025-07-01T21:47:40.1460525+00:00",
+                "DaysToDueDate": 3,
+                "Description": "Clark Construction",
+                "IsDupe": false,
+                "JobNumber": 51252,
+                "JobQuantity": 24,
+                "LocationCode": "",
+                "MasterJobStatus": "Approved",
+                "MasterJobStatusId": 5,
+                "MustDate": false,
+                "OrderNumber": "42990",
+                "SortBy": "dateduefactory",
+                "StockComplete": 2,
+                "StockCompleteStatus": "Stock Complete",
+                "StopCredit": "N",
+                "TimeSensitive": false,
+                "EWMasterJobStatusTimeStamp": null,
+                "DeliveryOption": "2DA",
+                "GangCodesCsv": "",
+                "GangCodes": [""],
+                "GangsInfo": [
+                  {
+                    "GangCode": "",
+                    "GangMondayLink": ""
+                  }
+                ],
+                "JobLocationCode": "",
+                "JobLocationName": "",
+                "CanSuggestMachines": true,
+                "CanPrintJobLineLabels": true,
+                "HasScheduleableJobLines": true,
+                "SortKey": "51252",
+                "StatusLine": "Approved - Stock Complete",
+                "StatusLineHtml": "<span class=\"cw--master-status-pill jobstatus_5\">Approved</span> - <span class=\"cw--stock-status-pill stockstatus_2\">Stock Complete</span>",
+                "IsReprint": false
+              }
+            ],
+            "Aux1": null,
+            "Aux2": null,
+            "Aux3": null,
+            "Aux4": null
+          },
+          "responseText": null,
+          "error": null,
+          "Aux1": 33516519,
+          "Aux2": 0,
+          "Aux3": [
+            {
+              "Filter": "1,17",
+              "Title": "Entered",
+              "Count": 0,
+              "Code": "entered"
+            },
+            {
+              "Filter": "2",
+              "Title": "Sent to Proof",
+              "Count": 6,
+              "Code": "awaitingproof"
+            },
+            {
+              "Filter": "18",
+              "Title": "Change Req",
+              "Count": 0,
+              "Code": "changerequested"
+            },
+            {
+              "Filter": "3,4,11",
+              "Title": "Proofed",
+              "Count": 17,
+              "Code": "proofed"
+            },
+            {
+              "Filter": "5",
+              "Title": "Approved",
+              "Count": 79,
+              "Code": "approved"
+            },
+            {
+              "Filter": "6",
+              "Title": "On Time",
+              "Count": 9,
+              "Code": "ontime"
+            },
+            {
+              "Filter": "7",
+              "Title": "Running Late",
+              "Count": 1,
+              "Code": "runninglate"
+            },
+            {
+              "Filter": "8",
+              "Title": "Problem",
+              "Count": 0,
+              "Code": "problem"
+            },
+            {
+              "Filter": "9",
+              "Title": "Completed",
+              "Count": 3,
+              "Code": "completed"
+            },
+            {
+              "Filter": "10",
+              "Title": "Dispatched",
+              "Count": 0,
+              "Code": "dispatched"
+            },
+            {
+              "Filter": "13",
+              "Title": "Return",
+              "Count": 0,
+              "Code": "return"
+            },
+            {
+              "Filter": "12",
+              "Title": "Closed",
+              "Count": 21653,
+              "Code": "closed"
+            }
+          ],
+          "Aux4": {
+            "LastId": -1,
+            "LastKey": "",
+            "SortDirection": "asc",
+            "SortBy": "dateduefactory",
+            "PageSize": 20,
+            "RequestedPage": 1,
+            "SuggestedMachineFilterBitInclude": -1,
+            "IncludeUnsuggestedJobs": false,
+            "FilterCustomerId": 0,
+            "JobStatusFilter": "5,6,7,8",
+            "StockStatusFilter": "0,1,2",
+            "MyJobsOnly": false,
+            "TextFilter": "",
+            "TaggedUser": "",
+            "FilterAccountManagerId": 0,
+            "SqlQuery": "",
+            "ProcessBitInclude": 33516519,
+            "ProcessBitExclude": 0,
+            "GetJobCounts": true,
+            "MinimumJobAgeInDays": -1,
+            "MinimumUnitQty": -1,
+            "MinimumMasterJobStatusTimeStamp": null,
+            "CustomerId": 0,
+            "StatusLineFormat": "[MASTERJOBSTATUS] - [STOCKSTATUS]",
+            "NoLocToken": "[NOLOC]",
+            "UserDefinedSortDefinition": "status,stockstatus",
+            "DueDateFilter": "1,2,3",
+            "AppTimeZone": "America/Los_Angeles",
+            "LocationIdFilter": "-1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "get-all-inwards-and-stock-items : all stock items for an order",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Cookie",
+            "value": "AspxAutoDetectCookieSupport=1; User=Guid=8f2d089b-10df-4cff-895e-403fcc904f16&tag_permissions_add=asset,inwards,job,quote&tag_permissions_remove=asset,inwards,job,quote; UserGuid=8f2d089b-10df-4cff-895e-403fcc904f16; TenantTz={\"TzId\":\"America%2fLos_Angeles\"}; localeinfo={%22Locale%22:%22en%22%2C%22CustomFormats%22:{%22DM%22:%22MM/DD%22}}; tz=America/Los_Angeles; jsl={%22SortCol%22:%22sortDateDue2%22%2C%22SortDir%22:%22asc%22}; .ASPXAUTH=982D13FDF3EF2A81D7DC8AF25281EF300F9B3446B0B73D5E19858FAFF499F3550298E7EE7629DB7489960DB96E26D9C2239C685728FCF941F2947D5F52EDE687137F7874B416804A0733F40DF8BAA8141DDF17B3",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "urlencoded",
+          "urlencoded": [
+            {
+              "key": "jobNumber",
+              "value": "51132",
+              "type": "text"
+            },
+            {
+              "key": "bit",
+              "value": "get-all-inwards-and-stock-items",
+              "type": "text"
+            }
+          ]
+        },
+        "url": {
+          "raw": "https://intranet.decopress.com/Jobs/ajax/JobHandler.ashx",
+          "protocol": "https",
+          "host": ["intranet", "decopress", "com"],
+          "path": ["Jobs", "ajax", "JobHandler.ashx"]
+        }
+      },
+      "response": [
+        {
+          "isSuccess": true,
+          "isError": false,
+          "data": [
+            {
+              "Items": [
+                {
+                  "Id": 28292,
+                  "TxtDelId": 19778,
+                  "SzId": 3,
+                  "Code": "1154 -",
+                  "Garment": " Class Two-Tone Cap",
+                  "Colour": "natural/navy ",
+                  "Sz1": 50,
+                  "Sz2": 0,
+                  "Sz3": 0,
+                  "Sz4": 0,
+                  "Sz5": 0,
+                  "Sz6": 0,
+                  "Sz7": 0,
+                  "Sz8": 0,
+                  "Sz9": 0,
+                  "Sz10": 0,
+                  "Sz11": 0,
+                  "Sz12": 0,
+                  "Sz13": 0,
+                  "Sz14": 0,
+                  "Sz15": 0,
+                  "Sz16": 0,
+                  "Sz17": 0,
+                  "Sz18": 0,
+                  "Sz19": 0,
+                  "Sz20": 0,
+                  "Totals": 50,
+                  "SzDescription": "One Size",
+                  "Deducted": 0
+                }
+              ],
+              "JobStockStatus": null,
+              "ID": 19778,
+              "Description": "1154 -  Class Two-Tone Cap natural/navy \r\n",
+              "LocCode": "E2",
+              "ClientOrderNumber": "51132",
+              "CustomerNumber": 0,
+              "Customer": "Family Industries",
+              "Supplier": "AlphaBroder",
+              "DateIn": "0001-01-01T00:00:00",
+              "Quantity": 50.0,
+              "DeliveryDateUtc": "2025-06-25T18:04:14.6285254+00:00",
+              "Cartons": 1,
+              "PackageType": "Carton"
+            }
+          ],
+          "responseText": null,
+          "error": null,
+          "Aux1": null,
+          "Aux2": null,
+          "Aux3": null,
+          "Aux4": null
+        }
+      ]
+    },
+    {
+      "name": "get-customer-by-id : get customer info by customerId",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Cookie",
+            "value": "AspxAutoDetectCookieSupport=1; User=Guid=8f2d089b-10df-4cff-895e-403fcc904f16&tag_permissions_add=asset,inwards,job,quote&tag_permissions_remove=asset,inwards,job,quote; UserGuid=8f2d089b-10df-4cff-895e-403fcc904f16; TenantTz={\"TzId\":\"America%2fLos_Angeles\"}; localeinfo={%22Locale%22:%22en%22%2C%22CustomFormats%22:{%22DM%22:%22MM/DD%22}}; tz=America/Los_Angeles; jsl={%22SortCol%22:%22sortDateDue2%22%2C%22SortDir%22:%22asc%22}; .ASPXAUTH=982D13FDF3EF2A81D7DC8AF25281EF300F9B3446B0B73D5E19858FAFF499F3550298E7EE7629DB7489960DB96E26D9C2239C685728FCF941F2947D5F52EDE687137F7874B416804A0733F40DF8BAA8141DDF17B3",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "urlencoded",
+          "urlencoded": [
+            {
+              "key": "customerId",
+              "value": "319",
+              "type": "text"
+            },
+            {
+              "key": "bit",
+              "value": "get-customer-by-id",
+              "type": "text"
+            }
+          ]
+        },
+        "url": {
+          "raw": "https://intranet.decopress.com/Jobs/ajax/JobHandler.ashx",
+          "protocol": "https",
+          "host": ["intranet", "decopress", "com"],
+          "path": ["Jobs", "ajax", "JobHandler.ashx"]
+        }
+      },
+      "response": [
+        {
+          "isSuccess": true,
+          "isError": false,
+          "data": {
+            "Address": {
+              "Location": 0,
+              "StreetAddress": "",
+              "AddressLine2": "",
+              "Suburb": "",
+              "City": "",
+              "State": "",
+              "Region": null,
+              "PostalCode": "",
+              "Country": "",
+              "AddressSummaryOneLine": "",
+              "MailingLabel": "",
+              "Fmt": "",
+              "FmtParts": [],
+              "FullAddress": "",
+              "FullAddressHtml": ""
+            },
+            "Users": [
+              {
+                "UserName": {
+                  "FirstName": "Adam",
+                  "LastName": "Calvary",
+                  "FirstNamePossessive": "Adam's",
+                  "FullNamePossessive": "Adam Calvary's",
+                  "FullName": "Adam Calvary",
+                  "Initials": "AC"
+                },
+                "UserAddress": {
+                  "Location": 0,
+                  "StreetAddress": "2755 Fruitdale St,",
+                  "AddressLine2": "",
+                  "Suburb": "",
+                  "City": "Los Angeles",
+                  "State": "California",
+                  "Region": null,
+                  "PostalCode": "90039",
+                  "Country": "United States",
+                  "AddressSummaryOneLine": "",
+                  "MailingLabel": "",
+                  "Fmt": "%N%n%O%n%A%n%C, %S %Z",
+                  "FmtParts": ["A", "C", "S", "Z"],
+                  "FullAddress": "",
+                  "FullAddressHtml": ""
+                },
+                "Id": 2363,
+                "EmailAddress": "adam@familyindustries.com",
+                "IsCustomerAdmin": false,
+                "IsGlobalCustomerUser": false,
+                "Phone": "310-283-1030",
+                "Location": 0,
+                "Factory": null,
+                "DefaultDueTimeUtc": "0001-01-01T00:00:00+00:00",
+                "TimeZone": null
+              },
+              {
+                "UserName": {
+                  "FirstName": "Alex",
+                  "LastName": "Meiner",
+                  "FirstNamePossessive": "Alex's",
+                  "FullNamePossessive": "Alex Meiner's",
+                  "FullName": "Alex Meiner",
+                  "Initials": "AM"
+                },
+                "UserAddress": {
+                  "Location": 0,
+                  "StreetAddress": "2755 Fruitdale St,",
+                  "AddressLine2": "",
+                  "Suburb": "",
+                  "City": "Los Angeles",
+                  "State": "CA",
+                  "Region": null,
+                  "PostalCode": "90039",
+                  "Country": "United States",
+                  "AddressSummaryOneLine": "",
+                  "MailingLabel": "",
+                  "Fmt": "%N%n%O%n%A%n%C, %S %Z",
+                  "FmtParts": ["A", "C", "S", "Z"],
+                  "FullAddress": "",
+                  "FullAddressHtml": ""
+                },
+                "Id": 2334,
+                "EmailAddress": "alex@familyindustries.com",
+                "IsCustomerAdmin": false,
+                "IsGlobalCustomerUser": false,
+                "Phone": "1323.227.1547",
+                "Location": 0,
+                "Factory": null,
+                "DefaultDueTimeUtc": "0001-01-01T00:00:00+00:00",
+                "TimeZone": null
+              },
+              {
+                "UserName": {
+                  "FirstName": "Connie",
+                  "LastName": "Tsang",
+                  "FirstNamePossessive": "Connie's",
+                  "FullNamePossessive": "Connie Tsang's",
+                  "FullName": "Connie Tsang",
+                  "Initials": "CT"
+                },
+                "UserAddress": {
+                  "Location": 0,
+                  "StreetAddress": "2755 Fruitdale St",
+                  "AddressLine2": "",
+                  "Suburb": "",
+                  "City": "Los Angeles",
+                  "State": "California",
+                  "Region": null,
+                  "PostalCode": "90039",
+                  "Country": "United States",
+                  "AddressSummaryOneLine": "",
+                  "MailingLabel": "",
+                  "Fmt": "%N%n%O%n%A%n%C, %S %Z",
+                  "FmtParts": ["A", "C", "S", "Z"],
+                  "FullAddress": "",
+                  "FullAddressHtml": ""
+                },
+                "Id": 5555,
+                "EmailAddress": "connie@familyindustries.com",
+                "IsCustomerAdmin": false,
+                "IsGlobalCustomerUser": false,
+                "Phone": "1323.227.1547",
+                "Location": 0,
+                "Factory": null,
+                "DefaultDueTimeUtc": "0001-01-01T00:00:00+00:00",
+                "TimeZone": null
+              },
+              {
+                "UserName": {
+                  "FirstName": "Edwin",
+                  "LastName": "Parrillas",
+                  "FirstNamePossessive": "Edwin's",
+                  "FullNamePossessive": "Edwin Parrillas'",
+                  "FullName": "Edwin Parrillas",
+                  "Initials": "EP"
+                },
+                "UserAddress": {
+                  "Location": 0,
+                  "StreetAddress": "2755 Fruitdale Street",
+                  "AddressLine2": "",
+                  "Suburb": "",
+                  "City": "Los Angeles",
+                  "State": "",
+                  "Region": null,
+                  "PostalCode": "90039",
+                  "Country": "United States",
+                  "AddressSummaryOneLine": "",
+                  "MailingLabel": "",
+                  "Fmt": "%N%n%O%n%A%n%C, %S %Z",
+                  "FmtParts": ["A", "C", "S", "Z"],
+                  "FullAddress": "",
+                  "FullAddressHtml": ""
+                },
+                "Id": 6222,
+                "EmailAddress": "edwin@familyindustries.com",
+                "IsCustomerAdmin": false,
+                "IsGlobalCustomerUser": false,
+                "Phone": "-",
+                "Location": 0,
+                "Factory": null,
+                "DefaultDueTimeUtc": "0001-01-01T00:00:00+00:00",
+                "TimeZone": null
+              },
+              {
+                "UserName": {
+                  "FirstName": "Gabi",
+                  "LastName": "Capriano",
+                  "FirstNamePossessive": "Gabi's",
+                  "FullNamePossessive": "Gabi Capriano's",
+                  "FullName": "Gabi Capriano",
+                  "Initials": "GC"
+                },
+                "UserAddress": {
+                  "Location": 0,
+                  "StreetAddress": "2755 Fruitdale Street",
+                  "AddressLine2": "",
+                  "Suburb": "",
+                  "City": "Los Angeles",
+                  "State": "CA",
+                  "Region": null,
+                  "PostalCode": "90039",
+                  "Country": "United States",
+                  "AddressSummaryOneLine": "",
+                  "MailingLabel": "",
+                  "Fmt": "%N%n%O%n%A%n%C, %S %Z",
+                  "FmtParts": ["A", "C", "S", "Z"],
+                  "FullAddress": "",
+                  "FullAddressHtml": ""
+                },
+                "Id": 4976,
+                "EmailAddress": "gabi@familyindustries.com",
+                "IsCustomerAdmin": false,
+                "IsGlobalCustomerUser": false,
+                "Phone": "323-227-1547 ext. 100",
+                "Location": 0,
+                "Factory": null,
+                "DefaultDueTimeUtc": "0001-01-01T00:00:00+00:00",
+                "TimeZone": null
+              },
+              {
+                "UserName": {
+                  "FirstName": "Jack",
+                  "LastName": "Kekstadt",
+                  "FirstNamePossessive": "Jack's",
+                  "FullNamePossessive": "Jack Kekstadt's",
+                  "FullName": "Jack Kekstadt",
+                  "Initials": "JK"
+                },
+                "UserAddress": {
+                  "Location": 0,
+                  "StreetAddress": "2755 Fruitdale St",
+                  "AddressLine2": "",
+                  "Suburb": "",
+                  "City": "Los Angeles",
+                  "State": "California",
+                  "Region": null,
+                  "PostalCode": "90039",
+                  "Country": "United States",
+                  "AddressSummaryOneLine": "",
+                  "MailingLabel": "",
+                  "Fmt": "%N%n%O%n%A%n%C, %S %Z",
+                  "FmtParts": ["A", "C", "S", "Z"],
+                  "FullAddress": "",
+                  "FullAddressHtml": ""
+                },
+                "Id": 5618,
+                "EmailAddress": "jack@familyindustries.com",
+                "IsCustomerAdmin": false,
+                "IsGlobalCustomerUser": false,
+                "Phone": "1323.227.1547",
+                "Location": 0,
+                "Factory": null,
+                "DefaultDueTimeUtc": "0001-01-01T00:00:00+00:00",
+                "TimeZone": null
+              },
+              {
+                "UserName": {
+                  "FirstName": "Mari",
+                  "LastName": "Russell",
+                  "FirstNamePossessive": "Mari's",
+                  "FullNamePossessive": "Mari Russell's",
+                  "FullName": "Mari Russell",
+                  "Initials": "MR"
+                },
+                "UserAddress": {
+                  "Location": 0,
+                  "StreetAddress": "2755 Fruitdale Street",
+                  "AddressLine2": "",
+                  "Suburb": "",
+                  "City": "Los Angeles",
+                  "State": "",
+                  "Region": null,
+                  "PostalCode": "90039",
+                  "Country": "United States",
+                  "AddressSummaryOneLine": "",
+                  "MailingLabel": "",
+                  "Fmt": "%N%n%O%n%A%n%C, %S %Z",
+                  "FmtParts": ["A", "C", "S", "Z"],
+                  "FullAddress": "",
+                  "FullAddressHtml": ""
+                },
+                "Id": 6676,
+                "EmailAddress": "mari@familyindustries.com",
+                "IsCustomerAdmin": false,
+                "IsGlobalCustomerUser": false,
+                "Phone": "-",
+                "Location": 0,
+                "Factory": null,
+                "DefaultDueTimeUtc": "0001-01-01T00:00:00+00:00",
+                "TimeZone": null
+              },
+              {
+                "UserName": {
+                  "FirstName": "Matthew",
+                  "LastName": "-",
+                  "FirstNamePossessive": "Matthew's",
+                  "FullNamePossessive": "Matthew -'s",
+                  "FullName": "Matthew -",
+                  "Initials": "M-"
+                },
+                "UserAddress": {
+                  "Location": 0,
+                  "StreetAddress": "2755 Fruitdale Street",
+                  "AddressLine2": "",
+                  "Suburb": "",
+                  "City": "Los Angeles",
+                  "State": "",
+                  "Region": null,
+                  "PostalCode": "90039",
+                  "Country": "United States",
+                  "AddressSummaryOneLine": "",
+                  "MailingLabel": "",
+                  "Fmt": "%N%n%O%n%A%n%C, %S %Z",
+                  "FmtParts": ["A", "C", "S", "Z"],
+                  "FullAddress": "",
+                  "FullAddressHtml": ""
+                },
+                "Id": 6606,
+                "EmailAddress": "matthew@familyindustries.com",
+                "IsCustomerAdmin": false,
+                "IsGlobalCustomerUser": false,
+                "Phone": "-",
+                "Location": 0,
+                "Factory": null,
+                "DefaultDueTimeUtc": "0001-01-01T00:00:00+00:00",
+                "TimeZone": null
+              },
+              {
+                "UserName": {
+                  "FirstName": "Phil",
+                  "LastName": "McDonald",
+                  "FirstNamePossessive": "Phil's",
+                  "FullNamePossessive": "Phil McDonald's",
+                  "FullName": "Phil McDonald",
+                  "Initials": "PM"
+                },
+                "UserAddress": {
+                  "Location": 0,
+                  "StreetAddress": "2755 Fruitdale St.",
+                  "AddressLine2": "",
+                  "Suburb": "",
+                  "City": "Los Angeles",
+                  "State": "CA",
+                  "Region": null,
+                  "PostalCode": "90039",
+                  "Country": "United States",
+                  "AddressSummaryOneLine": "",
+                  "MailingLabel": "",
+                  "Fmt": "%N%n%O%n%A%n%C, %S %Z",
+                  "FmtParts": ["A", "C", "S", "Z"],
+                  "FullAddress": "",
+                  "FullAddressHtml": ""
+                },
+                "Id": 2384,
+                "EmailAddress": "phil@familyindustries.com",
+                "IsCustomerAdmin": false,
+                "IsGlobalCustomerUser": false,
+                "Phone": "1323.227.1547",
+                "Location": 0,
+                "Factory": null,
+                "DefaultDueTimeUtc": "0001-01-01T00:00:00+00:00",
+                "TimeZone": null
+              },
+              {
+                "UserName": {
+                  "FirstName": "Stefan",
+                  "LastName": "Kane",
+                  "FirstNamePossessive": "Stefan's",
+                  "FullNamePossessive": "Stefan Kane's",
+                  "FullName": "Stefan Kane",
+                  "Initials": "SK"
+                },
+                "UserAddress": {
+                  "Location": 0,
+                  "StreetAddress": "2755 Fruitdale Street",
+                  "AddressLine2": "",
+                  "Suburb": "",
+                  "City": "Los Angeles",
+                  "State": "",
+                  "Region": null,
+                  "PostalCode": "90039",
+                  "Country": "United States",
+                  "AddressSummaryOneLine": "",
+                  "MailingLabel": "",
+                  "Fmt": "%N%n%O%n%A%n%C, %S %Z",
+                  "FmtParts": ["A", "C", "S", "Z"],
+                  "FullAddress": "",
+                  "FullAddressHtml": ""
+                },
+                "Id": 6771,
+                "EmailAddress": "stefan@familyindustries.com",
+                "IsCustomerAdmin": false,
+                "IsGlobalCustomerUser": false,
+                "Phone": "-",
+                "Location": 0,
+                "Factory": null,
+                "DefaultDueTimeUtc": "0001-01-01T00:00:00+00:00",
+                "TimeZone": null
+              }
+            ],
+            "Id": 319,
+            "Name": "Family Industries",
+            "PriceTierCode": "F",
+            "Identifier": "4f962ee6-1dc8-438d-a914-5b3ed3e3e024",
+            "LeadTimeAdjustment": null,
+            "LeadTimeFixed": null,
+            "AccountOnCreditHold": false,
+            "LocationId": null,
+            "LocationName": ""
+          },
+          "responseText": null,
+          "error": null,
+          "Aux1": null,
+          "Aux2": null,
+          "Aux3": null,
+          "Aux4": null
+        }
+      ]
+    },
+    {
+      "name": "get-joblines : important* all joblines and unit pricing for an order",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Cookie",
+            "value": "AspxAutoDetectCookieSupport=1; User=Guid=8f2d089b-10df-4cff-895e-403fcc904f16&tag_permissions_add=asset,inwards,job,quote&tag_permissions_remove=asset,inwards,job,quote; UserGuid=8f2d089b-10df-4cff-895e-403fcc904f16; TenantTz={\"TzId\":\"America%2fLos_Angeles\"}; localeinfo={%22Locale%22:%22en%22%2C%22CustomFormats%22:{%22DM%22:%22MM/DD%22}}; tz=America/Los_Angeles; jsl={%22SortCol%22:%22sortDateDue2%22%2C%22SortDir%22:%22asc%22}; .ASPXAUTH=982D13FDF3EF2A81D7DC8AF25281EF300F9B3446B0B73D5E19858FAFF499F3550298E7EE7629DB7489960DB96E26D9C2239C685728FCF941F2947D5F52EDE687137F7874B416804A0733F40DF8BAA8141DDF17B3",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "urlencoded",
+          "urlencoded": []
+        },
+        "url": {
+          "raw": "https://intranet.decopress.com/Jobs/ajax/JobHandler.ashx?bit=get-joblines&jobNumber=51132",
+          "protocol": "https",
+          "host": ["intranet", "decopress", "com"],
+          "path": ["Jobs", "ajax", "JobHandler.ashx"],
+          "query": [
+            {
+              "key": "bit",
+              "value": "get-joblines"
+            },
+            {
+              "key": "jobNumber",
+              "value": "51132"
+            }
+          ]
+        }
+      },
+      "response": [
+        {
+          "isSuccess": true,
+          "isError": false,
+          "data": [
+            {
+              "ID": 168745,
+              "Prgram": "GSORT",
+              "Description": "Garment Sort",
+              "Qty": 50,
+              "UnitPrice": 0.0,
+              "Garment": "1154 - Class Two-Tone Cap",
+              "Comments": "",
+              "ProgComment": "",
+              "JobNumber": 51132,
+              "ActQty": 50,
+              "MachineNumber": "",
+              "Progress": 0,
+              "MachNum": 0,
+              "PDFInstructions": null,
+              "ParentJobLineID": 168745,
+              "IsScheduleable": false,
+              "IsEditable": false,
+              "PDFId": 0,
+              "AssetImage": null,
+              "CanUploadPDF": false,
+              "CanEdit": true,
+              "CanDelete": false,
+              "IsStock": false,
+              "IsAsset": true,
+              "IsOther": false,
+              "EncrptedJobLineId": "1e4MiXjhLfSvvxAa9+pasw==",
+              "EncrptedPrgram": "l5TPSlJL9VEOvjWDRiJo1w==",
+              "AssetImagePreviewUrl": null,
+              "Supplier": "",
+              "JoblineTypes": [
+                {
+                  "ID": 245,
+                  "Machine": "GSORT",
+                  "isAutoAdd": true
+                }
+              ],
+              "HasImage": false,
+              "AssetHasPDF": false,
+              "CanUploadImage": false,
+              "CanDuplicate": true,
+              "CanPrintLabel": false,
+              "IsParentJobline": true,
+              "IsChildJobline": false,
+              "IsJoblineAlone": false,
+              "Order": 1,
+              "Gang": "",
+              "GangMondayLink": "",
+              "CanReprintSeps": false,
+              "CanQCComplete": true,
+              "CanCheckSeps": false,
+              "AssetIsNew": false,
+              "WorksheetId": 0,
+              "WorksheetType": "",
+              "AssetId": 185214,
+              "ExternalArtworkUrl": null,
+              "ExternalSupplier": null
+            },
+            {
+              "ID": 168743,
+              "Prgram": "EM13044",
+              "Description": "SOME COASTAL TOWN",
+              "Qty": 50,
+              "UnitPrice": 4.8,
+              "Garment": "1154 - Class Two-Tone Cap",
+              "Comments": "EM_DIRECT | CENTER FRONT | PMS 541C 172C 2018C 137C | 4.25''W | Stitches: 7833 | THREADS 1776, 1987, 1965, 1955, 1682",
+              "ProgComment": "SCHEDULED E4 08:00 7/3/2025 (PDT)",
+              "JobNumber": 51132,
+              "ActQty": 50,
+              "MachineNumber": "",
+              "Progress": 2,
+              "MachNum": 0,
+              "PDFInstructions": null,
+              "ParentJobLineID": 168745,
+              "IsScheduleable": true,
+              "IsEditable": true,
+              "PDFId": 0,
+              "AssetImage": "https://decopressus.blob.core.windows.net/decopressus-private/assets/EM/13000/EM13044/thumbnails/513122/EM13044_50.png?sv=2021-10-04&spr=https&se=2025-07-03T05:50:43Z&sr=b&sp=r&sig=m77HyumQN5sXHIkKRJltjNhMp3n4u6gm3nsPNhL9LY8%3D",
+              "CanUploadPDF": true,
+              "CanEdit": true,
+              "CanDelete": false,
+              "IsStock": false,
+              "IsAsset": true,
+              "IsOther": false,
+              "EncrptedJobLineId": "wyvcU4Q9f781OPfgnwLTiQ==",
+              "EncrptedPrgram": "nXLg3jm46comMPXTL1UnXQ==",
+              "AssetImagePreviewUrl": "https://decopressus.blob.core.windows.net/decopressus-private/assets/EM/13000/EM13044/EM13044.png?sv=2021-10-04&spr=https&se=2025-07-03T05:50:44Z&sr=b&sp=r&sig=e4z5uL3IVnRTlYKLxy7Wr83BgTykNyxbsbu7KXfexbs%3D",
+              "Supplier": "",
+              "JoblineTypes": [
+                {
+                  "ID": 190,
+                  "Machine": "E1",
+                  "isAutoAdd": false
+                },
+                {
+                  "ID": 191,
+                  "Machine": "E2",
+                  "isAutoAdd": false
+                },
+                {
+                  "ID": 223,
+                  "Machine": "E3",
+                  "isAutoAdd": false
+                },
+                {
+                  "ID": 224,
+                  "Machine": "E4",
+                  "isAutoAdd": false
+                },
+                {
+                  "ID": 227,
+                  "Machine": "EMB_BORDER_L",
+                  "isAutoAdd": true
+                },
+                {
+                  "ID": 228,
+                  "Machine": "EMB_BORDER_S",
+                  "isAutoAdd": true
+                },
+                {
+                  "ID": 232,
+                  "Machine": "S1",
+                  "isAutoAdd": false
+                },
+                {
+                  "ID": 233,
+                  "Machine": "S2",
+                  "isAutoAdd": false
+                },
+                {
+                  "ID": 234,
+                  "Machine": "E5",
+                  "isAutoAdd": false
+                }
+              ],
+              "HasImage": true,
+              "AssetHasPDF": true,
+              "CanUploadImage": true,
+              "CanDuplicate": true,
+              "CanPrintLabel": false,
+              "IsParentJobline": false,
+              "IsChildJobline": true,
+              "IsJoblineAlone": false,
+              "Order": 1,
+              "Gang": "",
+              "GangMondayLink": "",
+              "CanReprintSeps": false,
+              "CanQCComplete": true,
+              "CanCheckSeps": true,
+              "AssetIsNew": true,
+              "WorksheetId": 0,
+              "WorksheetType": "",
+              "AssetId": 211988,
+              "ExternalArtworkUrl": null,
+              "ExternalSupplier": null
+            },
+            {
+              "ID": 168744,
+              "Prgram": "SETEM",
+              "Description": "Setup for EM13044",
+              "Qty": 1,
+              "UnitPrice": 0.0,
+              "Garment": "",
+              "Comments": "",
+              "ProgComment": "",
+              "JobNumber": 51132,
+              "ActQty": 1,
+              "MachineNumber": "160",
+              "Progress": 0,
+              "MachNum": 0,
+              "PDFInstructions": null,
+              "ParentJobLineID": 168743,
+              "IsScheduleable": false,
+              "IsEditable": true,
+              "PDFId": 0,
+              "AssetImage": null,
+              "CanUploadPDF": false,
+              "CanEdit": true,
+              "CanDelete": false,
+              "IsStock": false,
+              "IsAsset": false,
+              "IsOther": true,
+              "EncrptedJobLineId": "b4j3lZdqiur9szgfJ19SSQ==",
+              "EncrptedPrgram": "0LIHDfHk59YZdWAVfSRFoA==",
+              "AssetImagePreviewUrl": null,
+              "Supplier": "",
+              "JoblineTypes": [
+                {
+                  "ID": 160,
+                  "Machine": "SETEM",
+                  "isAutoAdd": true
+                }
+              ],
+              "HasImage": false,
+              "AssetHasPDF": false,
+              "CanUploadImage": false,
+              "CanDuplicate": false,
+              "CanPrintLabel": false,
+              "IsParentJobline": false,
+              "IsChildJobline": false,
+              "IsJoblineAlone": true,
+              "Order": 0,
+              "Gang": "",
+              "GangMondayLink": "",
+              "CanReprintSeps": false,
+              "CanQCComplete": false,
+              "CanCheckSeps": false,
+              "AssetIsNew": false,
+              "WorksheetId": 0,
+              "WorksheetType": "",
+              "AssetId": 0,
+              "ExternalArtworkUrl": null,
+              "ExternalSupplier": null
+            }
+          ],
+          "responseText": null,
+          "error": null,
+          "Aux1": {
+            "ActionsAvailable": 1074056005210783242,
+            "RuleSet": 2.3,
+            "UserStrategyType": "Codewolf.Gatekeeper.UserStrategy.StandardUser, Codewolf.Main.Repository, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "ActionsAvailableList": [
+              0, 2, 8, 512, 1024, 2048, 4096, 8192, 32768, 131072, 262144,
+              1048576, 2097152, 4194304, 16777216, 33554432, 4294967296,
+              8589934592, 17179869184, 34359738368, 68719476736, 137438953472,
+              17592186044416, 70368744177664, 140737488355328, 281474976710656,
+              562949953421312, 1125899906842624, 9007199254740992,
+              18014398509481984, 36028797018963968, 144115188075855872,
+              288230376151711744, 576460752303423488
+            ],
+            "ActionsAvailableStringList": [
+              "0",
+              "2",
+              "DuplicateJobline",
+              "PrintJoblineLabel",
+              "RequestChanges",
+              "AddShipment",
+              "ChangeLocation",
+              "ShipConsignment",
+              "AddCompletedPhotos",
+              "DeleteCompletedPhotos",
+              "SaveSeps"
+            ]
+          },
+          "Aux2": [],
+          "Aux3": {
+            "MasterStatus": {
+              "Id": 6,
+              "Status": "On Time"
+            },
+            "StockStatus": {
+              "Id": 2,
+              "Status": "Stock Complete"
+            },
+            "Location": {
+              "Id": 100,
+              "Code": "DP",
+              "Name": "Decopress"
+            },
+            "StatusFormat": "[MASTERJOBSTATUS] - [STOCKSTATUS]",
+            "StatusLineHtml": "<span class=\"cw--master-status-pill jobstatus_6\">On Time</span> - <span class=\"cw--stock-status-pill stockstatus_2\">Stock Complete</span>",
+            "StatusLineText": "On Time - Stock Complete"
+          },
+          "Aux4": null
+        }
+      ]
+    },
+    {
+      "name": "get-job-history : all touch points for an order",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Cookie",
+            "value": "AspxAutoDetectCookieSupport=1; User=Guid=8f2d089b-10df-4cff-895e-403fcc904f16&tag_permissions_add=asset,inwards,job,quote&tag_permissions_remove=asset,inwards,job,quote; UserGuid=8f2d089b-10df-4cff-895e-403fcc904f16; TenantTz={\"TzId\":\"America%2fLos_Angeles\"}; localeinfo={%22Locale%22:%22en%22%2C%22CustomFormats%22:{%22DM%22:%22MM/DD%22}}; tz=America/Los_Angeles; jsl={%22SortCol%22:%22sortDateDue2%22%2C%22SortDir%22:%22asc%22}; .ASPXAUTH=982D13FDF3EF2A81D7DC8AF25281EF300F9B3446B0B73D5E19858FAFF499F3550298E7EE7629DB7489960DB96E26D9C2239C685728FCF941F2947D5F52EDE687137F7874B416804A0733F40DF8BAA8141DDF17B3",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "urlencoded",
+          "urlencoded": []
+        },
+        "url": {
+          "raw": "https://intranet.decopress.com/Jobs/ajax/JobHandler.ashx?bit=get-job-history&jobNumber=51132",
+          "protocol": "https",
+          "host": ["intranet", "decopress", "com"],
+          "path": ["Jobs", "ajax", "JobHandler.ashx"],
+          "query": [
+            {
+              "key": "bit",
+              "value": "get-job-history"
+            },
+            {
+              "key": "jobNumber",
+              "value": "51132"
+            }
+          ]
+        }
+      },
+      "response": [
+        {
+          "isSuccess": true,
+          "isError": false,
+          "data": [
+            {
+              "Entry": "Jobline Scheduled by Carrol Buchanan On <span data-tz-format=\"L HH:mm:ss (z)\" data-tz-utc=\"2025-06-26T19:47:27.5965013+00:00\" data-tz-timezone=\"America/Los_Angeles\" title=\"America/Los_Angeles -07:00\" class=\"js-tz-aware\">6/26/2025 12:47:27</span>",
+              "Detail": "Jobline EM13044 scheduled to E4 (120 minutes)."
+            },
+            {
+              "Entry": "Job file added by Jana Nuada On <span data-tz-format=\"L HH:mm:ss (z)\" data-tz-utc=\"2025-06-23T21:54:11.0048484+00:00\" data-tz-timezone=\"America/Los_Angeles\" title=\"America/Los_Angeles -07:00\" class=\"js-tz-aware\">6/23/2025 14:54:11</span>",
+              "Detail": "File SCT_Beach-Day_Pack_TECH_v1_06.19.pdf uploaded"
+            },
+            {
+              "Entry": "Job file added by Jana Nuada On <span data-tz-format=\"L HH:mm:ss (z)\" data-tz-utc=\"2025-06-23T21:54:09.3173699+00:00\" data-tz-timezone=\"America/Los_Angeles\" title=\"America/Los_Angeles -07:00\" class=\"js-tz-aware\">6/23/2025 14:54:09</span>",
+              "Detail": "File 33617 Some Coastal Town Hats Cad.pdf uploaded"
+            },
+            {
+              "Entry": "Sales Tax On <span data-tz-format=\"L HH:mm:ss (z)\" data-tz-utc=\"2025-06-23T21:53:30.6868649+00:00\" data-tz-timezone=\"America/Los_Angeles\" title=\"America/Los_Angeles -07:00\" class=\"js-tz-aware\">6/23/2025 14:53:30</span>",
+              "Detail": "Sales Tax set to Tax Exempt"
+            },
+            {
+              "Entry": "Sales Tax On <span data-tz-format=\"L HH:mm:ss (z)\" data-tz-utc=\"2025-06-23T21:52:16.9842879+00:00\" data-tz-timezone=\"America/Los_Angeles\" title=\"America/Los_Angeles -07:00\" class=\"js-tz-aware\">6/23/2025 14:52:16</span>",
+              "Detail": "Sales Tax set to Tax Exempt"
+            },
+            {
+              "Entry": "Owner by Phil McDonald On <span data-tz-format=\"L HH:mm:ss (z)\" data-tz-utc=\"2025-06-23T21:52:16.7930000+00:00\" data-tz-timezone=\"America/Los_Angeles\" title=\"America/Los_Angeles -07:00\" class=\"js-tz-aware\">6/23/2025 14:52:16</span>",
+              "Detail": "Owner set via QuickJob"
+            },
+            {
+              "Entry": "Created by Jana Nuada On <span data-tz-format=\"L HH:mm:ss (z)\" data-tz-utc=\"2025-06-23T21:52:16.7930000+00:00\" data-tz-timezone=\"America/Los_Angeles\" title=\"America/Los_Angeles -07:00\" class=\"js-tz-aware\">6/23/2025 14:52:16</span>",
+              "Detail": "Creator set via QuickJob"
+            },
+            {
+              "Entry": "Shipment Added by Jana Nuada On <span data-tz-format=\"L HH:mm:ss (z)\" data-tz-utc=\"2025-06-23T21:52:15.6249219+00:00\" data-tz-timezone=\"America/Los_Angeles\" title=\"America/Los_Angeles -07:00\" class=\"js-tz-aware\">6/23/2025 14:52:15</span>",
+              "Detail": "Shipment 1 Added - NDA - Family Industries, 2755 Fruitdale St., Los Angeles, CA 90039 - Phil McDonald, 1323.227.1547, phil@familyindustries.com"
+            }
+          ],
+          "responseText": null,
+          "error": null,
+          "Aux1": null,
+          "Aux2": null,
+          "Aux3": null,
+          "Aux4": null
+        }
+      ]
+    },
+    {
+      "name": "get-delivery-options : delivery options for a customer by rank",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Cookie",
+            "value": "AspxAutoDetectCookieSupport=1; User=Guid=8f2d089b-10df-4cff-895e-403fcc904f16&tag_permissions_add=asset,inwards,job,quote&tag_permissions_remove=asset,inwards,job,quote; UserGuid=8f2d089b-10df-4cff-895e-403fcc904f16; TenantTz={\"TzId\":\"America%2fLos_Angeles\"}; localeinfo={%22Locale%22:%22en%22%2C%22CustomFormats%22:{%22DM%22:%22MM/DD%22}}; tz=America/Los_Angeles; jsl={%22SortCol%22:%22sortDateDue2%22%2C%22SortDir%22:%22asc%22}; .ASPXAUTH=982D13FDF3EF2A81D7DC8AF25281EF300F9B3446B0B73D5E19858FAFF499F3550298E7EE7629DB7489960DB96E26D9C2239C685728FCF941F2947D5F52EDE687137F7874B416804A0733F40DF8BAA8141DDF17B3",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "urlencoded",
+          "urlencoded": []
+        },
+        "url": {
+          "raw": "https://intranet.decopress.com/Jobs/ajax/jobhandler.ashx?bit=get-delivery-options&customer-id=319",
+          "protocol": "https",
+          "host": ["intranet", "decopress", "com"],
+          "path": ["Jobs", "ajax", "jobhandler.ashx"],
+          "query": [
+            {
+              "key": "bit",
+              "value": "get-delivery-options"
+            },
+            {
+              "key": "customer-id",
+              "value": "319"
+            }
+          ]
+        }
+      },
+      "response": [
+        {
+          "isSuccess": true,
+          "isError": false,
+          "data": [
+            {
+              "label": "GND",
+              "value": "Ground",
+              "iscollection": false,
+              "rank": 1,
+              "deliveryLabelEnabled": true
+            },
+            {
+              "label": "NDA",
+              "value": "Next Day Air",
+              "iscollection": false,
+              "rank": 2,
+              "deliveryLabelEnabled": true
+            },
+            {
+              "label": "2DA",
+              "value": "2 Day Air",
+              "iscollection": false,
+              "rank": 3,
+              "deliveryLabelEnabled": true
+            },
+            {
+              "label": "COLLECTION",
+              "value": "collection",
+              "iscollection": true,
+              "rank": 4,
+              "deliveryLabelEnabled": true
+            },
+            {
+              "label": "TBD",
+              "value": "To Be Decided",
+              "iscollection": true,
+              "rank": 5,
+              "deliveryLabelEnabled": true
+            },
+            {
+              "label": "3DS",
+              "value": "3 Day Saver",
+              "iscollection": false,
+              "rank": 6,
+              "deliveryLabelEnabled": true
+            }
+          ],
+          "responseText": null,
+          "error": null,
+          "Aux1": null,
+          "Aux2": null,
+          "Aux3": null,
+          "Aux4": null
+        }
+      ]
+    },
+    {
+      "name": "get-job-shipments : * main shipment info, has t/f for has shipped!",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Cookie",
+            "value": "AspxAutoDetectCookieSupport=1; User=Guid=8f2d089b-10df-4cff-895e-403fcc904f16&tag_permissions_add=asset,inwards,job,quote&tag_permissions_remove=asset,inwards,job,quote; UserGuid=8f2d089b-10df-4cff-895e-403fcc904f16; TenantTz={\"TzId\":\"America%2fLos_Angeles\"}; localeinfo={%22Locale%22:%22en%22%2C%22CustomFormats%22:{%22DM%22:%22MM/DD%22}}; tz=America/Los_Angeles; jsl={%22SortCol%22:%22sortDateDue2%22%2C%22SortDir%22:%22asc%22}; .ASPXAUTH=982D13FDF3EF2A81D7DC8AF25281EF300F9B3446B0B73D5E19858FAFF499F3550298E7EE7629DB7489960DB96E26D9C2239C685728FCF941F2947D5F52EDE687137F7874B416804A0733F40DF8BAA8141DDF17B3",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "urlencoded",
+          "urlencoded": []
+        },
+        "url": {
+          "raw": "https://intranet.decopress.com/Jobs/ajax/jobhandler.ashx?jobNumber=51132&customer-id=319&bit=get-job-shipments",
+          "protocol": "https",
+          "host": ["intranet", "decopress", "com"],
+          "path": ["Jobs", "ajax", "jobhandler.ashx"],
+          "query": [
+            {
+              "key": "jobNumber",
+              "value": "51132"
+            },
+            {
+              "key": "customer-id",
+              "value": "319"
+            },
+            {
+              "key": "bit",
+              "value": "get-job-shipments"
+            }
+          ]
+        }
+      },
+      "response": [
+        {
+          "isSuccess": true,
+          "isError": false,
+          "data": {
+            "JobShipments": [
+              {
+                "Id": 42573,
+                "Guid": "ca59e316-4829-4e11-b26d-1ce3b481de33",
+                "Index": 1,
+                "Title": "Shipment 1",
+                "MailingLabel": "Phil McDonald\nFamily Industries\n2755 Fruitdale St.\nLos Angeles, CA 90039",
+                "AddressSummaryOneLine": "2755 Fruitdale St., Los Angeles, CA 90039",
+                "ContactDetailsOneLine": "Phil McDonald, 1323.227.1547, phil@familyindustries.com",
+                "ShipmentNotes": "",
+                "IsShipmentIntl": false,
+                "CanShip": true,
+                "Shipped": false,
+                "DateShipped": null,
+                "CanCollect": false,
+                "Collected": false,
+                "CollectionDate": null,
+                "Validated": false,
+                "ApiId": null,
+                "ApiSource": null,
+                "IsCollection": false,
+                "IsComplete": false,
+                "ActionsAvailable": ["printDeliveryLabel", "edit", "delete"],
+                "ShipmentMethod": {
+                  "label": "NDA",
+                  "value": "Next Day Air",
+                  "iscollection": false,
+                  "rank": 2,
+                  "deliveryLabelEnabled": true
+                },
+                "IsSaturdayDelivery": false,
+                "TrackingDetails": null,
+                "CollectionDetails": null,
+                "ShipmentPackages": null,
+                "Address": {
+                  "Id": 45879,
+                  "Guid": "30086aad-7435-4125-a4a5-c9f8ef2e0a45",
+                  "ContactName": "Phil McDonald",
+                  "Organisation": "Family Industries",
+                  "Phone": "1323.227.1547",
+                  "Phone2": null,
+                  "Mobile": "",
+                  "EmailAddress": "phil@familyindustries.com",
+                  "CountryCodeISO2": "US",
+                  "CountryName": "United States",
+                  "StreetAddress": "2755 Fruitdale St.",
+                  "AddressLine2": "",
+                  "DependentLocality": "",
+                  "City": "Los Angeles",
+                  "District": null,
+                  "AdministrativeArea": "California",
+                  "AdministrativeAreaAbbreviation": "CA",
+                  "AdministrativeAreaCode": null,
+                  "ZipCode": "90039",
+                  "ExtraInformation": null,
+                  "Validated": false,
+                  "ValidationPartnerApi": null,
+                  "ValidationPartnerApiAddressId": null,
+                  "ValidationSource": null,
+                  "RelatedToEntityId": 51132,
+                  "RelatedToEntityType": "JOB",
+                  "IsDefault": false,
+                  "DateEnteredUtc": "2025-06-23T14:52:15.562428-07:00",
+                  "AddressType": "street_address",
+                  "AddressSummaryOneLine": "2755 Fruitdale St., Los Angeles, CA 90039",
+                  "MailingLabel": "Phil McDonald\nFamily Industries\n2755 Fruitdale St.\nLos Angeles, CA 90039",
+                  "GeoUrl": null,
+                  "UTCOffset": 0,
+                  "EntityAddressSourceId": -1,
+                  "Active": true,
+                  "Fmt": "%N%n%O%n%A%n%C, %S %Z",
+                  "CheckSum": 514871661,
+                  "Ts": "AAAAAAYlm/M="
+                },
+                "ShippingStatusJson": {
+                  "Id": "ship-to",
+                  "Name": "Ship",
+                  "Icon": "fal fa-shipping-fast"
+                },
+                "ShippingLabels": "",
+                "ShippingInternationalDocuments": "",
+                "IsManualTrackingDetails": false
+              }
+            ]
+          },
+          "responseText": null,
+          "error": null,
+          "Aux1": null,
+          "Aux2": null,
+          "Aux3": null,
+          "Aux4": null
+        }
+      ]
+    },
+    {
+      "name": "get-joblines-cost-details : job line totals",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Cookie",
+            "value": "AspxAutoDetectCookieSupport=1; User=Guid=8f2d089b-10df-4cff-895e-403fcc904f16&tag_permissions_add=asset,inwards,job,quote&tag_permissions_remove=asset,inwards,job,quote; UserGuid=8f2d089b-10df-4cff-895e-403fcc904f16; TenantTz={\"TzId\":\"America%2fLos_Angeles\"}; localeinfo={%22Locale%22:%22en%22%2C%22CustomFormats%22:{%22DM%22:%22MM/DD%22}}; tz=America/Los_Angeles; jsl={%22SortCol%22:%22sortDateDue2%22%2C%22SortDir%22:%22asc%22}; .ASPXAUTH=982D13FDF3EF2A81D7DC8AF25281EF300F9B3446B0B73D5E19858FAFF499F3550298E7EE7629DB7489960DB96E26D9C2239C685728FCF941F2947D5F52EDE687137F7874B416804A0733F40DF8BAA8141DDF17B3",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "urlencoded",
+          "urlencoded": [
+            {
+              "key": "bit",
+              "value": "get-joblines-cost-details",
+              "type": "text"
+            },
+            {
+              "key": "jobNumber",
+              "value": "51132",
+              "type": "text"
+            }
+          ]
+        },
+        "url": {
+          "raw": "https://intranet.decopress.com/Jobs/ajax/JobHandler.ashx",
+          "protocol": "https",
+          "host": ["intranet", "decopress", "com"],
+          "path": ["Jobs", "ajax", "JobHandler.ashx"]
+        }
+      },
+      "response": [
+        {
+          "isSuccess": true,
+          "isError": false,
+          "data": {
+            "jobLinesSubTotal": 240.0,
+            "jobLinesTaxTotal": 0.0,
+            "jobLinesTotalCost": 240.0,
+            "jobLinesSubTotalFormattedText": "$240.00",
+            "jobLinesTaxTotalFormattedText": "$0.00",
+            "jobLinesTotalCostFormattedText": "$240.00"
+          },
+          "responseText": null,
+          "error": null,
+          "Aux1": null,
+          "Aux2": null,
+          "Aux3": null,
+          "Aux4": null
+        }
+      ]
+    },
+    {
+      "name": "get-all-category-units : returns all materials",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Cookie",
+            "value": "AspxAutoDetectCookieSupport=1; User=Guid=8f2d089b-10df-4cff-895e-403fcc904f16&tag_permissions_add=asset,inwards,job,quote&tag_permissions_remove=asset,inwards,job,quote; UserGuid=8f2d089b-10df-4cff-895e-403fcc904f16; TenantTz={\"TzId\":\"America%2fLos_Angeles\"}; localeinfo={%22Locale%22:%22en%22%2C%22CustomFormats%22:{%22DM%22:%22MM/DD%22}}; tz=America/Los_Angeles; jsl={%22SortCol%22:%22sortDateDue2%22%2C%22SortDir%22:%22asc%22}; .ASPXAUTH=982D13FDF3EF2A81D7DC8AF25281EF300F9B3446B0B73D5E19858FAFF499F3550298E7EE7629DB7489960DB96E26D9C2239C685728FCF941F2947D5F52EDE687137F7874B416804A0733F40DF8BAA8141DDF17B3",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "urlencoded",
+          "urlencoded": []
+        },
+        "url": {
+          "raw": "https://intranet.decopress.com/assetmanager/ajax/assetbit.ashx?bit=get-all-category-units&no-cache=0",
+          "protocol": "https",
+          "host": ["intranet", "decopress", "com"],
+          "path": ["assetmanager", "ajax", "assetbit.ashx"],
+          "query": [
+            {
+              "key": "bit",
+              "value": "get-all-category-units"
+            },
+            {
+              "key": "no-cache",
+              "value": "0"
+            }
+          ]
+        }
+      },
+      "response": [
+        {
+          "isSuccess": true,
+          "isError": false,
+          "data": [
+            {
+              "Id": 12067,
+              "CategoryCode": "DECODUO_AP",
+              "UnitType": "1.5 x 1.5",
+              "Rank": 1100,
+              "CatName": "DecoDuo",
+              "PriceCalcType": "UNIT",
+              "ProcessCode": "AP",
+              "CategorySetupMultiplier": 1,
+              "HumanName": "DecoDuo Apparel",
+              "FilterName": "DECODUO_AP:DecoDuo-1.5 x 1.5  (DecoDuo Apparel 1.5 x 1.5)",
+              "PriceCode": "DECODUO_AP:DecoDuo-1.5 x 1.5",
+              "Active": true,
+              "MapsToMasterProcess": "AP",
+              "PriceFormulaType": ""
+            },
+            {
+              "Id": 12104,
+              "CategoryCode": "SIMWOVEN_TC",
+              "UnitType": "A3 11.7 x 16.5",
+              "Rank": 2050,
+              "CatName": "SimWoven",
+              "PriceCalcType": "UNIT",
+              "ProcessCode": "TC",
+              "CategorySetupMultiplier": 6,
+              "HumanName": "SimWoven Technical",
+              "FilterName": "SIMWOVEN_TC:SimWoven-A3 11.7 x 16.5  (SimWoven Technical A3 11.7 x 16.5)",
+              "PriceCode": "SIMWOVEN_TC:SimWoven-A3 11.7 x 16.5",
+              "Active": true,
+              "MapsToMasterProcess": "TC",
+              "PriceFormulaType": ""
+            }
+          ],
+          "responseText": null,
+          "error": null,
+          "Aux1": {
+            "fromCache": true,
+            "ttl": 0,
+            "noCache": false,
+            "includeInactive": false
+          },
+          "Aux2": null,
+          "Aux3": null,
+          "Aux4": null
+        }
+      ]
+    },
+    {
+      "name": "** get-price-quantity-bands : price tier, code, cat - unit id - all from asset by tag!",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Cookie",
+            "value": "AspxAutoDetectCookieSupport=1; User=Guid=8f2d089b-10df-4cff-895e-403fcc904f16&tag_permissions_add=asset,inwards,job,quote&tag_permissions_remove=asset,inwards,job,quote; UserGuid=8f2d089b-10df-4cff-895e-403fcc904f16; TenantTz={\"TzId\":\"America%2fLos_Angeles\"}; localeinfo={%22Locale%22:%22en%22%2C%22CustomFormats%22:{%22DM%22:%22MM/DD%22}}; tz=America/Los_Angeles; jsl={%22SortCol%22:%22sortDateDue2%22%2C%22SortDir%22:%22asc%22}; .ASPXAUTH=982D13FDF3EF2A81D7DC8AF25281EF300F9B3446B0B73D5E19858FAFF499F3550298E7EE7629DB7489960DB96E26D9C2239C685728FCF941F2947D5F52EDE687137F7874B416804A0733F40DF8BAA8141DDF17B3",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "urlencoded",
+          "urlencoded": [
+            {
+              "key": "category-unit-id",
+              "value": "11317",
+              "type": "text"
+            },
+            {
+              "key": "price-tier",
+              "value": "F",
+              "type": "text"
+            },
+            {
+              "key": "price-code",
+              "value": "EM_DIRECT:Embroidery-7001 to 8000",
+              "type": "text"
+            },
+            {
+              "key": "bit",
+              "value": "get-price-quantity-bands",
+              "type": "text"
+            }
+          ]
+        },
+        "url": {
+          "raw": "https://intranet.decopress.com/assetmanager/ajax/assetbit.ashx",
+          "protocol": "https",
+          "host": ["intranet", "decopress", "com"],
+          "path": ["assetmanager", "ajax", "assetbit.ashx"]
+        }
+      },
+      "response": [
+        {
+          "isSuccess": true,
+          "isError": false,
+          "data": {
+            "CategoryUnitId": 11317,
+            "CategoryCode": "EM_DIRECT",
+            "UnitType": "7001 to 8000",
+            "Rank": 17020,
+            "CategoryName": "Embroidery",
+            "Setup": 0.0,
+            "Reset": 0.0,
+            "PriceCalcType": "UNIT",
+            "ProcessCode": "EM",
+            "PriceTierCode": "F",
+            "PriceEngineCompatibleLookupCode": "EM_DIRECT:Embroidery-7001 to 8000",
+            "PriceFormulaType": "",
+            "CategoryMarginUnitType": null,
+            "ExternalSupplier": null,
+            "ExternalPriceCode": null,
+            "QuantityBands": [
+              {
+                "Id": 766056,
+                "From": 1,
+                "To": 1,
+                "PerUnit": 25.0,
+                "MinCharge": 0.0,
+                "Tier": "F"
+              },
+              {
+                "Id": 766057,
+                "From": 2,
+                "To": 5,
+                "PerUnit": 12.5,
+                "MinCharge": 0.0,
+                "Tier": "F"
+              },
+              {
+                "Id": 766058,
+                "From": 6,
+                "To": 9,
+                "PerUnit": 10.0,
+                "MinCharge": 0.0,
+                "Tier": "F"
+              },
+              {
+                "Id": 766059,
+                "From": 10,
+                "To": 19,
+                "PerUnit": 8.0,
+                "MinCharge": 0.0,
+                "Tier": "F"
+              },
+              {
+                "Id": 766060,
+                "From": 20,
+                "To": 49,
+                "PerUnit": 6.0,
+                "MinCharge": 0.0,
+                "Tier": "F"
+              },
+              {
+                "Id": 766061,
+                "From": 50,
+                "To": 99,
+                "PerUnit": 4.8,
+                "MinCharge": 0.0,
+                "Tier": "F"
+              },
+              {
+                "Id": 766062,
+                "From": 100,
+                "To": 199,
+                "PerUnit": 3.8,
+                "MinCharge": 0.0,
+                "Tier": "F"
+              },
+              {
+                "Id": 766063,
+                "From": 200,
+                "To": 299,
+                "PerUnit": 3.6,
+                "MinCharge": 0.0,
+                "Tier": "F"
+              },
+              {
+                "Id": 766064,
+                "From": 300,
+                "To": 499,
+                "PerUnit": 3.35,
+                "MinCharge": 0.0,
+                "Tier": "F"
+              },
+              {
+                "Id": 766065,
+                "From": 500,
+                "To": null,
+                "PerUnit": 3.2,
+                "MinCharge": 0.0,
+                "Tier": "F"
+              }
+            ],
+            "ProcessParameters": {
+              "STITCHES": 0,
+              "DG-X": 0.0,
+              "DG-Y": 0.0
+            }
+          },
+          "responseText": null,
+          "error": null,
+          "Aux1": null,
+          "Aux2": null,
+          "Aux3": null,
+          "Aux4": null
+        }
+      ]
+    },
+    {
+      "name": "https://intranet.decopress.com/jobstatuslist/ajax/JobStatusQueryAsync.ashx",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Cookie",
+            "value": "AspxAutoDetectCookieSupport=1; User=Guid=8f2d089b-10df-4cff-895e-403fcc904f16&tag_permissions_add=asset,inwards,job,quote&tag_permissions_remove=asset,inwards,job,quote; UserGuid=8f2d089b-10df-4cff-895e-403fcc904f16; TenantTz={\"TzId\":\"America%2fLos_Angeles\"}; localeinfo={%22Locale%22:%22en%22%2C%22CustomFormats%22:{%22DM%22:%22MM/DD%22}}; tz=America/Los_Angeles; jsl={%22SortCol%22:%22sortDateDue2%22%2C%22SortDir%22:%22asc%22}; .ASPXAUTH=982D13FDF3EF2A81D7DC8AF25281EF300F9B3446B0B73D5E19858FAFF499F3550298E7EE7629DB7489960DB96E26D9C2239C685728FCF941F2947D5F52EDE687137F7874B416804A0733F40DF8BAA8141DDF17B3",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "urlencoded",
+          "urlencoded": [
+            {
+              "key": "machine-filter",
+              "value": "US,1,2,4,8,16,32,64,128,256,512,1024,2048,4096,8192,16384",
+              "type": "text"
+            },
+            {
+              "key": "status-line-format",
+              "value": "[MASTERJOBSTATUS] - [STOCKSTATUS]",
+              "type": "text"
+            },
+            {
+              "key": "no-loc-token",
+              "value": "[NOLOC]",
+              "type": "text"
+            },
+            {
+              "key": "show-due-date-filter",
+              "value": "true",
+              "type": "text"
+            },
+            {
+              "key": "tagged-user",
+              "value": "@laser",
+              "type": "text"
+            },
+            {
+              "key": "app-timezone",
+              "value": "America/Los_Angeles",
+              "type": "text"
+            },
+            {
+              "key": "location",
+              "value": "-1",
+              "type": "text"
+            },
+            {
+              "key": "job-status-codes",
+              "value": "approved,ontime,runninglate,problem",
+              "type": "text"
+            },
+            {
+              "key": "sort-by",
+              "value": "dateduefactory",
+              "type": "text"
+            },
+            {
+              "key": "sort-direction",
+              "value": "asc",
+              "type": "text"
+            },
+            {
+              "key": "job-status",
+              "value": "5,6,7,8",
+              "type": "text"
+            },
+            {
+              "key": "due-date",
+              "value": "1,2,3",
+              "type": "text"
+            },
+            {
+              "key": "stock-status",
+              "value": "0,1,2",
+              "type": "text"
+            },
+            {
+              "key": "process-filter",
+              "value": "HW,AP,TC,MP,PR,NA,CR,DS,ES,PP,PA,EM,SW,SC,DF,Misc,Sewing,Dispatch,Stock,Bagging",
+              "type": "text"
+            },
+            {
+              "key": "bit",
+              "value": "get-job-list",
+              "type": "text"
+            },
+            {
+              "key": "page-size",
+              "value": "200",
+              "type": "text"
+            },
+            {
+              "key": "requested-page",
+              "value": "",
+              "type": "text"
+            },
+            {
+              "key": "user-def-sort-def",
+              "value": "status,stockstatus",
+              "type": "text"
+            },
+            {
+              "key": "get-job-counts",
+              "value": "true",
+              "type": "text"
+            }
+          ]
+        },
+        "url": {
+          "raw": "https://intranet.decopress.com/jobstatuslist/ajax/JobStatusQueryAsync.ashx",
+          "protocol": "https",
+          "host": ["intranet", "decopress", "com"],
+          "path": ["jobstatuslist", "ajax", "JobStatusQueryAsync.ashx"]
+        }
+      },
+      "response": []
+    }
+  ]
+}

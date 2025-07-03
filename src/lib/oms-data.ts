@@ -1,5 +1,11 @@
 import fs from "fs";
 import path from "path";
+import {
+  APIJob,
+  APIJobStatus,
+  APIJobShipments,
+  APIJobFiles,
+} from "./api-client";
 
 export interface Order {
   jobNumber: string;
@@ -76,12 +82,46 @@ export interface Order {
   };
 }
 
+// Enhanced Order interface that combines scraped data with live API data
+export interface EnhancedOrder extends Order {
+  // Live API data (when available)
+  liveStatus?: APIJobStatus["data"];
+  liveShipping?: APIJobShipments["data"];
+  liveFiles?: APIJobFiles["data"];
+  apiJobData?: APIJob;
+
+  // Data source tracking
+  dataSource: "scraped" | "api" | "hybrid";
+  lastAPIUpdate?: string;
+  needsRefresh?: boolean;
+  apiErrors?: string[];
+
+  // Data freshness indicators
+  dataAge?: number; // hours since last update
+  staleness?: "fresh" | "stale" | "very-stale";
+}
+
 export interface OrdersData {
   orders: Order[];
   summary: {
     totalOrders: number;
     lastUpdated: string;
     scrapedAt: string;
+  };
+}
+
+export interface EnhancedOrdersData {
+  orders: EnhancedOrder[];
+  summary: {
+    totalOrders: number;
+    lastUpdated: string;
+    scrapedAt: string;
+    apiIntegration: {
+      enabled: boolean;
+      lastAPISync?: string;
+      apiHealth?: "healthy" | "degraded" | "offline";
+      hybridOrdersCount?: number;
+    };
   };
 }
 
