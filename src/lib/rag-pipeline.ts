@@ -4,14 +4,19 @@
 import OpenAI from "openai";
 import { vectorDBService, SearchResult } from "./vector-db";
 import { embeddingService, createEmbeddingService } from "./embeddings";
-import { hybridOMSDataService } from "./hybrid-data-service";
+import { apiFirstDataService } from "./api-first-data-service";
 import { EnhancedOrder } from "./oms-data";
 import { intelligentQueryRouter, RoutedQueryResult } from "./query-router";
 import {
   enhancedVectorPipeline,
   EnhancedSearchResult,
 } from "./enhanced-vector-pipeline";
-import { apiFirstDataService, ModernOrder } from "./api-first-data-service";
+import { ModernOrder } from "./api-first-data-service";
+import {
+  temporalUtils,
+  TemporalContext,
+  ParsedDateRange,
+} from "./temporal-utils";
 
 export interface RAGResult {
   answer: string;
@@ -72,7 +77,7 @@ export interface EnhancedRAGQuery {
 export class RAGPipeline {
   private openai: OpenAI;
   private vectorDB = vectorDBService;
-  private dataService = hybridOMSDataService;
+  private dataService = apiFirstDataService;
 
   constructor() {
     this.openai = new OpenAI({
@@ -203,8 +208,35 @@ export class RAGPipeline {
     userQuery: string,
     context: any
   ): Promise<{ answer: string; tokensUsed?: number }> {
+    // Get temporal context for date-aware responses
+    const temporalContext = temporalUtils.getCurrentTemporalContext();
+    const temporalPrompt = temporalUtils.generateTemporalReasoningPrompt(
+      userQuery,
+      temporalContext
+    );
+
+    // Parse any natural language dates in the query
+    const parsedDates = temporalUtils.parseNaturalLanguageDate(userQuery);
+
     const contextText = this.formatEnhancedContext(context);
-    const enhancedSystemPrompt = `You are an expert assistant for a printing and manufacturing order management system. You analyze comprehensive order data including job details, line items, production processes, shipments, and financials. Provide accurate, helpful responses based on the data provided. Always cite specific job numbers when relevant.`;
+
+    const enhancedSystemPrompt = `You are a date-aware expert assistant for a printing and manufacturing order management system. You analyze comprehensive order data including job details, line items, production processes, shipments, and financials.
+
+${temporalPrompt}
+
+TEMPORAL REASONING INSTRUCTIONS:
+1. Always consider current date/time when processing queries about timing
+2. When users say "today", "this week", "urgent", "due soon" - calculate exact dates
+3. Prioritize time-sensitive orders (mustDate=true, rush orders, overdue items)
+4. Consider business hours and deadlines in your recommendations
+5. Factor in days-to-due-date when prioritizing orders
+
+RESPONSE GUIDELINES:
+- Provide accurate, helpful responses based on the data provided
+- Always cite specific job numbers when relevant
+- For time-sensitive queries, prioritize orders by urgency and due dates
+- Explain your temporal reasoning (e.g., "Based on today being [date]...")
+- Consider $10k revenue targets in context of order values and timelines`;
 
     try {
       const response = await this.openai.chat.completions.create({
@@ -217,7 +249,7 @@ export class RAGPipeline {
           },
         ],
         temperature: 0.2,
-        max_tokens: 1200,
+        max_tokens: 1500, // Increased for more detailed temporal reasoning
       });
 
       const answer =

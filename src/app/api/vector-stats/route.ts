@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { vectorDBService } from "@/lib/vector-db";
 import { dataUpdater } from "@/lib/data-updater";
-import { hybridOMSDataService } from "@/lib/hybrid-data-service";
+import { apiFirstDataService } from "@/lib/api-first-data-service";
 
 export async function GET(request: NextRequest) {
   try {
@@ -27,8 +27,8 @@ export async function GET(request: NextRequest) {
 
       case "detect-changes":
         // Detect what changes would happen in an incremental update
-        const orders = await hybridOMSDataService.getEnhancedOrders();
-        const regularOrders = orders.map((order) => ({
+        const ordersData = await apiFirstDataService.getAllOrders();
+        const regularOrders = ordersData.orders.map((order) => ({
           ...order,
           // Remove enhanced fields for change detection
           dataSource: undefined,
@@ -70,8 +70,8 @@ export async function GET(request: NextRequest) {
 
       case "test-incremental":
         // Test incremental update with current data
-        const testOrders = await hybridOMSDataService.getEnhancedOrders();
-        const testRegularOrders = testOrders.map((order) => ({
+        const testOrdersData = await apiFirstDataService.getAllOrders();
+        const testRegularOrders = testOrdersData.orders.map((order) => ({
           ...order,
           dataSource: undefined,
           lastAPIUpdate: undefined,
@@ -96,10 +96,10 @@ export async function GET(request: NextRequest) {
 
       case "system-overview":
         // Comprehensive system overview
-        const [health, tracker, systemStatus] = await Promise.all([
+        const [health, tracker, systemHealth] = await Promise.all([
           dataUpdater.assessDataHealth(),
           vectorDBService.getChangeTrackerStats(),
-          hybridOMSDataService.getSystemStatus(),
+          apiFirstDataService.healthCheck(),
         ]);
 
         return NextResponse.json({

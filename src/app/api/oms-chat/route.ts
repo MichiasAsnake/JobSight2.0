@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { intelligentQueryRouter } from "../../../lib/query-router";
-import { enrichedOMSDataService } from "../../../lib/enhanced-data-service";
+// Cleaned up - now uses only GPT-powered semantic search via intelligentQueryRouter
 import { RAGPipeline } from "../../../lib/rag-pipeline";
 
 // Initialize RAG pipeline for intelligent responses
@@ -27,59 +27,25 @@ export async function POST(request: NextRequest) {
       JSON.stringify(routerResult, null, 2)
     );
 
-    // Step 2: Get enriched data for additional context
+    // Step 2: Use router results directly (skip old enriched service)
     let enrichedOrders: any[] = [];
-    let enrichedSummary = "";
-    let triedEnriched = false;
 
-    try {
-      // Get enriched data based on query type
-      if (message.toLowerCase().includes("job") && /\d+/.test(message)) {
-        // Extract job number from message
-        const jobMatch = message.match(/\d+/);
-        if (jobMatch) {
-          triedEnriched = true;
-          const enrichedOrder =
-            await enrichedOMSDataService.getEnrichedOrderByJobNumber(
-              jobMatch[0]
-            );
-          if (enrichedOrder) {
-            enrichedOrders = [enrichedOrder];
-          } else {
-            console.warn(
-              `[OMS-CHAT] No enriched order found for job number: ${jobMatch[0]}`
-            );
-          }
-        }
-      } else {
-        triedEnriched = true;
-        // Search for orders using enriched service
-        const searchResults = await enrichedOMSDataService.searchEnrichedOrders(
-          message
-        );
-        enrichedOrders = searchResults.slice(0, 10);
-
-        if (enrichedOrders.length === 0) {
-          console.warn(
-            `[OMS-CHAT] No enriched orders found for query: '${message}'`
-          );
-        }
-      }
-    } catch (enrichedError) {
-      console.warn(
-        "⚠️ Enriched data fetch failed, using basic results:",
-        enrichedError
-      );
+    // Only use enriched service for specific job number lookups
+    if (message.toLowerCase().includes("job") && /\d+/.test(message)) {
+      // Job number lookup now handled by GPT semantic search in router
+      // No need for separate enriched service lookup
     }
+
+    // For all other queries, use the intelligent router results which include GPT semantic search
 
     // Step 3: Use RAG pipeline for intelligent response generation
     try {
       console.log("🧠 Generating intelligent response using RAG pipeline...");
 
-      // Combine all available data for context
+      // Prioritize router results (GPT semantic search) over enriched data
       const allOrders = [
-        ...(enrichedOrders || []),
         ...(routerResult.results?.orders || []),
+        ...(enrichedOrders || []),
       ];
 
       // Use RAG pipeline for intelligent analysis
@@ -101,15 +67,11 @@ export async function POST(request: NextRequest) {
         orders: allOrders.slice(0, 10), // Include relevant orders for context
         analytics: {
           totalResults: allOrders.length,
-          dataSource:
-            enrichedOrders.length > 0 ? "enriched_api" : routerResult.strategy,
+          dataSource: routerResult.strategy, // Always use router strategy (includes GPT semantic search)
           processingTime:
             routerResult.processingTime + ragResult.processingTime,
           confidence: ragResult.confidence,
-          searchStrategy:
-            enrichedOrders.length > 0
-              ? "enriched_search"
-              : routerResult.strategy,
+          searchStrategy: routerResult.strategy, // Router includes GPT semantic search
           ragAnalysis: {
             contextQuality: ragResult.contextQuality,
             llmTokensUsed: ragResult.metadata?.llmTokensUsed || 0,
@@ -136,11 +98,11 @@ export async function POST(request: NextRequest) {
         ragError
       );
 
-      // Fallback to basic response if RAG fails
-      const finalOrders =
-        enrichedOrders.length > 0
-          ? enrichedOrders
-          : routerResult.results?.orders || [];
+      // Fallback to basic response if RAG fails - prioritize router results
+      const finalOrders = [
+        ...(routerResult.results?.orders || []),
+        ...(enrichedOrders || []),
+      ];
       const basicSummary = generateBasicSummary(finalOrders, message);
 
       const fallbackResponse = {
@@ -149,14 +111,10 @@ export async function POST(request: NextRequest) {
         orders: finalOrders,
         analytics: {
           totalResults: finalOrders.length,
-          dataSource:
-            enrichedOrders.length > 0 ? "enriched_api" : routerResult.strategy,
+          dataSource: routerResult.strategy, // Use router strategy (includes GPT)
           processingTime: routerResult.processingTime,
           confidence: routerResult.confidence,
-          searchStrategy:
-            enrichedOrders.length > 0
-              ? "enriched_search"
-              : routerResult.strategy,
+          searchStrategy: routerResult.strategy, // Router includes GPT semantic search
         },
         metadata: {
           queryProcessed: message,
@@ -167,7 +125,7 @@ export async function POST(request: NextRequest) {
       };
 
       console.log(
-        `[OMS-CHAT] Basic fallback response. Orders found: ${finalOrders.length}, Strategy: ${fallbackResponse.analytics.searchStrategy}, Processing time: ${routerResult.processingTime}`
+        `[OMS-CHAT] Basic fallback response. Orders found: ${finalOrders.length}, Strategy: ${routerResult.strategy}, Processing time: ${routerResult.processingTime}ms`
       );
 
       return NextResponse.json(fallbackResponse);

@@ -8,6 +8,7 @@ import {
   APIJobShipment,
   APIJobFile,
 } from "./enhanced-api-client";
+import OpenAI from "openai";
 
 export interface ModernOrder {
   // Core identifiers
@@ -511,85 +512,15 @@ class APIFirstDataService {
         pageSize: 500, // Get more results for better search coverage
       });
 
-      // Smart search logic with stop word filtering and semantic analysis
-      const stopWords = new Set([
-        "what",
-        "where",
-        "when",
-        "who",
-        "how",
-        "why",
-        "the",
-        "a",
-        "an",
-        "and",
-        "or",
-        "but",
-        "in",
-        "on",
-        "at",
-        "to",
-        "for",
-        "of",
-        "with",
-        "by",
-        "i",
-        "you",
-        "he",
-        "she",
-        "it",
-        "we",
-        "they",
-        "me",
-        "him",
-        "her",
-        "us",
-        "them",
-        "my",
-        "your",
-        "his",
-        "her",
-        "its",
-        "our",
-        "their",
-        "this",
-        "that",
-        "these",
-        "those",
-        "is",
-        "are",
-        "was",
-        "were",
-        "be",
-        "been",
-        "being",
-        "have",
-        "has",
-        "had",
-        "do",
-        "does",
-        "did",
-        "will",
-        "would",
-        "could",
-        "should",
-        "may",
-        "might",
-        "must",
-        "can",
-        "get",
-        "need",
-        "want",
-        "focus",
-        "today",
-        "orders",
-      ]);
+      // Use GPT-4 for intelligent semantic filtering
+      const { semanticSearchService } = await import("./semantic-search");
+      const semanticFilters =
+        await semanticSearchService.generateSemanticFilters(query);
 
-      // Extract meaningful terms and special patterns
-      const searchTerms = query
-        .toLowerCase()
-        .split(/\s+/)
-        .filter((term) => term.length > 2 && !stopWords.has(term));
+      console.log(
+        "🔍 Semantic filters generated:",
+        JSON.stringify(semanticFilters, null, 2)
+      );
 
       // Look for value patterns (like 10k, $1000, etc.)
       const valuePattern = /(\d+k|\$\d+|dollar|revenue|value|profit|sales)/gi;
@@ -676,49 +607,98 @@ class APIFirstDataService {
             return true;
         }
 
-        // Check for meaningful search terms (only need SOME, not ALL)
-        if (searchTerms.length > 0) {
-          const matchCount = searchTerms.filter((term) =>
-            searchableText.includes(term)
-          ).length;
+        // TEMPORAL & URGENCY SEMANTIC MATCHING (check BEFORE text matching)
+        const queryLower = query.toLowerCase();
 
-          // Return true if at least 30% of meaningful terms match
-          const matchRatio = matchCount / searchTerms.length;
-          if (matchRatio >= 0.3) return true;
-        }
-
-        // Special handling for analytical queries
+        // Check for urgency indicators
         if (
-          query.toLowerCase().includes("focus") ||
-          query.toLowerCase().includes("priority")
+          queryLower.includes("urgent") ||
+          queryLower.includes("rush") ||
+          queryLower.includes("asap")
         ) {
-          // Return high-value, urgent, or due-soon orders
-          const orderValue = order.lineItems.reduce(
-            (sum, item) => sum + (item.totalPrice || 0),
-            0
-          );
-
-          return (
-            orderValue >= 500 || // High value
-            order.production.timeSensitive || // Time sensitive
-            order.production.mustDate || // Must date
-            order.dates.daysToDueDate <= 3 || // Due soon
-            order.status.master.includes("Late") || // Running late
-            order.tags.some(
-              (t) =>
-                t.tag.toLowerCase().includes("urgent") ||
-                t.tag.toLowerCase().includes("rush")
-            )
-          );
+          if (order.production.timeSensitive || order.production.mustDate) {
+            return true;
+          }
         }
 
-        return false;
+        // Check for temporal indicators - THIS WEEK
+        if (
+          queryLower.includes("this week") ||
+          queryLower.includes("due this week")
+        ) {
+          const now = new Date();
+          const startOfWeek = new Date(now);
+          startOfWeek.setDate(now.getDate() - now.getDay());
+          startOfWeek.setHours(0, 0, 0, 0);
+
+          const endOfWeek = new Date(startOfWeek);
+          endOfWeek.setDate(startOfWeek.getDate() + 6);
+          endOfWeek.setHours(23, 59, 59, 999);
+
+          const orderDueDate = new Date(order.dates.dateDue);
+          if (orderDueDate >= startOfWeek && orderDueDate <= endOfWeek) {
+            return true;
+          }
+        }
+
+        // Check for TODAY
+        if (queryLower.includes("today") || queryLower.includes("due today")) {
+          const today = new Date();
+          today.setHours(0, 0, 0, 0);
+          const endOfToday = new Date(today);
+          endOfToday.setHours(23, 59, 59, 999);
+
+          const orderDueDate = new Date(order.dates.dateDue);
+          if (orderDueDate >= today && orderDueDate <= endOfToday) {
+            return true;
+          }
+        }
+
+        // Check for OVERDUE
+        if (
+          queryLower.includes("overdue") ||
+          queryLower.includes("late") ||
+          queryLower.includes("behind")
+        ) {
+          if (
+            order.dates.daysToDueDate < 0 ||
+            order.status.master.toLowerCase().includes("late")
+          ) {
+            return true;
+          }
+        }
+
+        // Check for NEXT X DAYS
+        const nextDaysMatch = queryLower.match(/next (\d+) days?/);
+        if (nextDaysMatch) {
+          const days = parseInt(nextDaysMatch[1]);
+          const now = new Date();
+          now.setHours(0, 0, 0, 0);
+          const futureDate = new Date(now);
+          futureDate.setDate(now.getDate() + days);
+          futureDate.setHours(23, 59, 59, 999);
+
+          const orderDueDate = new Date(order.dates.dateDue);
+          if (orderDueDate >= now && orderDueDate <= futureDate) {
+            return true;
+          }
+        }
+
+        return true; // Get all orders first
       });
 
+      // Apply GPT-powered semantic filtering
+      const semanticallyFilteredOrders =
+        semanticSearchService.applySemanticFilters(
+          allOrders.orders,
+          semanticFilters
+        );
+
       console.log(
-        `✅ Found ${filteredOrders.length} orders matching "${query}"`
+        `✅ Found ${semanticallyFilteredOrders.length} orders matching "${query}" (${allOrders.orders.length} total orders processed)`
       );
-      return filteredOrders;
+
+      return semanticallyFilteredOrders;
     } catch (error) {
       console.error(`❌ Search failed for "${query}":`, error);
       return [];

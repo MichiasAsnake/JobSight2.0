@@ -6,10 +6,6 @@ import {
   enhancedVectorPipeline,
   EnhancedSearchResult,
 } from "./enhanced-vector-pipeline";
-import { embeddingService } from "./embeddings";
-import { HybridOMSDataService } from "./hybrid-data-service";
-import { enrichedOMSDataService, EnrichedOrder } from "./enhanced-data-service";
-import { ModernHybridDataService } from "./modern-hybrid-data-service";
 
 export interface QueryIntent {
   type: "specific" | "semantic" | "analytical" | "hybrid";
@@ -132,10 +128,7 @@ export class IntelligentQueryRouter {
     successfulQueries: 0,
     successRate: 0,
   };
-  private hybridService: ModernHybridDataService;
-
   constructor() {
-    this.hybridService = new ModernHybridDataService();
     // Clean up old cache entries every 10 minutes
     setInterval(() => this.cleanupCache(), 10 * 60 * 1000);
   }
@@ -496,7 +489,7 @@ export class IntelligentQueryRouter {
       const sources = ["api"];
 
       // Route based on extracted entities
-      if (intent.extractedEntities.jobNumbers?.length > 0) {
+      if (intent.extractedEntities.jobNumbers?.length) {
         // Get specific orders by job number
         for (const jobNumber of intent.extractedEntities.jobNumbers) {
           const order = await apiFirstDataService.getOrderByJobNumber(
@@ -512,11 +505,11 @@ export class IntelligentQueryRouter {
         // Get filtered orders based on other criteria
         const filters: any = {};
 
-        if (intent.extractedEntities.customerNames?.length > 0) {
+        if (intent.extractedEntities.customerNames?.length) {
           filters.customer = intent.extractedEntities.customerNames[0];
         }
 
-        if (intent.extractedEntities.statusValues?.length > 0) {
+        if (intent.extractedEntities.statusValues?.length) {
           filters.status = intent.extractedEntities.statusValues[0];
         }
 
