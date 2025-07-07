@@ -2,7 +2,11 @@
 // Leverages rich ModernOrder data for superior semantic search capabilities
 
 import { Pinecone } from "@pinecone-database/pinecone";
-import { ModernOrder, apiFirstDataService } from "./api-first-data-service";
+import {
+  ModernOrder,
+  apiFirstDataService,
+  toModernOrder,
+} from "./api-first-data-service";
 import { embeddingService } from "./embeddings";
 import path from "path";
 import fs from "fs";

@@ -1,6 +1,6 @@
 // Test script for enriched OMS data system
-import { enrichedOMSDataService } from "./src/lib/enhanced-data-service.js";
-import { omsAPIClient } from "./src/lib/api-client.js";
+import { apiFirstDataService } from "./src/lib/api-first-data-service.js";
+import { enhancedAPIClient } from "./src/lib/enhanced-api-client.js";
 
 async function testEnrichedSystem() {
   console.log("🧪 Testing Enriched OMS Data System");
@@ -9,7 +9,7 @@ async function testEnrichedSystem() {
   // Test 1: Check API Health
   console.log("1. Testing API Health...");
   try {
-    const health = await omsAPIClient.checkAPIHealth();
+    const health = await enhancedAPIClient.healthCheck();
     console.log(`✅ API Health: ${health.healthy ? "Healthy" : "Degraded"}`);
     console.log(`   Endpoints: ${JSON.stringify(health.endpoints, null, 2)}`);
   } catch (error) {
@@ -21,15 +21,14 @@ async function testEnrichedSystem() {
   console.log("2. Testing Single Enriched Order...");
   try {
     // Get basic job list first to get a job number
-    const jobList = await omsAPIClient.getJobList({ "page-size": "5" });
+    const jobList = await enhancedAPIClient.getJobList({ "page-size": "5" });
     if (jobList.isSuccess && jobList.data.Entities.length > 0) {
       const firstJob = jobList.data.Entities[0];
       console.log(`   Testing with Job ${firstJob.JobNumber}`);
 
-      const enrichedOrder =
-        await enrichedOMSDataService.getEnrichedOrderByJobNumber(
-          firstJob.JobNumber.toString()
-        );
+      const enrichedOrder = await apiFirstDataService.getOrderByJobNumber(
+        firstJob.JobNumber.toString()
+      );
 
       if (enrichedOrder) {
         console.log(`✅ Successfully enriched Job ${enrichedOrder.jobNumber}`);
@@ -83,7 +82,7 @@ async function testEnrichedSystem() {
   // Test 3: Test Multiple Enriched Orders
   console.log("3. Testing Multiple Enriched Orders...");
   try {
-    const enrichedOrders = await enrichedOMSDataService.getEnrichedOrders();
+    const enrichedOrders = await apiFirstDataService.getAllOrders();
     console.log(
       `✅ Successfully retrieved ${enrichedOrders.orders.length} enriched orders`
     );
@@ -125,7 +124,7 @@ async function testEnrichedSystem() {
     ];
 
     for (const query of searchQueries) {
-      const results = await enrichedOMSDataService.searchEnrichedOrders(query);
+      const results = await apiFirstDataService.searchOrdersByQuery(query);
       console.log(`   "${query}": ${results.length} results`);
 
       if (results.length > 0) {

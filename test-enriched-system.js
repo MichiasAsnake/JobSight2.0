@@ -1,6 +1,6 @@
 // Test script for enriched OMS data system
-const { enrichedOMSDataService } = require("./src/lib/enhanced-data-service");
-const { omsAPIClient } = require("./src/lib/api-client");
+const { apiFirstDataService } = require("./src/lib/api-first-data-service");
+const { enhancedAPIClient } = require("./src/lib/enhanced-api-client");
 
 async function testEnrichedSystem() {
   console.log("🧪 Testing Enriched OMS Data System");
@@ -9,7 +9,7 @@ async function testEnrichedSystem() {
   // Test 1: Check API Health
   console.log("1. Testing API Health...");
   try {
-    const health = await omsAPIClient.checkAPIHealth();
+    const health = await enhancedAPIClient.healthCheck();
     console.log(`✅ API Health: ${health.healthy ? "Healthy" : "Degraded"}`);
     console.log(`   Endpoints: ${JSON.stringify(health.endpoints, null, 2)}`);
   } catch (error) {
@@ -21,15 +21,14 @@ async function testEnrichedSystem() {
   console.log("2. Testing Single Enriched Order...");
   try {
     // Get basic job list first to get a job number
-    const jobList = await omsAPIClient.getJobList({ "page-size": "5" });
+    const jobList = await enhancedAPIClient.getJobList({ "page-size": "5" });
     if (jobList.isSuccess && jobList.data.Entities.length > 0) {
       const firstJob = jobList.data.Entities[0];
       console.log(`   Testing with Job ${firstJob.JobNumber}`);
 
-      const enrichedOrder =
-        await enrichedOMSDataService.getEnrichedOrderByJobNumber(
-          firstJob.JobNumber.toString()
-        );
+      const enrichedOrder = await apiFirstDataService.getOrderByJobNumber(
+        firstJob.JobNumber.toString()
+      );
 
       if (enrichedOrder) {
         console.log(`✅ Successfully enriched Job ${enrichedOrder.jobNumber}`);
@@ -83,7 +82,7 @@ async function testEnrichedSystem() {
   // Test 3: Test Multiple Enriched Orders
   console.log("3. Testing Multiple Enriched Orders...");
   try {
-    const enrichedOrders = await enrichedOMSDataService.getEnrichedOrders();
+    const enrichedOrders = await apiFirstDataService.getAllOrders();
     console.log(
       `✅ Successfully retrieved ${enrichedOrders.orders.length} enriched orders`
     );
@@ -125,7 +124,7 @@ async function testEnrichedSystem() {
     ];
 
     for (const query of searchQueries) {
-      const results = await enrichedOMSDataService.searchEnrichedOrders(query);
+      const results = await apiFirstDataService.searchOrdersByQuery(query);
       console.log(`   "${query}": ${results.length} results`);
 
       if (results.length > 0) {
@@ -144,7 +143,7 @@ async function testEnrichedSystem() {
   console.log("5. Testing Individual API Endpoints...");
   try {
     // Get a job number to test with
-    const jobList = await omsAPIClient.getJobList({ "page-size": "1" });
+    const jobList = await enhancedAPIClient.getJobList({ "page-size": "1" });
     if (jobList.isSuccess && jobList.data.Entities.length > 0) {
       const testJob = jobList.data.Entities[0];
       const jobNumber = testJob.JobNumber.toString();
@@ -156,7 +155,7 @@ async function testEnrichedSystem() {
 
       // Test job lines
       try {
-        const jobLines = await omsAPIClient.getJobLines(jobNumber);
+        const jobLines = await enhancedAPIClient.getJobLines(jobNumber);
         console.log(
           `   ✅ Job Lines: ${
             jobLines.isSuccess
@@ -170,7 +169,9 @@ async function testEnrichedSystem() {
 
       // Test stock items
       try {
-        const stockItems = await omsAPIClient.getStockItems(jobNumber);
+        const stockItems = await enhancedAPIClient.getAllInwardsAndStockItems(
+          jobNumber
+        );
         console.log(
           `   ✅ Stock Items: ${
             stockItems.isSuccess
@@ -184,7 +185,7 @@ async function testEnrichedSystem() {
 
       // Test customer data
       try {
-        const customer = await omsAPIClient.getCustomerById(customerId);
+        const customer = await enhancedAPIClient.getCustomerById(customerId);
         console.log(
           `   ✅ Customer Data: ${
             customer.isSuccess ? customer.data?.Name || "Retrieved" : "Failed"
@@ -196,7 +197,9 @@ async function testEnrichedSystem() {
 
       // Test cost details
       try {
-        const costDetails = await omsAPIClient.getJobCostDetails(jobNumber);
+        const costDetails = await enhancedAPIClient.getJobLinesCostDetails(
+          jobNumber
+        );
         console.log(
           `   ✅ Cost Details: ${
             costDetails.isSuccess
@@ -210,7 +213,7 @@ async function testEnrichedSystem() {
 
       // Test shipments
       try {
-        const shipments = await omsAPIClient.getJobShipments(
+        const shipments = await enhancedAPIClient.getJobShipments(
           jobNumber,
           customerId
         );
@@ -227,7 +230,7 @@ async function testEnrichedSystem() {
 
       // Test history
       try {
-        const history = await omsAPIClient.getJobHistory(jobNumber);
+        const history = await enhancedAPIClient.getJobHistory(jobNumber);
         console.log(
           `   ✅ History: ${
             history.isSuccess

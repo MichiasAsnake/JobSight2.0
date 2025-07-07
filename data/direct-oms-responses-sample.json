@@ -1,0 +1,663 @@
+{
+  "metadata": {
+    "collectedAt": "2025-07-05T20:38:23.181Z",
+    "baseUrl": "https://intranet.decopress.com",
+    "totalEndpoints": 33,
+    "successfulCalls": 33,
+    "failedCalls": 0,
+    "jobsTested": ["51094"],
+    "customersTested": ["798"],
+    "categoryUnitIdsTested": [],
+    "priceCodesTested": ["EM_DIRECT", "EM_WHOLESALE", "EM_RETAIL"],
+    "endpointsCovered": [
+      "get-job-list",
+      "get-joblines",
+      "get-joblines-cost-details",
+      "get-all-inwards-and-stock-items",
+      "get-job-shipments",
+      "get-delivery-options",
+      "get-price-quantity-bands",
+      "get-all-category-units",
+      "get-job-history",
+      "get-customer-by-id"
+    ]
+  },
+  "responses": [
+    {
+      "endpoint": "get-job-list",
+      "url": "https://intranet.decopress.com/jobstatuslist/ajax/JobStatusQueryAsync.ashx",
+      "method": "POST",
+      "contentType": "application/x-www-form-urlencoded",
+      "parameters": {
+        "machine-filter": "US,1,2,4,8,16,32,64,128,256,512,1024,2048,4096,8192,16384",
+        "status-line-format": "[MASTERJOBSTATUS] - [STOCKSTATUS]",
+        "no-loc-token": "[NOLOC]",
+        "show-due-date-filter": "true",
+        "tagged-user": "@laser",
+        "app-timezone": "America/Los_Angeles",
+        "text-filter": "",
+        "location": "-1",
+        "job-status-codes": "approved,ontime,runninglate,problem",
+        "sort-by": "dateduefactory",
+        "sort-direction": "asc",
+        "job-status": "5,6,7,8",
+        "due-date": "1,2,3",
+        "stock-status": "0,1,2",
+        "process-filter": "HW,AP,TC,MP,PR,NA,CR,DS,ES,PP,PA,EM,SW,SC,DF,Misc,Sewing,Dispatch,Stock,Bagging",
+        "bit": "get-job-list",
+        "page-size": "50",
+        "requested-page": "1",
+        "user-def-sort-def": "status,stockstatus",
+        "get-job-counts": "true"
+      },
+      "timestamp": "2025-07-05T20:38:20.610Z",
+      "response": {
+        "isSuccess": true,
+        "isError": false,
+        "data": {
+          "PageSize": 50,
+          "ReturnedResults": 1,
+          "TotalResults": 1,
+          "TotalPages": 1,
+          "CurrentPage": 1,
+          "HasNext": false,
+          "HasPrevious": false,
+          "Entities": [
+            {
+              "ProcessQuantities": [
+                {
+                  "BitVal": 4194304,
+                  "Code": "Bagging",
+                  "DisplayCode": "Bagging",
+                  "Qty": 79,
+                  "SuggestedMachineId": 0,
+                  "SuggestedMachineLabel": "",
+                  "HasSuggestedMachine": false
+                },
+                {
+                  "BitVal": 1048576,
+                  "Code": "Dispatch",
+                  "DisplayCode": "Dispatch",
+                  "Qty": 1,
+                  "SuggestedMachineId": 0,
+                  "SuggestedMachineLabel": "",
+                  "HasSuggestedMachine": false
+                },
+                {
+                  "BitVal": 2048,
+                  "Code": "EM",
+                  "DisplayCode": "EM",
+                  "Qty": 276,
+                  "SuggestedMachineId": 0,
+                  "SuggestedMachineLabel": "",
+                  "HasSuggestedMachine": false
+                },
+                {
+                  "BitVal": 1,
+                  "Code": "HW",
+                  "DisplayCode": "HW",
+                  "Qty": 92,
+                  "SuggestedMachineId": 0,
+                  "SuggestedMachineLabel": "",
+                  "HasSuggestedMachine": false
+                },
+                {
+                  "BitVal": 262144,
+                  "Code": "Misc",
+                  "DisplayCode": "Misc",
+                  "Qty": 79,
+                  "SuggestedMachineId": 0,
+                  "SuggestedMachineLabel": "",
+                  "HasSuggestedMachine": false
+                }
+              ],
+              "JobTags": [
+                {
+                  "Tag": "ps done - gamma",
+                  "WhoEnteredUsername": "juliol",
+                  "WhenEntered": "2025-06-23T15:57:20.5630000+00:00",
+                  "WhenEnteredUtc": "2025-06-23T15:57:20.563+00:00",
+                  "Code": "",
+                  "Meta": null
+                },
+                {
+                  "Tag": "waiting for replacements",
+                  "WhoEnteredUsername": "dania",
+                  "WhenEntered": "2025-07-03T16:39:07.0470000+00:00",
+                  "WhenEnteredUtc": "2025-07-03T16:39:07.047+00:00",
+                  "Code": "",
+                  "Meta": null
+                }
+              ],
+              "BitVal": 5507073,
+              "Client": "Jackalope",
+              "Comments": "",
+              "IsEligibleForDueDateChange": true,
+              "CustomerId": 798,
+              "DateDue": "2025-06-28T05:00:00+00:00",
+              "DateDueUtc": "2025-06-28T05:00:00+00:00",
+              "DateDueFactory": "2025-06-27T18:00:00-07:00",
+              "DateOut": null,
+              "DateOutUtc": null,
+              "EWDateOut": null,
+              "TimeDue": null,
+              "DateIn": "2025-06-18T23:13:22.2505764+00:00",
+              "DateInUtc": "2025-06-18T23:13:22.2505764+00:00",
+              "DaysToDueDate": -6,
+              "Description": "MICRON / INVENTOR APPAREL - SPLIT ",
+              "IsDupe": true,
+              "JobNumber": 51094,
+              "JobQuantity": 527,
+              "LocationCode": "A0",
+              "MasterJobStatus": "Approved",
+              "MasterJobStatusId": 5,
+              "MustDate": false,
+              "OrderNumber": "10979-4",
+              "SortBy": "dateduefactory",
+              "StockComplete": 2,
+              "StockCompleteStatus": "Stock Complete",
+              "StopCredit": "N",
+              "TimeSensitive": false,
+              "EWMasterJobStatusTimeStamp": null,
+              "DeliveryOption": "NDA",
+              "GangCodesCsv": "",
+              "GangCodes": [""],
+              "GangsInfo": [
+                {
+                  "GangCode": "",
+                  "GangMondayLink": ""
+                }
+              ],
+              "JobLocationCode": "DP",
+              "JobLocationName": "Decopress",
+              "CanSuggestMachines": true,
+              "CanPrintJobLineLabels": true,
+              "HasScheduleableJobLines": true,
+              "SortKey": "51094",
+              "StatusLine": "Approved - Stock Complete",
+              "StatusLineHtml": "<span class=\"cw--master-status-pill jobstatus_5\">Approved</span> - <span class=\"cw--stock-status-pill stockstatus_2\">Stock Complete</span>",
+              "IsReprint": false
+            }
+          ]
+        }
+      }
+    },
+    {
+      "endpoint": "get-joblines",
+      "url": "https://intranet.decopress.com/joblines/ajax/JobLinesQueryAsync.ashx",
+      "method": "POST",
+      "contentType": "application/x-www-form-urlencoded",
+      "parameters": {
+        "job-number": "51094",
+        "bit": "get-joblines"
+      },
+      "timestamp": "2025-07-05T20:38:20.876Z",
+      "response": {
+        "isSuccess": true,
+        "isError": false,
+        "data": [
+          {
+            "ID": 168166,
+            "Prgram": "GSORT",
+            "Description": "Garment Sort",
+            "Qty": 47,
+            "UnitPrice": 0,
+            "Garment": "DLX-1 Men's Bergen Sherpa Fleece Jacket - Zinc",
+            "Comments": "S-3, M-18, L-17, XL-5, 2XL-3, 3XL-1",
+            "ProgComment": "",
+            "JobNumber": 51094,
+            "ActQty": 47,
+            "MachineNumber": "",
+            "Progress": 0,
+            "MachNum": 0,
+            "PDFInstructions": null,
+            "ParentJobLineID": 168166,
+            "IsScheduleable": false,
+            "IsEditable": false,
+            "PDFId": 0,
+            "AssetImage": null,
+            "CanUploadPDF": false,
+            "CanEdit": true,
+            "CanDelete": true,
+            "IsStock": false,
+            "IsAsset": true,
+            "IsOther": false,
+            "EncrptedJobLineId": "rDvfsb7Xzphh8fTvXi65EA==",
+            "EncrptedPrgram": "l5TPSlJL9VEOvjWDRiJo1w==",
+            "AssetImagePreviewUrl": null,
+            "Supplier": "",
+            "JoblineTypes": [
+              {
+                "ID": 245,
+                "Machine": "GSORT",
+                "isAutoAdd": true
+              }
+            ],
+            "HasImage": false,
+            "AssetHasPDF": false,
+            "CanUploadImage": false,
+            "CanDuplicate": true,
+            "CanPrintLabel": false,
+            "IsParentJobline": true,
+            "IsChildJobline": false,
+            "IsJoblineAlone": false,
+            "Order": 5,
+            "Gang": "",
+            "GangMondayLink": "",
+            "CanReprintSeps": false,
+            "CanQCComplete": true,
+            "CanCheckSeps": false,
+            "AssetIsNew": false,
+            "WorksheetId": 0,
+            "WorksheetType": "",
+            "AssetId": 185214,
+            "ExternalArtworkUrl": null,
+            "ExternalSupplier": null
+          },
+          {
+            "ID": 168167,
+            "Prgram": "EM12722",
+            "Description": "INVENTOR BLACK",
+            "Qty": 47,
+            "UnitPrice": 6.5,
+            "Garment": "DLX-1 Men's Bergen Sherpa Fleece Jacket - Zinc",
+            "Comments": "EM_3D | LEFT CHEST | BLACK, 1810 | 2.5\" W",
+            "ProgComment": "",
+            "JobNumber": 51094,
+            "ActQty": 47,
+            "MachineNumber": "",
+            "Progress": 0,
+            "MachNum": 0,
+            "PDFInstructions": null,
+            "ParentJobLineID": 168166,
+            "IsScheduleable": true,
+            "IsEditable": true,
+            "PDFId": 0,
+            "AssetImage": "/cdn/asset/EM12722/50/Icon",
+            "CanUploadPDF": true,
+            "CanEdit": true,
+            "CanDelete": true,
+            "IsStock": false,
+            "IsAsset": true,
+            "IsOther": false,
+            "EncrptedJobLineId": "gUiOpKsMYzQzaaPmT8EJZg==",
+            "EncrptedPrgram": "k89jEOZB8Xr+z+4lJiu/hg==",
+            "AssetImagePreviewUrl": "/cdn/asset/EM12722/0/Icon",
+            "Supplier": "",
+            "JoblineTypes": [
+              {
+                "ID": 190,
+                "Machine": "E1",
+                "isAutoAdd": false
+              },
+              {
+                "ID": 191,
+                "Machine": "E2",
+                "isAutoAdd": false
+              },
+              {
+                "ID": 223,
+                "Machine": "E3",
+                "isAutoAdd": false
+              },
+              {
+                "ID": 224,
+                "Machine": "E4",
+                "isAutoAdd": false
+              },
+              {
+                "ID": 227,
+                "Machine": "EMB_BORDER_L",
+                "isAutoAdd": true
+              },
+              {
+                "ID": 228,
+                "Machine": "EMB_BORDER_S",
+                "isAutoAdd": true
+              },
+              {
+                "ID": 232,
+                "Machine": "S1",
+                "isAutoAdd": false
+              },
+              {
+                "ID": 233,
+                "Machine": "S2",
+                "isAutoAdd": false
+              },
+              {
+                "ID": 234,
+                "Machine": "E5",
+                "isAutoAdd": false
+              }
+            ],
+            "HasImage": true,
+            "AssetHasPDF": true,
+            "CanUploadImage": true,
+            "CanDuplicate": true,
+            "CanPrintLabel": false,
+            "IsParentJobline": false,
+            "IsChildJobline": true,
+            "IsJoblineAlone": false,
+            "Order": 1,
+            "Gang": "",
+            "GangMondayLink": "",
+            "CanReprintSeps": false,
+            "CanQCComplete": true,
+            "CanCheckSeps": false,
+            "AssetIsNew": false,
+            "WorksheetId": 0,
+            "WorksheetType": "",
+            "AssetId": 209510,
+            "ExternalArtworkUrl": null,
+            "ExternalSupplier": null
+          }
+        ]
+      }
+    },
+    {
+      "endpoint": "get-joblines-cost-details",
+      "url": "https://intranet.decopress.com/joblines/ajax/JobLinesQueryAsync.ashx",
+      "method": "POST",
+      "contentType": "application/x-www-form-urlencoded",
+      "parameters": {
+        "job-number": "51094",
+        "bit": "get-joblines-cost-details"
+      },
+      "timestamp": "2025-07-05T20:38:21.142Z",
+      "response": {
+        "isSuccess": true,
+        "isError": false,
+        "data": [
+          {
+            "JobLineId": 168166,
+            "JobNumber": 51094,
+            "Program": "GSORT",
+            "Description": "Garment Sort",
+            "Qty": 47,
+            "UnitPrice": 0,
+            "TotalPrice": 0,
+            "CostDetails": []
+          },
+          {
+            "JobLineId": 168167,
+            "JobNumber": 51094,
+            "Program": "EM12722",
+            "Description": "INVENTOR BLACK",
+            "Qty": 47,
+            "UnitPrice": 6.5,
+            "TotalPrice": 305.5,
+            "CostDetails": [
+              {
+                "CostType": "Setup",
+                "Amount": 25.0,
+                "Description": "Setup Cost"
+              },
+              {
+                "CostType": "PerUnit",
+                "Amount": 5.5,
+                "Description": "Per Unit Cost"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "endpoint": "get-all-inwards-and-stock-items",
+      "url": "https://intranet.decopress.com/stock/ajax/StockQueryAsync.ashx",
+      "method": "POST",
+      "contentType": "application/x-www-form-urlencoded",
+      "parameters": {
+        "job-number": "51094",
+        "bit": "get-all-inwards-and-stock-items"
+      },
+      "timestamp": "2025-07-05T20:38:21.408Z",
+      "response": {
+        "isSuccess": true,
+        "isError": false,
+        "data": {
+          "Inwards": [
+            {
+              "ID": 12345,
+              "JobNumber": 51094,
+              "ItemCode": "DLX-1-ZINC",
+              "Description": "DLX-1 Men's Bergen Sherpa Fleece Jacket - Zinc",
+              "QtyOrdered": 47,
+              "QtyReceived": 47,
+              "QtyAllocated": 47,
+              "QtyAvailable": 0,
+              "DateReceived": "2025-06-18T10:00:00+00:00",
+              "Supplier": "Supplier A",
+              "Status": "Complete"
+            }
+          ],
+          "StockItems": [
+            {
+              "ID": 67890,
+              "ItemCode": "DLX-1-ZINC",
+              "Description": "DLX-1 Men's Bergen Sherpa Fleece Jacket - Zinc",
+              "QtyInStock": 0,
+              "QtyReserved": 47,
+              "QtyAvailable": 0,
+              "Location": "A0",
+              "LastUpdated": "2025-06-18T15:30:00+00:00"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "endpoint": "get-job-shipments",
+      "url": "https://intranet.decopress.com/shipments/ajax/ShipmentQueryAsync.ashx",
+      "method": "POST",
+      "contentType": "application/x-www-form-urlencoded",
+      "parameters": {
+        "job-number": "51094",
+        "bit": "get-job-shipments"
+      },
+      "timestamp": "2025-07-05T20:38:21.674Z",
+      "response": {
+        "isSuccess": true,
+        "isError": false,
+        "data": [
+          {
+            "ID": 9876,
+            "JobNumber": 51094,
+            "ShipmentNumber": "SH-51094-001",
+            "ShipmentDate": "2025-06-28T08:00:00+00:00",
+            "Carrier": "FedEx",
+            "TrackingNumber": "123456789012",
+            "Status": "Scheduled",
+            "Items": [
+              {
+                "ItemCode": "DLX-1-ZINC",
+                "Qty": 47,
+                "Description": "DLX-1 Men's Bergen Sherpa Fleece Jacket - Zinc"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "endpoint": "get-job-history",
+      "url": "https://intranet.decopress.com/jobhistory/ajax/JobHistoryQueryAsync.ashx",
+      "method": "POST",
+      "contentType": "application/x-www-form-urlencoded",
+      "parameters": {
+        "job-number": "51094",
+        "bit": "get-job-history"
+      },
+      "timestamp": "2025-07-05T20:38:21.940Z",
+      "response": {
+        "isSuccess": true,
+        "isError": false,
+        "data": [
+          {
+            "ID": 54321,
+            "JobNumber": 51094,
+            "Action": "Job Created",
+            "Description": "Job 51094 created for Jackalope",
+            "Timestamp": "2025-06-18T23:13:22.2505764+00:00",
+            "User": "system",
+            "Details": {
+              "CustomerId": 798,
+              "OrderNumber": "10979-4",
+              "JobQuantity": 527
+            }
+          },
+          {
+            "ID": 54322,
+            "JobNumber": 51094,
+            "Action": "Stock Received",
+            "Description": "Stock received for job 51094",
+            "Timestamp": "2025-06-18T15:30:00+00:00",
+            "User": "warehouse",
+            "Details": {
+              "ItemCode": "DLX-1-ZINC",
+              "QtyReceived": 47
+            }
+          },
+          {
+            "ID": 54323,
+            "JobNumber": 51094,
+            "Action": "Job Approved",
+            "Description": "Job 51094 approved for production",
+            "Timestamp": "2025-06-20T10:00:00+00:00",
+            "User": "production_manager",
+            "Details": {
+              "ApprovedBy": "production_manager",
+              "ApprovalNotes": "All requirements met"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "endpoint": "get-delivery-options",
+      "url": "https://intranet.decopress.com/delivery/ajax/DeliveryQueryAsync.ashx",
+      "method": "POST",
+      "contentType": "application/x-www-form-urlencoded",
+      "parameters": {
+        "customer-id": "798",
+        "bit": "get-delivery-options"
+      },
+      "timestamp": "2025-07-05T20:38:22.206Z",
+      "response": {
+        "isSuccess": true,
+        "isError": false,
+        "data": [
+          {
+            "ID": 1,
+            "Code": "NDA",
+            "Description": "Next Day Air",
+            "Price": 25.0,
+            "IsAvailable": true,
+            "DeliveryTime": "1-2 business days"
+          },
+          {
+            "ID": 2,
+            "Code": "2DA",
+            "Description": "2nd Day Air",
+            "Price": 15.0,
+            "IsAvailable": true,
+            "DeliveryTime": "2-3 business days"
+          },
+          {
+            "ID": 3,
+            "Code": "GROUND",
+            "Description": "Ground Shipping",
+            "Price": 8.0,
+            "IsAvailable": true,
+            "DeliveryTime": "5-7 business days"
+          }
+        ]
+      }
+    },
+    {
+      "endpoint": "get-customer-by-id",
+      "url": "https://intranet.decopress.com/customer/ajax/CustomerQueryAsync.ashx",
+      "method": "POST",
+      "contentType": "application/x-www-form-urlencoded",
+      "parameters": {
+        "customer-id": "798",
+        "bit": "get-customer-by-id"
+      },
+      "timestamp": "2025-07-05T20:38:22.472Z",
+      "response": {
+        "isSuccess": true,
+        "isError": false,
+        "data": {
+          "Users": [
+            {
+              "UserName": {
+                "FirstName": "John",
+                "LastName": "Doe",
+                "FirstNamePossessive": "John's",
+                "FullNamePossessive": "John Doe's",
+                "FullName": "John Doe",
+                "Initials": "JD"
+              },
+              "UserAddress": {
+                "Location": 0,
+                "StreetAddress": "123 Main Street",
+                "AddressLine2": "Suite 100",
+                "Suburb": "",
+                "City": "Los Angeles",
+                "State": "CA",
+                "Region": null,
+                "PostalCode": "90210",
+                "Country": "United States",
+                "AddressSummaryOneLine": "",
+                "MailingLabel": "",
+                "Fmt": "%N%n%O%n%A%n%C%n%Z",
+                "FmtParts": ["A", "C", "Z"],
+                "FullAddress": "",
+                "FullAddressHtml": ""
+              },
+              "Id": 1234,
+              "EmailAddress": "john.doe@jackalope.com",
+              "IsCustomerAdmin": true,
+              "IsGlobalCustomerUser": false,
+              "Phone": "+1-555-123-4567",
+              "Location": 0,
+              "Factory": null,
+              "DefaultDueTimeUtc": "0001-01-01T00:00:00+00:00",
+              "TimeZone": null
+            }
+          ],
+          "Id": 798,
+          "Name": "Jackalope",
+          "PriceTierCode": "A",
+          "Identifier": "jackalope-customer-id",
+          "LeadTimeAdjustment": null,
+          "LeadTimeFixed": null,
+          "AccountOnCreditHold": false,
+          "LocationId": null,
+          "LocationName": ""
+        }
+      }
+    }
+  ],
+  "relationships": {
+    "jobDependencies": [
+      {
+        "jobNumber": "51094",
+        "dependentEndpoints": [
+          "get-joblines",
+          "get-joblines-cost-details",
+          "get-all-inwards-and-stock-items",
+          "get-job-shipments",
+          "get-job-history"
+        ]
+      }
+    ],
+    "customerDependencies": [
+      {
+        "customerId": "798",
+        "dependentEndpoints": ["get-delivery-options", "get-customer-by-id"]
+      }
+    ]
+  }
+}

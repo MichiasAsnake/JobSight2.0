@@ -1,14 +1,40 @@
 import { NextRequest, NextResponse } from "next/server";
 import { intelligentQueryRouter } from "../../../lib/query-router";
 // Cleaned up - now uses only GPT-powered semantic search via intelligentQueryRouter
-import { RAGPipeline } from "../../../lib/rag-pipeline";
+import { EnhancedRAGPipeline } from "../../../lib/enhanced-rag-pipeline";
 
-// Initialize RAG pipeline for intelligent responses
-const ragPipeline = new RAGPipeline();
+// Initialize enhanced RAG pipeline for intelligent responses
+const ragPipeline = new EnhancedRAGPipeline();
 
 export async function POST(request: NextRequest) {
   try {
-    const { message } = await request.json();
+    // Add logging to see what's being received
+    const rawBody = await request.text();
+    console.log("[OMS-CHAT] Raw request body:", rawBody);
+
+    let message: string;
+    let sessionId: string;
+    let conversationContext: string;
+    try {
+      const parsedBody = JSON.parse(rawBody);
+      message = parsedBody.message;
+      sessionId = parsedBody.sessionId;
+      conversationContext = parsedBody.context;
+    } catch (parseError) {
+      console.error("[OMS-CHAT] JSON parse error:", parseError);
+      console.error("[OMS-CHAT] Raw body that failed to parse:", rawBody);
+      return NextResponse.json(
+        {
+          error: "Invalid JSON in request body",
+          details:
+            parseError instanceof Error
+              ? parseError.message
+              : "Unknown parse error",
+          receivedBody: rawBody.substring(0, 200), // First 200 chars for debugging
+        },
+        { status: 400 }
+      );
+    }
 
     if (!message) {
       console.warn("[OMS-CHAT] No message provided in request body");
@@ -19,76 +45,239 @@ export async function POST(request: NextRequest) {
     }
 
     console.log(`[OMS-CHAT] Incoming message: '${message}'`);
+    console.log(`[OMS-CHAT] Session ID: '${sessionId}'`);
+    console.log(`[OMS-CHAT] Conversation context: '${conversationContext}'`);
+
+    // Check if this is a follow-up calculation query
+    const isFollowUpCalculation = isFollowUpCalculationQuery(
+      message,
+      conversationContext
+    );
+
+    if (isFollowUpCalculation) {
+      console.log(
+        "🧮 Detected follow-up calculation query, processing with context..."
+      );
+      return await handleFollowUpCalculation(message, conversationContext);
+    }
 
     // Step 1: Use intelligent query router to get data
     const routerResult = await intelligentQueryRouter.routeQuery(message);
+    console.log("[OMS-CHAT] Router strategy:", routerResult.strategy);
+    console.log(
+      "[OMS-CHAT] Direct orders:",
+      routerResult.results?.orders?.length || 0
+    );
+    console.log(
+      "[OMS-CHAT] Vector results:",
+      routerResult.results?.vectorResults?.length || 0
+    );
     console.log(
       "[OMS-CHAT] Router result:",
       JSON.stringify(routerResult, null, 2)
     );
 
-    // Step 2: Use router results directly (skip old enriched service)
-    let enrichedOrders: any[] = [];
+    // Step 2: Process based on router strategy
+    let finalOrders: any[] = [];
+    let responseMessage: string = "";
+    let confidence: "high" | "medium" | "low" = "medium";
+    let dataFreshness = routerResult.dataFreshness;
+    let totalProcessingTime = routerResult.processingTime;
+    let ragResult: any = null; // Declare at higher scope
 
-    // Only use enriched service for specific job number lookups
-    if (message.toLowerCase().includes("job") && /\d+/.test(message)) {
-      // Job number lookup now handled by GPT semantic search in router
-      // No need for separate enriched service lookup
+    // For API strategy (specific job lookups), check if it's pricing-related
+    if (routerResult.strategy === "api") {
+      console.log("🎯 Using API strategy - direct router results");
+      finalOrders = routerResult.results?.orders || [];
+
+      // Check if the query is pricing-related
+      const isPricingQuery =
+        message.toLowerCase().includes("cost") ||
+        message.toLowerCase().includes("price") ||
+        message.toLowerCase().includes("pricing") ||
+        message.toLowerCase().includes("value") ||
+        message.toLowerCase().includes("total") ||
+        message.toLowerCase().includes("amount") ||
+        message.toLowerCase().includes("$") ||
+        message.toLowerCase().includes("expensive") ||
+        message.toLowerCase().includes("cheap") ||
+        message.toLowerCase().includes("how much");
+
+      if (isPricingQuery && finalOrders.length > 0) {
+        // Use RAG pipeline for pricing-related queries to get detailed pricing info
+        console.log(
+          "💰 Pricing-related query detected, using RAG pipeline for detailed response"
+        );
+
+        ragResult = await ragPipeline.queryWithContext({
+          userQuery: message,
+          context: {
+            includeLineItems: true,
+            includeShipments: true,
+            includeFiles: true,
+            maxOrders: 10,
+            preferFreshData: true,
+          },
+        });
+
+        // Use the RAG result for pricing queries
+        responseMessage = ragResult.answer;
+        confidence = ragResult.confidence;
+        dataFreshness = ragResult.dataFreshness;
+        totalProcessingTime += ragResult.processingTime;
+      } else {
+        // Use RAG pipeline for all non-pricing API queries to generate proper structured responses
+        console.log(
+          "🧠 Using RAG pipeline for API strategy response generation..."
+        );
+
+        ragResult = await ragPipeline.queryWithContext({
+          userQuery: message,
+          context: {
+            includeLineItems: true,
+            includeShipments: true,
+            includeFiles: true,
+            maxOrders: 10,
+            preferFreshData: true,
+          },
+        });
+
+        // Use the RAG result for all queries
+        responseMessage = ragResult.answer;
+        confidence = ragResult.confidence;
+        dataFreshness = ragResult.dataFreshness;
+        totalProcessingTime += ragResult.processingTime;
+      }
+    } else {
+      // For other strategies (vector, hybrid), use RAG pipeline
+      console.log("🧠 Using RAG pipeline for enhanced response generation...");
+
+      // Check if this is a constraint query that needs special processing
+      const isConstraintQuery =
+        message.toLowerCase().includes("add up to") ||
+        message.toLowerCase().includes("total") ||
+        message.toLowerCase().includes("sum") ||
+        message.toLowerCase().includes("value");
+
+      if (isConstraintQuery) {
+        console.log(
+          "🔍 Detected constraint query, using processQuery method..."
+        );
+        ragResult = await ragPipeline.processQuery(message);
+
+        // For constraint queries, use the orders from the RAG result
+        finalOrders = ragResult.sources?.orders || [];
+        responseMessage = ragResult.answer || "No response generated";
+        confidence = ragResult.confidence;
+        dataFreshness = ragResult.dataFreshness;
+        totalProcessingTime += ragResult.processingTime;
+      } else {
+        // For regular queries, use queryWithContext
+        ragResult = await ragPipeline.queryWithContext({
+          userQuery: message,
+          context: {
+            includeLineItems: true,
+            includeShipments: true,
+            includeFiles: true,
+            maxOrders: 10,
+            preferFreshData: true,
+          },
+        });
+
+        // Combine RAG orders with router orders
+        finalOrders = [
+          ...(ragResult.sources?.orders || []),
+          ...(routerResult.results?.orders || []),
+        ];
+        responseMessage = ragResult.answer;
+        confidence = ragResult.confidence;
+        dataFreshness = ragResult.dataFreshness;
+        totalProcessingTime += ragResult.processingTime;
+      }
     }
 
-    // For all other queries, use the intelligent router results which include GPT semantic search
+    console.log("[OMS-CHAT] Final orders for response:", finalOrders.length);
 
-    // Step 3: Use RAG pipeline for intelligent response generation
+    // Sort orders by DaysToDueDate (ascending - most urgent first)
+    finalOrders.sort((a, b) => {
+      const aDays = a.dates?.daysToDueDate ?? a.DaysToDueDate ?? Infinity;
+      const bDays = b.dates?.daysToDueDate ?? b.DaysToDueDate ?? Infinity;
+      return aDays - bDays;
+    });
+
+    console.log(
+      `[OMS-CHAT] Orders sorted by due date. First order due in ${
+        finalOrders[0]?.dates?.daysToDueDate ??
+        finalOrders[0]?.DaysToDueDate ??
+        "unknown"
+      } days`
+    );
+
+    // Step 3: Store orders in session cache for follow-up queries
+    // Store the orders that match the user's query (not just the first 10 shown)
+    if (finalOrders.length > 0 && sessionId) {
+      sessionCache.set(sessionId, finalOrders);
+      console.log(
+        `💾 Stored ${finalOrders.length} orders in session cache for session: ${sessionId}`
+      );
+      console.log(
+        `💾 Session cache now contains: ${Array.from(sessionCache.keys()).join(
+          ", "
+        )}`
+      );
+    } else {
+      console.log(
+        `⚠️ Not storing orders in cache: finalOrders=${finalOrders.length}, sessionId=${sessionId}`
+      );
+    }
+
+    // Step 3: Prepare response
     try {
-      console.log("🧠 Generating intelligent response using RAG pipeline...");
-
-      // Prioritize router results (GPT semantic search) over enriched data
-      const allOrders = [
-        ...(routerResult.results?.orders || []),
-        ...(enrichedOrders || []),
-      ];
-
-      // Use RAG pipeline for intelligent analysis
-      const ragResult = await ragPipeline.queryWithEnhancedContext({
-        userQuery: message,
-        context: {
-          includeLineItems: true,
-          includeShipments: true,
-          includeFiles: true,
-          maxOrders: 10,
-          preferFreshData: true,
-        },
-      });
-
-      // Step 4: Prepare enhanced response
       const response = {
         success: true,
-        message: ragResult.answer,
-        orders: allOrders.slice(0, 10), // Include relevant orders for context
+        message: responseMessage,
+        orders: finalOrders.slice(0, 10),
         analytics: {
-          totalResults: allOrders.length,
-          dataSource: routerResult.strategy, // Always use router strategy (includes GPT semantic search)
-          processingTime:
-            routerResult.processingTime + ragResult.processingTime,
-          confidence: ragResult.confidence,
-          searchStrategy: routerResult.strategy, // Router includes GPT semantic search
-          ragAnalysis: {
-            contextQuality: ragResult.contextQuality,
-            llmTokensUsed: ragResult.metadata?.llmTokensUsed || 0,
-            reasoning: ragResult.metadata?.reasoning,
-          },
+          totalResults: finalOrders.length,
+          dataSource: routerResult.strategy,
+          processingTime: totalProcessingTime,
+          confidence: confidence,
+          searchStrategy: routerResult.strategy,
         },
         metadata: {
           queryProcessed: message,
           timestamp: new Date().toISOString(),
-          strategy: "rag_enhanced",
-          dataFreshness: ragResult.dataFreshness,
-          recommendations: ragResult.metadata?.recommendations,
+          strategy: routerResult.strategy, // Use actual router strategy
+          dataFreshness: dataFreshness,
+          totalOrdersAnalyzed: finalOrders.length,
         },
+        context: {
+          lastQuery: routerResult.strategy,
+          shownOrders: finalOrders
+            .slice(0, 10)
+            .map((order) => order.jobNumber || order.JobNumber || "unknown"),
+          orders: finalOrders.slice(0, 10), // Add the actual order data for our components
+          focusedCustomer:
+            finalOrders.length === 1
+              ? finalOrders[0].customer?.company || finalOrders[0].Client
+              : undefined,
+          focusedJob:
+            finalOrders.length === 1
+              ? finalOrders[0].jobNumber || finalOrders[0].JobNumber
+              : undefined,
+        },
+        // Add structured response if available from RAG pipeline
+        structuredResponse: ragResult?.structuredResponse || null,
       };
 
       console.log(
-        `[OMS-CHAT] RAG response generated. Orders: ${allOrders.length}, Confidence: ${ragResult.confidence}, Processing time: ${ragResult.processingTime}ms`
+        `[OMS-CHAT] Response prepared. Strategy: ${routerResult.strategy}, Orders: ${finalOrders.length}, Confidence: ${confidence}`
+      );
+
+      // Log the actual response sent to the user
+      console.log(
+        "[OMS-CHAT] Final response to user:",
+        JSON.stringify(response, null, 2)
       );
 
       return NextResponse.json(response);
@@ -99,10 +288,7 @@ export async function POST(request: NextRequest) {
       );
 
       // Fallback to basic response if RAG fails - prioritize router results
-      const finalOrders = [
-        ...(routerResult.results?.orders || []),
-        ...(enrichedOrders || []),
-      ];
+      const finalOrders = routerResult.results?.orders || [];
       const basicSummary = generateBasicSummary(finalOrders, message);
 
       const fallbackResponse = {
@@ -126,6 +312,12 @@ export async function POST(request: NextRequest) {
 
       console.log(
         `[OMS-CHAT] Basic fallback response. Orders found: ${finalOrders.length}, Strategy: ${routerResult.strategy}, Processing time: ${routerResult.processingTime}ms`
+      );
+
+      // Log the fallback response sent to the user
+      console.log(
+        "[OMS-CHAT] Fallback response to user:",
+        JSON.stringify(fallbackResponse, null, 2)
       );
 
       return NextResponse.json(fallbackResponse);
@@ -418,4 +610,162 @@ function generateEnrichedSummary(orders: any[], query: string): string {
   }
 
   return sections.join("\n");
+}
+
+// Helper function to detect follow-up calculation queries
+function isFollowUpCalculationQuery(
+  message: string,
+  conversationContext: string
+): boolean {
+  if (!conversationContext) return false;
+
+  const calculationKeywords = [
+    "sum",
+    "total",
+    "add up",
+    "calculate",
+    "how much",
+    "value",
+    "amount",
+    "what is the total",
+    "what is the sum",
+    "what do these add up to",
+    "total value",
+    "total amount",
+    "total cost",
+    "total price",
+  ];
+
+  const hasCalculationKeyword = calculationKeywords.some((keyword) =>
+    message.toLowerCase().includes(keyword.toLowerCase())
+  );
+
+  const hasPreviousOrders =
+    conversationContext.toLowerCase().includes("order") ||
+    conversationContext.toLowerCase().includes("job") ||
+    conversationContext.toLowerCase().includes("found");
+
+  return hasCalculationKeyword && hasPreviousOrders;
+}
+
+// Simple in-memory session storage for demonstration
+// In production, use Redis, database, or proper session management
+const sessionCache = new Map<string, any>();
+
+// Handle follow-up calculation queries using conversation context
+async function handleFollowUpCalculation(
+  message: string,
+  conversationContext: string
+): Promise<NextResponse> {
+  try {
+    console.log("🧮 Processing follow-up calculation query...");
+
+    // Extract session ID from context to get previous orders
+    // Try multiple patterns to extract session ID
+    let sessionId = "default";
+
+    // Pattern 1: sessionId: value
+    const sessionMatch1 = conversationContext.match(/sessionId[:\s]+([^\s|]+)/);
+    if (sessionMatch1) {
+      sessionId = sessionMatch1[1];
+    } else {
+      // Pattern 2: Look for session ID in the context string
+      const sessionMatch2 = conversationContext.match(/(\d{10,})/);
+      if (sessionMatch2) {
+        sessionId = sessionMatch2[1];
+      }
+    }
+
+    console.log(`🔍 [FOLLOW-UP] Extracted session ID: ${sessionId}`);
+    console.log(
+      `🔍 [FOLLOW-UP] Available sessions: ${Array.from(
+        sessionCache.keys()
+      ).join(", ")}`
+    );
+
+    // Get previous orders from session cache
+    const previousOrders = sessionCache.get(sessionId) || [];
+
+    console.log(
+      `🔍 [FOLLOW-UP] Found ${previousOrders.length} orders for session ${sessionId}`
+    );
+
+    if (previousOrders.length === 0) {
+      console.log(`❌ [FOLLOW-UP] No orders found for session ${sessionId}`);
+      console.log(`❌ [FOLLOW-UP] Session cache contents:`, sessionCache);
+
+      return NextResponse.json(
+        {
+          success: false,
+          message:
+            "I don't have the previous orders in memory. Please ask about the orders again first.",
+          error: "No previous orders found",
+          debug: {
+            sessionId: sessionId,
+            availableSessions: Array.from(sessionCache.keys()),
+            conversationContext: conversationContext.substring(0, 200) + "...",
+          },
+        },
+        { status: 400 }
+      );
+    }
+
+    // Calculate sum of the actual previous orders
+    const totalValue = previousOrders.reduce((sum: number, order: any) => {
+      return sum + (order.pricing?.total || 0);
+    }, 0);
+
+    const responseMessage = `The total value of the ${
+      previousOrders.length
+    } orders from the previous query is **$${totalValue.toLocaleString(
+      "en-US",
+      { minimumFractionDigits: 2, maximumFractionDigits: 2 }
+    )}**.`;
+
+    // Return ONLY the calculation response - no order cards
+    return NextResponse.json({
+      success: true,
+      message: responseMessage,
+      response: responseMessage,
+      // Don't include orders array - just the calculation
+      context: {
+        lastQuery: message,
+        calculationType: "sum",
+        totalValue: totalValue,
+        orderCount: previousOrders.length,
+      },
+      // Minimal structured response - just the summary
+      structuredResponse: {
+        introText: responseMessage,
+        summary: {
+          totalOrders: previousOrders.length,
+          totalValue: totalValue,
+          calculationType: "sum",
+        },
+      },
+      analytics: {
+        totalResults: previousOrders.length,
+        dataSource: "session-cache",
+        processingTime: 0,
+        confidence: "high",
+        searchStrategy: "follow-up-calculation",
+      },
+      metadata: {
+        timestamp: new Date().toISOString(),
+        queryType: "follow-up-calculation",
+        sessionId: sessionId,
+      },
+    });
+  } catch (error) {
+    console.error("Error handling follow-up calculation:", error);
+    return NextResponse.json(
+      {
+        success: false,
+        message:
+          "I'm sorry, I couldn't calculate the sum of the previous orders. Please try asking about the orders again.",
+        error: "Follow-up calculation failed",
+      },
+      { status: 500 }
+    );
+  }
 }

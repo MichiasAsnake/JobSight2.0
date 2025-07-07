@@ -15,7 +15,7 @@ export interface BatchEmbeddingResponse {
 }
 
 export class EmbeddingService {
-  private openai: OpenAI;
+  private openai: OpenAI | null = null;
   private model: string;
   private maxTokens: number;
   private dimensions: number; // Matching user's Pinecone index
@@ -23,16 +23,40 @@ export class EmbeddingService {
   private retryDelay: number;
 
   constructor() {
-    this.openai = new OpenAI({
-      apiKey: process.env.OPENAI_API_KEY || "",
-      timeout: 30000, // 30 second timeout
-      maxRetries: 2, // Built-in retries
-    });
     this.model = "text-embedding-3-small";
     this.maxTokens = 8000; // Model limit
     this.dimensions = 1024; // Updated to match user's Pinecone index
     this.maxRetries = 3; // Custom retry logic
     this.retryDelay = 1000; // 1 second base delay
+  }
+
+  // Lazy initialization of OpenAI client
+  private getOpenAI(): OpenAI {
+    if (!this.openai) {
+      const apiKey = process.env.OPENAI_API_KEY;
+      console.log("🔑 Debug: Checking OpenAI API key...");
+      console.log("🔑 Debug: OPENAI_API_KEY exists:", !!apiKey);
+      console.log(
+        "🔑 Debug: OPENAI_API_KEY length:",
+        apiKey ? apiKey.length : 0
+      );
+      console.log(
+        "🔑 Debug: OPENAI_API_KEY starts with:",
+        apiKey ? apiKey.substring(0, 7) + "..." : "undefined"
+      );
+
+      if (!apiKey) {
+        throw new Error("OPENAI_API_KEY environment variable is not set");
+      }
+
+      this.openai = new OpenAI({
+        apiKey: apiKey,
+        timeout: 30000, // 30 second timeout
+        maxRetries: 2, // Built-in retries
+      });
+      console.log("✅ Debug: OpenAI client created successfully");
+    }
+    return this.openai;
   }
 
   // Create a single embedding with retry logic
@@ -48,7 +72,8 @@ export class EmbeddingService {
           `🔧 Attempt ${attempt}/${this.maxRetries} - Creating embedding...`
         );
 
-        const response = await this.openai.embeddings.create({
+        const openai = this.getOpenAI();
+        const response = await openai.embeddings.create({
           model: this.model,
           input: processedText,
           dimensions: this.dimensions, // Specify dimensions to match Pinecone index
@@ -123,7 +148,8 @@ export class EmbeddingService {
               }, attempt ${batchAttempt}`
             );
 
-            const response = await this.openai.embeddings.create({
+            const openai = this.getOpenAI();
+            const response = await openai.embeddings.create({
               model: this.model,
               input: batch,
               dimensions: this.dimensions, // Specify dimensions

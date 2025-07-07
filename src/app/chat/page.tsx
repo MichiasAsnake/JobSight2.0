@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef, useCallback, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import OMSChatInput from "../components/oms-chat-input";
-import { OMSMessage } from "../components/oms-message";
+import OMSMessage from "../components/oms-message";
 import { Button } from "@/components/ui/button";
 import { useChat } from "../components/chat-context";
 
@@ -69,6 +69,8 @@ function ChatPageContent() {
               return new Date();
             }
           })(),
+          context: data.context,
+          structuredResponse: data.structuredResponse,
         };
 
         addMessage(currentChatId, assistantMessage);
@@ -139,14 +141,7 @@ function ChatPageContent() {
             timestampISO = new Date().toISOString(); // Fallback to current time
           }
 
-          return (
-            <OMSMessage
-              key={message.id}
-              content={message.content}
-              isUser={message.role === "user"}
-              timestamp={timestampISO}
-            />
-          );
+          return <OMSMessage key={message.id} message={message} />; // TODO: timestampISO
         })}
 
         {isLoading && (

@@ -1,448 +1,690 @@
 "use client";
 
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import React from "react";
 import {
-  ChevronDown,
-  ChevronRight,
   User,
-  DollarSign,
+  Bot,
+  AlertCircle,
+  Clock,
+  CheckCircle,
   Package,
-  FileText,
-  AlertTriangle,
-  TrendingUp,
-  Phone,
-  Mail,
-  Calendar,
-  Building,
-  ExternalLink,
 } from "lucide-react";
+import ReactMarkdown from "react-markdown";
+import {
+  DetailedOrderDisplay,
+  transformAPIOrderToOrderSummary,
+  transformLineItemsArray,
+} from "@/components/order-display";
 
-interface MessageContext {
-  lastQuery?: string;
-  shownOrders?: string[];
-  focusedCustomer?: string;
-  focusedJob?: string;
-}
-
-interface MessageProps {
+interface ExtendedMessage {
+  role: "user" | "assistant" | "system";
   content: string;
-  isUser: boolean;
-  timestamp: string;
-  context?: MessageContext;
-}
-
-interface ParsedItem {
-  type: string;
-  content?: string;
-  key?: string;
-  value?: string;
-}
-
-interface ParsedSection {
-  type: string;
-  title: string;
-  items: ParsedItem[];
-}
-
-export function OMSMessage({
-  content,
-  isUser,
-  timestamp,
-  context,
-}: MessageProps) {
-  const [isExpanded, setIsExpanded] = useState(false);
-  const [showRawContent, setShowRawContent] = useState(false);
-
-  const safeContent = content || "";
-
-  const formatTimestamp = (timestamp: string) => {
-    try {
-      if (!timestamp)
-        return new Date().toLocaleTimeString([], {
-          hour: "2-digit",
-          minute: "2-digit",
-        });
-      const date = new Date(timestamp);
-      if (isNaN(date.getTime())) {
-        return new Date().toLocaleTimeString([], {
-          hour: "2-digit",
-          minute: "2-digit",
-        });
-      }
-      return date.toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
-      });
-    } catch {
-      return new Date().toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
-      });
-    }
+  context?: {
+    strategy?: string;
+    confidence?: string;
+    sources?: {
+      orders?: any[];
+      vectorResults?: any[];
+      strategy: string;
+    };
+    orders?: any[];
   };
+  structuredResponse?: {
+    introText: string;
+    orders: Array<{
+      jobNumber: string;
+      customer: string;
+      description: string;
+      dueDate: string;
+      daysToDue: number;
+      status: string;
+      quantity?: number;
+      tags?: string[];
+      priority: "urgent" | "normal" | "low";
+      value?: number;
+      // Pricing information
+      pricing?: {
+        total?: number;
+        totalFormatted?: string;
+        subtotal?: number;
+        subtotalFormatted?: string;
+        tax?: number;
+        taxFormatted?: string;
+      };
+      // Enhanced fields from consistent data structure
+      processes?: Array<{
+        code: string;
+        displayCode: string;
+        quantity: number;
+      }>;
+      orderNumber?: string;
+      stockStatus?: string;
+      timeSensitive?: boolean;
+      mustDate?: boolean;
+      isReprint?: boolean;
+      isDupe?: boolean;
+      location?: {
+        code: string;
+        name: string;
+      };
+    }>;
+    summary?: {
+      totalOrders: number;
+      totalValue?: number;
+      urgentCount: number;
+      overdueCount: number;
+    };
+  };
+}
 
-  // Enhanced markdown parsing
-  const parseContent = (content: string): ParsedSection[] => {
-    const lines = content.split("\n");
-    const parsed: ParsedSection[] = [];
-    let currentSection = null;
-    let currentItems: ParsedItem[] = [];
+interface ParsedOrder {
+  jobNumber: string;
+  title?: string;
+  customer: string;
+  dueDate: string;
+  daysToDue: number;
+  status: string;
+  quantity?: number;
+  tags?: string[];
+  description?: string;
+  priority?: "urgent" | "normal" | "low";
+  value?: number;
+  // Pricing information
+  pricing?: {
+    total?: number;
+    totalFormatted?: string;
+    subtotal?: number;
+    subtotalFormatted?: string;
+    tax?: number;
+    taxFormatted?: string;
+  };
+  // Enhanced fields from consistent data structure
+  processes?: Array<{
+    code: string;
+    displayCode: string;
+    quantity: number;
+  }>;
+  orderNumber?: string;
+  stockStatus?: string;
+  timeSensitive?: boolean;
+  mustDate?: boolean;
+  isReprint?: boolean;
+  isDupe?: boolean;
+  location?: {
+    code: string;
+    name: string;
+  };
+  // Line items for detailed view
+  lineItems?: Array<{
+    // Core identification
+    id: string | number;
+    jobNumber?: number;
+    program?: string; // Program/SKU/Asset code
 
-    for (let i = 0; i < lines.length; i++) {
-      const line = lines[i].trim();
+    // Basic information
+    description: string;
+    garment?: string; // Garment type/name
+    comments?: string; // Detailed comments
+    progComment?: string; // Program-specific comments
 
-      if (line.startsWith("## ")) {
-        // New section
-        if (currentSection) {
-          parsed.push({
-            type: "section",
-            title: currentSection,
-            items: currentItems,
-          });
-          currentItems = [];
+    // Quantities and pricing
+    quantity: number;
+    actualQuantity?: number;
+    unitPrice?: number;
+    totalPrice?: number;
+
+    // Status and progress
+    progress?: number;
+    machineNumber?: string;
+    machineNum?: number;
+
+    // File and asset information
+    pdfInstructions?: string | null;
+    pdfId?: number;
+    assetImage?: string | null;
+    assetImagePreviewUrl?: string | null;
+    assetId?: number;
+    hasImage?: boolean;
+    assetHasPDF?: boolean;
+
+    // Relationships
+    parentJobLineId?: number;
+    isParentJobline?: boolean;
+    isChildJobline?: boolean;
+    isJoblineAlone?: boolean;
+    order?: number;
+
+    // Capabilities and permissions
+    isScheduleable?: boolean;
+    isEditable?: boolean;
+    canUploadPDF?: boolean;
+    canEdit?: boolean;
+    canDelete?: boolean;
+    canUploadImage?: boolean;
+    canDuplicate?: boolean;
+    canPrintLabel?: boolean;
+    canReprintSeps?: boolean;
+    canQCComplete?: boolean;
+    canCheckSeps?: boolean;
+
+    // Type classification
+    isStock?: boolean;
+    isAsset?: boolean;
+    isOther?: boolean;
+    assetIsNew?: boolean;
+
+    // Additional information
+    gang?: string;
+    gangMondayLink?: string;
+    supplier?: string;
+    worksheetId?: number;
+    worksheetType?: string;
+    externalArtworkUrl?: string | null;
+    externalSupplier?: string | null;
+
+    // Machine types available for this job line
+    joblineTypes?: Array<{
+      id: number;
+      machine: string;
+      isAutoAdd: boolean;
+    }>;
+
+    // Legacy fields for backward compatibility
+    status?: string;
+    category?: string;
+    processCodes?: string[];
+    materials?: string[];
+    hasPDF?: boolean;
+    assetSKU?: string;
+  }>;
+}
+
+// Transform API response data to component format
+function transformOrderData(apiOrder: any): ParsedOrder {
+  return {
+    jobNumber: apiOrder.jobNumber || apiOrder.JobNumber || "Unknown",
+    orderNumber: apiOrder.orderNumber || apiOrder.OrderNumber,
+    customer:
+      apiOrder.customer?.company ||
+      apiOrder.customer?.name ||
+      apiOrder.Client ||
+      "Unknown Customer",
+    description:
+      apiOrder.description ||
+      apiOrder.Description ||
+      apiOrder.title ||
+      "No Description",
+    dueDate:
+      apiOrder.dates?.dateDue || apiOrder.dateDue || apiOrder.DateDue || "",
+    daysToDue:
+      apiOrder.dates?.daysToDueDate ||
+      apiOrder.daysToDueDate ||
+      apiOrder.DaysToDueDate ||
+      0,
+    status:
+      apiOrder.status?.master ||
+      apiOrder.status?.status ||
+      apiOrder.Status ||
+      "Unknown",
+    quantity: apiOrder.jobQuantity || apiOrder.quantity || apiOrder.JobQuantity,
+    stockStatus:
+      apiOrder.status?.stock || apiOrder.stockStatus || apiOrder.StockStatus,
+    timeSensitive:
+      apiOrder.production?.timeSensitive || apiOrder.timeSensitive || false,
+    mustDate: apiOrder.production?.mustDate || apiOrder.mustDate || false,
+    isReprint: apiOrder.production?.isReprint || apiOrder.isReprint || false,
+    isDupe: apiOrder.production?.isDupe || apiOrder.isDupe || false,
+    location: apiOrder.location
+      ? {
+          code: apiOrder.location.code || "",
+          name: apiOrder.location.name || "",
         }
-        currentSection = line
-          .replace("## ", "")
-          .replace(/^[📊📋⚠️🚨💡✅🔍🏢🏆💰]+\s*/, "");
-      } else if (line.startsWith("### ")) {
-        // Subsection
-        const subsection = line.replace("### ", "");
-        currentItems.push({ type: "subsection", content: subsection });
-      } else if (line.startsWith("**") && line.endsWith("**")) {
-        // Bold headers
-        const header = line.replace(/\*\*/g, "");
-        currentItems.push({ type: "header", content: header });
-      } else if (line.startsWith("• ") || line.startsWith("- ")) {
-        // List items
-        currentItems.push({ type: "list", content: line.substring(2) });
-      } else if (line.match(/^\d+\.\s/)) {
-        // Numbered items
-        currentItems.push({ type: "numbered", content: line });
-      } else if (
-        line.includes(":") &&
-        !line.includes("//") &&
-        !line.includes("http")
-      ) {
-        // Key-value pairs
-        const [key, ...valueParts] = line.split(":");
-        const value = valueParts.join(":").trim();
-        currentItems.push({ type: "keyvalue", key: key.trim(), value });
-      } else if (line.includes("💡")) {
-        // Tip/suggestion
-        currentItems.push({
-          type: "tip",
-          content: line.replace("💡", "").trim(),
-        });
-      } else if (line.trim()) {
-        // Regular text
-        currentItems.push({ type: "text", content: line });
-      }
-    }
-
-    if (currentSection) {
-      parsed.push({
-        type: "section",
-        title: currentSection,
-        items: currentItems,
-      });
-    } else if (currentItems.length > 0) {
-      parsed.push({ type: "section", title: "Details", items: currentItems });
-    }
-
-    return parsed;
+      : undefined,
+    processes: apiOrder.production?.processes || apiOrder.processes || [],
+    // Pricing information
+    pricing: apiOrder.pricing
+      ? {
+          total: apiOrder.pricing.total,
+          totalFormatted: apiOrder.pricing.totalFormatted,
+          subtotal: apiOrder.pricing.subtotal,
+          subtotalFormatted: apiOrder.pricing.subtotalFormatted,
+          tax: apiOrder.pricing.tax,
+          taxFormatted: apiOrder.pricing.taxFormatted,
+        }
+      : undefined,
+    // Transform tags from API format (objects with 'tag' property) to strings
+    tags: apiOrder.tags
+      ? apiOrder.tags
+          .map((tag: any) =>
+            typeof tag === "string" ? tag : tag.tag || tag.name || ""
+          )
+          .filter(Boolean)
+      : [],
+    // Line items for detailed view - transform using enhanced function
+    lineItems: transformLineItemsArray(
+      apiOrder.lineItems || apiOrder.jobLines || [],
+      apiOrder
+    ),
+    // Calculate priority based on days to due
+    priority: (() => {
+      const daysToDue =
+        apiOrder.dates?.daysToDueDate ||
+        apiOrder.daysToDueDate ||
+        apiOrder.DaysToDueDate ||
+        0;
+      if (daysToDue < 0 || daysToDue <= 2) return "urgent";
+      if (daysToDue <= 7) return "normal";
+      return "low";
+    })(),
   };
+}
 
-  const renderParsedContent = (sections: ParsedSection[]) => {
-    return sections.map((section, sectionIndex) => (
-      <div key={sectionIndex} className="mb-4">
-        <h3 className="font-semibold text-lg mb-3 flex items-center gap-2">
-          {section.title.includes("Due Today") && (
-            <Calendar className="h-4 w-4 text-blue-500" />
-          )}
-          {section.title.includes("Overdue") && (
-            <AlertTriangle className="h-4 w-4 text-red-500" />
-          )}
-          {section.title.includes("Customer") && (
-            <Building className="h-4 w-4 text-green-500" />
-          )}
-          {section.title.includes("Overview") && (
-            <TrendingUp className="h-4 w-4 text-purple-500" />
-          )}
-          {section.title.includes("Revenue") && (
-            <DollarSign className="h-4 w-4 text-green-600" />
-          )}
-          {section.title.includes("Job") && (
-            <FileText className="h-4 w-4 text-blue-600" />
-          )}
-          {section.title.includes("Contact") && (
-            <Phone className="h-4 w-4 text-blue-500" />
-          )}
-          {section.title.includes("Top Customers") && (
-            <TrendingUp className="h-4 w-4 text-purple-500" />
-          )}
-          {section.title}
-        </h3>
+function getDaysToDueColor(daysToDue: number): string {
+  if (daysToDue < 0) return "text-red-600 bg-red-50";
+  if (daysToDue <= 2) return "text-orange-600 bg-orange-50";
+  if (daysToDue <= 7) return "text-yellow-600 bg-yellow-50";
+  return "text-green-600 bg-green-50";
+}
 
-        <div className="space-y-2">
-          {section.items.map((item: ParsedItem, itemIndex: number) => {
-            switch (item.type) {
-              case "subsection":
-                return (
-                  <h4
-                    key={itemIndex}
-                    className="font-medium text-md mt-4 mb-2 text-blue-700"
-                  >
-                    {item.content}
-                  </h4>
-                );
-              case "header":
-                return (
-                  <h4 key={itemIndex} className="font-medium text-md mt-3 mb-1">
-                    {item.content}
-                  </h4>
-                );
-              case "list":
-                return (
-                  <div key={itemIndex} className="flex items-start gap-2 ml-4">
-                    <div className="w-1.5 h-1.5 bg-blue-500 rounded-full mt-2 flex-shrink-0" />
-                    <span className="text-sm">{item.content}</span>
-                  </div>
-                );
-              case "numbered":
-                return (
-                  <div key={itemIndex} className="ml-4 text-sm">
-                    {item.content}
-                  </div>
-                );
-              case "keyvalue":
-                return (
-                  <div
-                    key={itemIndex}
-                    className="flex justify-between items-center py-1 border-b border-gray-100"
-                  >
-                    <span className="text-sm text-muted-foreground flex items-center gap-1">
-                      {item.key?.includes("Customer") && (
-                        <User className="h-3 w-3" />
-                      )}
-                      {item.key?.includes("Company") && (
-                        <Building className="h-3 w-3" />
-                      )}
-                      {item.key?.includes("Value") && (
-                        <DollarSign className="h-3 w-3" />
-                      )}
-                      {item.key?.includes("Revenue") && (
-                        <DollarSign className="h-3 w-3" />
-                      )}
-                      {item.key?.includes("Due") && (
-                        <Calendar className="h-3 w-3" />
-                      )}
-                      {item.key?.includes("Phone") && (
-                        <Phone className="h-3 w-3" />
-                      )}
-                      {item.key?.includes("Email") && (
-                        <Mail className="h-3 w-3" />
-                      )}
-                      {item.key?.includes("Contact") && (
-                        <User className="h-3 w-3" />
-                      )}
-                      {item.key?.includes("Summary") && (
-                        <TrendingUp className="h-3 w-3" />
-                      )}
-                      {item.key}
-                    </span>
-                    <span className="text-sm font-medium">{item.value}</span>
-                  </div>
-                );
-              case "tip":
-                return (
-                  <div
-                    key={itemIndex}
-                    className="mt-3 p-3 bg-blue-50 border-l-4 border-blue-400 rounded-r"
-                  >
-                    <div className="flex items-start gap-2">
-                      <div className="text-blue-600 text-lg">💡</div>
-                      <p className="text-sm text-blue-800">{item.content}</p>
-                    </div>
-                  </div>
-                );
-              case "text":
-                return (
-                  <p key={itemIndex} className="text-sm text-muted-foreground">
-                    {item.content}
-                  </p>
-                );
-              default:
-                return null;
-            }
-          })}
-        </div>
-      </div>
-    ));
-  };
+function getDaysToDueIcon(daysToDue: number) {
+  if (daysToDue < 0) return <AlertCircle className="w-4 h-4" />;
+  if (daysToDue <= 2) return <Clock className="w-4 h-4" />;
+  if (daysToDue <= 7) return <Package className="w-4 h-4" />;
+  return <CheckCircle className="w-4 h-4" />;
+}
 
-  if (isUser) {
-    return (
-      <div className="flex justify-end mb-4">
-        <div className="bg-primary text-primary-foreground rounded-lg px-4 py-2 max-w-[80%]">
-          <p className="text-sm">{safeContent}</p>
-          <p className="text-xs opacity-70 mt-1">
-            {formatTimestamp(timestamp)}
-          </p>
-        </div>
-      </div>
-    );
-  }
+function formatDaysToDue(daysToDue: number): string {
+  if (daysToDue < 0) return `${Math.abs(daysToDue)} days overdue`;
+  if (daysToDue === 0) return "Due today";
+  if (daysToDue === 1) return "Due tomorrow";
+  return `Due in ${daysToDue} days`;
+}
 
-  // Enhanced AI response rendering
-  const parsedContent = parseContent(safeContent);
-  const hasStructuredData =
-    parsedContent.length > 0 && parsedContent[0].items.length > 0;
+function OrderCard({ order }: { order: ParsedOrder }) {
+  const colorClass = getDaysToDueColor(order.daysToDue);
+  const icon = getDaysToDueIcon(order.daysToDue);
 
   return (
-    <div className="flex justify-start mb-4">
-      <div className="bg-muted rounded-lg px-4 py-3 max-w-[95%] w-full">
-        <div className="flex items-center justify-between mb-3">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center">
-              {context?.lastQuery === "due_today" && (
-                <Calendar className="h-4 w-4 text-primary" />
-              )}
-              {context?.lastQuery === "overdue" && (
-                <AlertTriangle className="h-4 w-4 text-primary" />
-              )}
-              {context?.lastQuery === "customer" && (
-                <Building className="h-4 w-4 text-primary" />
-              )}
-              {context?.lastQuery === "job_detail" && (
-                <FileText className="h-4 w-4 text-primary" />
-              )}
-              {context?.lastQuery === "revenue" && (
-                <DollarSign className="h-4 w-4 text-primary" />
-              )}
-              {context?.lastQuery === "top_customers" && (
-                <TrendingUp className="h-4 w-4 text-primary" />
-              )}
-              {context?.lastQuery === "status" && (
-                <Package className="h-4 w-4 text-primary" />
-              )}
-              {context?.lastQuery === "rush" && (
-                <AlertTriangle className="h-4 w-4 text-primary" />
-              )}
-              {!context?.lastQuery && (
-                <FileText className="h-4 w-4 text-primary" />
-              )}
-            </div>
-            <div>
-              <h4 className="font-semibold text-sm">
-                {context?.lastQuery === "due_today" && "Due Today"}
-                {context?.lastQuery === "overdue" && "Overdue Orders"}
-                {context?.lastQuery === "customer" && "Customer Information"}
-                {context?.lastQuery === "job_detail" && "Job Details"}
-                {context?.lastQuery === "revenue" && "Revenue Summary"}
-                {context?.lastQuery === "top_customers" && "Top Customers"}
-                {context?.lastQuery === "status" && "Status Overview"}
-                {context?.lastQuery === "rush" && "Rush Orders"}
-                {!context?.lastQuery && "Order Management"}
-              </h4>
-              <p className="text-xs text-muted-foreground">
-                {formatTimestamp(timestamp)}
-              </p>
-            </div>
+    <div className="border rounded-lg p-4 bg-white shadow-sm hover:shadow-md transition-shadow">
+      <div className="flex items-start justify-between mb-2">
+        <div className="flex items-center gap-2">
+          <span className="font-mono text-sm font-medium text-blue-600">
+            #{order.jobNumber}
+          </span>
+          {order.orderNumber && (
+            <span className="text-xs text-gray-500">{order.orderNumber}</span>
+          )}
+          <div
+            className={`flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${colorClass}`}
+          >
+            {icon}
+            {formatDaysToDue(order.daysToDue)}
           </div>
-
-          {hasStructuredData && (
-            <div className="flex gap-1">
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setIsExpanded(!isExpanded)}
-                className="text-xs h-8 px-2"
-              >
-                {isExpanded ? (
-                  <>
-                    <ChevronDown className="h-3 w-3 mr-1" />
-                    Collapse
-                  </>
-                ) : (
-                  <>
-                    <ChevronRight className="h-3 w-3 mr-1" />
-                    Expand
-                  </>
-                )}
-              </Button>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setShowRawContent(!showRawContent)}
-                className="text-xs h-8 px-2"
-              >
-                <ExternalLink className="h-3 w-3 mr-1" />
-                Raw
-              </Button>
-            </div>
+        </div>
+        <div className="flex items-center gap-1">
+          {order.timeSensitive && (
+            <span className="px-2 py-1 text-xs bg-red-100 text-red-700 rounded-full font-medium">
+              RUSH
+            </span>
+          )}
+          {order.mustDate && (
+            <span className="px-2 py-1 text-xs bg-orange-100 text-orange-700 rounded-full font-medium">
+              MUST DATE
+            </span>
+          )}
+          {order.isReprint && (
+            <span className="px-2 py-1 text-xs bg-purple-100 text-purple-700 rounded-full font-medium">
+              REPRINT
+            </span>
+          )}
+          {order.isDupe && (
+            <span className="px-2 py-1 text-xs bg-gray-100 text-gray-700 rounded-full font-medium">
+              DUPE
+            </span>
           )}
         </div>
+      </div>
 
-        {hasStructuredData ? (
-          <Card className="mb-3">
-            <CardContent className="pt-4">
-              {renderParsedContent(parsedContent)}
-            </CardContent>
-          </Card>
-        ) : (
-          <div className="text-sm whitespace-pre-wrap">{safeContent}</div>
+      <h3 className="font-medium text-gray-900 mb-1">
+        {order.title || order.description}
+      </h3>
+      <p className="text-sm text-gray-600 mb-2">{order.customer}</p>
+
+      {/* Process Information */}
+      {order.processes && order.processes.length > 0 && (
+        <div className="flex flex-wrap gap-1 mb-2">
+          {order.processes.map((process, index) => (
+            <span
+              key={index}
+              className="inline-flex items-center gap-1 px-2 py-1 text-xs bg-blue-100 text-blue-700 rounded font-medium"
+            >
+              {process.displayCode}
+              <span className="text-blue-600">×{process.quantity}</span>
+            </span>
+          ))}
+        </div>
+      )}
+
+      {/* Status and Details */}
+      <div className="text-xs text-gray-500 mb-2 space-y-1">
+        <div className="flex items-center gap-2">
+          <span className="font-medium">Status:</span>
+          <span>{order.status}</span>
+          {order.stockStatus && (
+            <>
+              <span>•</span>
+              <span>Stock: {order.stockStatus}</span>
+            </>
+          )}
+        </div>
+        <div className="flex items-center gap-2">
+          {order.quantity && (
+            <>
+              <span>Qty: {order.quantity}</span>
+              <span>•</span>
+            </>
+          )}
+          {order.pricing?.totalFormatted && (
+            <>
+              <span className="font-semibold text-green-600">
+                {order.pricing.totalFormatted}
+              </span>
+              <span>•</span>
+            </>
+          )}
+          {order.value && !order.pricing?.totalFormatted && (
+            <>
+              <span>Value: ${order.value.toFixed(2)}</span>
+              <span>•</span>
+            </>
+          )}
+          {order.location && <span>Location: {order.location.name}</span>}
+        </div>
+      </div>
+
+      {/* Tags */}
+      {order.tags && order.tags.length > 0 && (
+        <div className="flex flex-wrap gap-1">
+          {order.tags?.slice(0, 5).map((tag, index) => (
+            <span
+              key={index}
+              className={`inline-block px-2 py-1 text-xs rounded font-medium ${
+                tag.startsWith("@")
+                  ? "bg-green-100 text-green-700"
+                  : tag.includes("rush") || tag.includes("urgent")
+                  ? "bg-red-100 text-red-700"
+                  : "bg-gray-100 text-gray-700"
+              }`}
+            >
+              {tag}
+            </span>
+          ))}
+          {order.tags.length > 5 && (
+            <span className="text-xs text-gray-500">
+              +{order.tags.length - 5} more
+            </span>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function groupOrdersByDaysToDue(orders: ParsedOrder[]) {
+  const groups = {
+    overdue: orders.filter((o) => o.daysToDue < 0),
+    urgent: orders.filter((o) => o.daysToDue >= 0 && o.daysToDue <= 2),
+    thisWeek: orders.filter((o) => o.daysToDue > 2 && o.daysToDue <= 7),
+    later: orders.filter((o) => o.daysToDue > 7),
+  };
+
+  return groups;
+}
+
+// Enhanced function to detect specific order detail requests
+function isSpecificOrderDetailRequest(message: string): boolean {
+  const specificOrderPatterns = [
+    /show\s+me\s+order\s+(\d+)/i,
+    /show\s+me\s+job\s+(\d+)/i,
+    /order\s+(\d+)/i,
+    /job\s+(\d+)/i,
+    /details?\s+for\s+(?:order|job)\s+(\d+)/i,
+    /more\s+(?:on|about)\s+(?:order|job)\s+(\d+)/i,
+    /get\s+(?:order|job)\s+(\d+)/i,
+    /find\s+(?:order|job)\s+(\d+)/i,
+  ];
+
+  return specificOrderPatterns.some((pattern) => pattern.test(message));
+}
+
+// Enhanced function to extract job numbers from specific order requests
+function extractJobNumbersFromRequest(message: string): string[] {
+  const patterns = [
+    /show\s+me\s+order\s+(\d+)/gi,
+    /show\s+me\s+job\s+(\d+)/gi,
+    /order\s+(\d+)/gi,
+    /job\s+(\d+)/gi,
+    /details?\s+for\s+(?:order|job)\s+(\d+)/gi,
+    /more\s+(?:on|about)\s+(?:order|job)\s+(\d+)/gi,
+    /get\s+(?:order|job)\s+(\d+)/gi,
+    /find\s+(?:order|job)\s+(\d+)/gi,
+  ];
+
+  const jobNumbers = new Set<string>();
+
+  patterns.forEach((pattern) => {
+    const matches = Array.from(message.matchAll(pattern));
+    matches.forEach((match) => {
+      if (match[1]) {
+        jobNumbers.add(match[1]);
+      }
+    });
+  });
+
+  return Array.from(jobNumbers);
+}
+
+export default function OMSMessage({ message }: { message: ExtendedMessage }) {
+  const isUser = message.role === "user";
+  const context = message.context;
+
+  // Transform API data to component format - check both data sources
+  const structuredOrders = message.structuredResponse?.orders || [];
+  const contextOrders =
+    message.context?.orders || message.context?.sources?.orders || [];
+
+  // Use structured orders if available (for constraint satisfaction), otherwise use context orders
+  const rawOrders =
+    structuredOrders.length > 0 ? structuredOrders : contextOrders;
+
+  console.log(
+    "🔍 [OMSMessage] Raw orders:",
+    rawOrders.map((o) => ({
+      jobNumber: o.jobNumber,
+      hasPricing: !!o.pricing,
+      pricing: o.pricing,
+    }))
+  );
+  const transformedOrders = rawOrders.map(transformOrderData);
+  console.log(
+    "🔍 [OMSMessage] Transformed orders:",
+    transformedOrders.map((o) => ({
+      jobNumber: o.jobNumber,
+      hasPricing: !!o.pricing,
+      pricing: o.pricing,
+      lineItemsCount: o.lineItems?.length || 0,
+      lineItems: o.lineItems?.slice(0, 2).map((li) => ({
+        description: li.description,
+        quantity: li.quantity,
+        unitPrice: li.unitPrice,
+        materials: li.materials,
+      })),
+    }))
+  );
+  const hasOrderData = transformedOrders.length > 0;
+
+  // Check if this is a specific order detail request
+  const isSpecificOrderRequest = isSpecificOrderDetailRequest(message.content);
+  const requestedJobNumbers = extractJobNumbersFromRequest(message.content);
+
+  // If this is a specific order request and we have exactly one order that matches
+  const shouldShowDetailedView =
+    isSpecificOrderRequest &&
+    transformedOrders.length === 1 &&
+    requestedJobNumbers.length > 0 &&
+    requestedJobNumbers.some(
+      (jobNum) => transformedOrders[0].jobNumber === jobNum
+    );
+
+  // Force detailed view for testing when we have line items
+  const forceDetailedView =
+    transformedOrders.length === 1 &&
+    (transformedOrders[0]?.lineItems?.length || 0) > 0;
+
+  const orderGroups =
+    hasOrderData && !shouldShowDetailedView
+      ? groupOrdersByDaysToDue(transformedOrders)
+      : null;
+
+  return (
+    <div
+      className={`w-full flex ${isUser ? "justify-end" : "justify-start"} mb-4`}
+      style={{ maxWidth: "100vw" }}
+    >
+      <div
+        className="flex items-end w-full"
+        style={{ maxWidth: 700, margin: "0 auto" }}
+      >
+        {!isUser && (
+          <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center flex-shrink-0 mr-2">
+            <Bot className="w-4 h-4 text-blue-600" />
+          </div>
         )}
 
-        {isExpanded && hasStructuredData && (
-          <div className="mt-3">
-            <div className="text-xs font-medium text-muted-foreground mb-2">
-              Additional Context:
+        <div
+          className={`flex-1 max-w-2xl ${isUser ? "order-1" : "order-2"}`}
+          style={{
+            marginLeft: isUser ? "auto" : undefined,
+            marginRight: !isUser ? "auto" : undefined,
+          }}
+        >
+          <div
+            className={`rounded-lg px-4 py-3 ${
+              isUser
+                ? "bg-blue-600 text-white ml-auto"
+                : "bg-gray-50 text-gray-900"
+            }`}
+            aria-live="polite"
+            aria-label={isUser ? "Your message" : "Assistant response"}
+          >
+            <div
+              className={`prose prose-sm max-w-none ${
+                isUser ? "prose-invert" : ""
+              }`}
+            >
+              <ReactMarkdown>
+                {hasOrderData &&
+                !isUser &&
+                message.structuredResponse?.introText
+                  ? message.structuredResponse.introText
+                  : message.content}
+              </ReactMarkdown>
             </div>
-            {context && (
-              <div className="grid grid-cols-2 gap-2 text-xs">
-                {context.lastQuery && (
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">Query Type:</span>
-                    <span className="font-medium">{context.lastQuery}</span>
+
+            {context && !isUser && (
+              <div className="mt-3 pt-3 border-t border-gray-200 text-xs text-gray-500">
+                Strategy: {context.strategy} • Confidence: {context.confidence}
+              </div>
+            )}
+          </div>
+
+          {/* Detailed Order Display for specific order requests */}
+          {(shouldShowDetailedView || forceDetailedView) &&
+            !isUser &&
+            transformedOrders.length === 1 && (
+              <div className="mt-4">
+                <DetailedOrderDisplay
+                  order={transformAPIOrderToOrderSummary(transformedOrders[0])}
+                  lineItems={
+                    transformedOrders[0].lineItems
+                      ? transformLineItemsArray(
+                          transformedOrders[0].lineItems,
+                          rawOrders[0]
+                        )
+                      : []
+                  }
+                />
+              </div>
+            )}
+
+          {/* Enhanced Order Display organized by DaysToDueDate for general queries */}
+          {hasOrderData &&
+            !isUser &&
+            !shouldShowDetailedView &&
+            !forceDetailedView && (
+              <div className="mt-4 space-y-4">
+                {orderGroups?.overdue && orderGroups.overdue.length > 0 && (
+                  <div>
+                    <h4 className="text-sm font-medium text-red-600 mb-2 flex items-center gap-2">
+                      <AlertCircle className="w-4 h-4" />
+                      Overdue ({orderGroups.overdue.length})
+                    </h4>
+                    <div className="grid gap-2">
+                      {orderGroups.overdue.map((order) => (
+                        <OrderCard key={order.jobNumber} order={order} />
+                      ))}
+                    </div>
                   </div>
                 )}
-                {context.shownOrders && context.shownOrders.length > 0 && (
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">Orders Shown:</span>
-                    <span className="font-medium">
-                      {context.shownOrders.length}
-                    </span>
+
+                {orderGroups?.urgent && orderGroups.urgent.length > 0 && (
+                  <div>
+                    <h4 className="text-sm font-medium text-orange-600 mb-2 flex items-center gap-2">
+                      <Clock className="w-4 h-4" />
+                      Urgent - Due Soon ({orderGroups.urgent.length})
+                    </h4>
+                    <div className="grid gap-2">
+                      {orderGroups.urgent.map((order) => (
+                        <OrderCard key={order.jobNumber} order={order} />
+                      ))}
+                    </div>
                   </div>
                 )}
-                {context.focusedCustomer && (
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">Customer:</span>
-                    <span className="font-medium">
-                      {context.focusedCustomer}
-                    </span>
+
+                {orderGroups?.thisWeek && orderGroups.thisWeek.length > 0 && (
+                  <div>
+                    <h4 className="text-sm font-medium text-yellow-600 mb-2 flex items-center gap-2">
+                      <Package className="w-4 h-4" />
+                      This Week ({orderGroups.thisWeek.length})
+                    </h4>
+                    <div className="grid gap-2">
+                      {orderGroups.thisWeek.map((order) => (
+                        <OrderCard key={order.jobNumber} order={order} />
+                      ))}
+                    </div>
                   </div>
                 )}
-                {context.focusedJob && (
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">Job:</span>
-                    <span className="font-medium">{context.focusedJob}</span>
+
+                {orderGroups?.later && orderGroups.later.length > 0 && (
+                  <div>
+                    <h4 className="text-sm font-medium text-green-600 mb-2 flex items-center gap-2">
+                      <CheckCircle className="w-4 h-4" />
+                      Later ({orderGroups.later.length})
+                    </h4>
+                    <div className="grid gap-2">
+                      {orderGroups.later.map((order) => (
+                        <OrderCard key={order.jobNumber} order={order} />
+                      ))}
+                    </div>
                   </div>
                 )}
               </div>
             )}
-          </div>
-        )}
+        </div>
 
-        {showRawContent && (
-          <div className="mt-3 p-3 bg-background rounded border">
-            <div className="text-xs font-medium text-muted-foreground mb-2">
-              Raw Response:
-            </div>
-            <pre className="text-xs whitespace-pre-wrap text-muted-foreground">
-              {safeContent}
-            </pre>
+        {isUser && (
+          <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center flex-shrink-0 ml-2">
+            <User className="w-4 h-4 text-gray-600" />
           </div>
         )}
       </div>

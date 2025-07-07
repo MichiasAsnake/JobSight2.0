@@ -1,13 +1,3 @@
-Here's a **complete Markdown (`.md`) file** that you can use as your **API knowledge base for Cursor**, GPT-4, or any RAG system. It includes:
-
-✅ Clear endpoint descriptions  
-✅ Parameter mappings  
-✅ Sample response keys  
-✅ Relationship logic  
-✅ Query-to-endpoint mapping
-
----
-
 # 🧠 API Knowledge Base for Decopress Internal Systems
 
 This document helps AI tools like Cursor, GPT-4, and RAG systems understand how to:

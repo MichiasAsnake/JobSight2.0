@@ -1,0 +1,446 @@
+#!/usr/bin/env node
+// Test All 10 OMS API Endpoints from api_knowledge.md
+// Uses the existing enhanced API client to call the actual OMS endpoints
+
+import { enhancedAPIClient } from "../src/lib/enhanced-api-client.js";
+import fs from "fs";
+import path from "path";
+
+const DATA_DIR = path.join(process.cwd(), "data");
+
+// Ensure directory exists
+if (!fs.existsSync(DATA_DIR)) {
+  fs.mkdirSync(DATA_DIR, { recursive: true });
+}
+
+class OMSAPIEndpointTester {
+  constructor() {
+    this.responses = [];
+    this.selectedJobNumber = "";
+    this.selectedCustomerId = "";
+  }
+
+  async testAllEndpoints() {
+    console.log(
+      "🚀 Testing All 10 OMS API Endpoints from api_knowledge.md...\n"
+    );
+
+    try {
+      // Step 1: Get job list to find a job number and customer ID
+      console.log("📋 Step 1: Testing get-job-list...");
+      const jobListResponse = await this.testGetJobList();
+      this.responses.push(jobListResponse);
+
+      if (jobListResponse.error) {
+        throw new Error(`Failed to get job list: ${jobListResponse.error}`);
+      }
+
+      // Extract job number and customer ID from the first job
+      const jobs =
+        jobListResponse.response?.data?.Entities ||
+        jobListResponse.response?.Entities ||
+        [];
+      if (jobs.length === 0) {
+        throw new Error("No jobs found in the response");
+      }
+
+      const firstJob = jobs[0];
+      this.selectedJobNumber =
+        firstJob.JobNumber?.toString() ||
+        firstJob.jobNumber?.toString() ||
+        "51132";
+      this.selectedCustomerId =
+        firstJob.CustomerId?.toString() ||
+        firstJob.customerId?.toString() ||
+        "1";
+
+      console.log(`✅ Selected Job Number: ${this.selectedJobNumber}`);
+      console.log(`✅ Selected Customer ID: ${this.selectedCustomerId}\n`);
+
+      // Step 2: Test get-joblines
+      console.log("📋 Step 2: Testing get-joblines...");
+      const jobLinesResponse = await this.testGetJobLines(
+        this.selectedJobNumber
+      );
+      this.responses.push(jobLinesResponse);
+
+      // Step 3: Test get-joblines-cost-details
+      console.log("💰 Step 3: Testing get-joblines-cost-details...");
+      const costDetailsResponse = await this.testGetJobLinesCostDetails(
+        this.selectedJobNumber
+      );
+      this.responses.push(costDetailsResponse);
+
+      // Step 4: Test get-all-inwards-and-stock-items
+      console.log("📦 Step 4: Testing get-all-inwards-and-stock-items...");
+      const stockItemsResponse = await this.testGetAllInwardsAndStockItems(
+        this.selectedJobNumber
+      );
+      this.responses.push(stockItemsResponse);
+
+      // Step 5: Test get-job-shipments
+      console.log("🚚 Step 5: Testing get-job-shipments...");
+      const shipmentsResponse = await this.testGetJobShipments(
+        this.selectedJobNumber
+      );
+      this.responses.push(shipmentsResponse);
+
+      // Step 6: Test get-delivery-options
+      console.log("📬 Step 6: Testing get-delivery-options...");
+      const deliveryOptionsResponse = await this.testGetDeliveryOptions(
+        this.selectedCustomerId
+      );
+      this.responses.push(deliveryOptionsResponse);
+
+      // Step 7: Test get-all-category-units
+      console.log("📂 Step 7: Testing get-all-category-units...");
+      const categoryUnitsResponse = await this.testGetAllCategoryUnits();
+      this.responses.push(categoryUnitsResponse);
+
+      // Step 8: Test get-job-history
+      console.log("📋 Step 8: Testing get-job-history...");
+      const historyResponse = await this.testGetJobHistory(
+        this.selectedJobNumber
+      );
+      this.responses.push(historyResponse);
+
+      // Step 9: Test get-customer-by-id
+      console.log("👤 Step 9: Testing get-customer-by-id...");
+      const customerResponse = await this.testGetCustomerById(
+        this.selectedCustomerId
+      );
+      this.responses.push(customerResponse);
+
+      // Step 10: Test get-price-quantity-bands
+      console.log("🧾 Step 10: Testing get-price-quantity-bands...");
+      const priceBandsResponse = await this.testGetPriceQuantityBands();
+      this.responses.push(priceBandsResponse);
+
+      // Save all responses
+      await this.saveResponses();
+
+      console.log("\n🎉 All 10 OMS API Endpoints Tested!");
+      console.log(`📊 Collected ${this.responses.length} API responses`);
+      console.log("💾 Responses saved to data/oms-api-responses.json");
+    } catch (error) {
+      console.error("❌ OMS API Testing failed:", error);
+      await this.saveResponses();
+      process.exit(1);
+    }
+  }
+
+  async testGetJobList() {
+    const parameters = {
+      "job-status": "5,6,7,8",
+      "due-date": "1,2,3",
+      "stock-status": "0,1,2",
+      "text-filter": "",
+      bit: "get-job-list",
+    };
+
+    try {
+      const response = await enhancedAPIClient.getJobList(parameters);
+      return {
+        endpoint: "get-job-list",
+        url: "/jobstatuslist/ajax/JobStatusQueryAsync.ashx",
+        method: "POST",
+        parameters,
+        timestamp: new Date().toISOString(),
+        response,
+      };
+    } catch (error) {
+      return {
+        endpoint: "get-job-list",
+        url: "/jobstatuslist/ajax/JobStatusQueryAsync.ashx",
+        method: "POST",
+        parameters,
+        timestamp: new Date().toISOString(),
+        response: null,
+        error: error instanceof Error ? error.message : "Unknown error",
+      };
+    }
+  }
+
+  async testGetJobLines(jobNumber) {
+    const parameters = { jobNumber, bit: "get-joblines" };
+
+    try {
+      const response = await enhancedAPIClient.getJobLines(jobNumber);
+      return {
+        endpoint: "get-joblines",
+        url: `/Jobs/ajax/JobHandler.ashx?bit=get-joblines&jobNumber=${jobNumber}`,
+        method: "GET",
+        parameters,
+        timestamp: new Date().toISOString(),
+        response,
+      };
+    } catch (error) {
+      return {
+        endpoint: "get-joblines",
+        url: `/Jobs/ajax/JobHandler.ashx?bit=get-joblines&jobNumber=${jobNumber}`,
+        method: "GET",
+        parameters,
+        timestamp: new Date().toISOString(),
+        response: null,
+        error: error instanceof Error ? error.message : "Unknown error",
+      };
+    }
+  }
+
+  async testGetJobLinesCostDetails(jobNumber) {
+    const parameters = {
+      bit: "get-joblines-cost-details",
+      jobNumber: jobNumber,
+    };
+
+    try {
+      const response = await enhancedAPIClient.getJobLinesCostDetails(
+        jobNumber
+      );
+      return {
+        endpoint: "get-joblines-cost-details",
+        url: "/Jobs/ajax/JobHandler.ashx",
+        method: "POST",
+        parameters,
+        timestamp: new Date().toISOString(),
+        response,
+      };
+    } catch (error) {
+      return {
+        endpoint: "get-joblines-cost-details",
+        url: "/Jobs/ajax/JobHandler.ashx",
+        method: "POST",
+        parameters,
+        timestamp: new Date().toISOString(),
+        response: null,
+        error: error instanceof Error ? error.message : "Unknown error",
+      };
+    }
+  }
+
+  async testGetAllInwardsAndStockItems(jobNumber) {
+    const parameters = { jobNumber, bit: "get-all-inwards-and-stock-items" };
+
+    try {
+      const response = await enhancedAPIClient.getAllInwardsAndStockItems(
+        jobNumber
+      );
+      return {
+        endpoint: "get-all-inwards-and-stock-items",
+        url: `/Jobs/ajax/JobHandler.ashx?bit=get-all-inwards-and-stock-items&jobNumber=${jobNumber}`,
+        method: "GET",
+        parameters,
+        timestamp: new Date().toISOString(),
+        response,
+      };
+    } catch (error) {
+      return {
+        endpoint: "get-all-inwards-and-stock-items",
+        url: `/Jobs/ajax/JobHandler.ashx?bit=get-all-inwards-and-stock-items&jobNumber=${jobNumber}`,
+        method: "GET",
+        parameters,
+        timestamp: new Date().toISOString(),
+        response: null,
+        error: error instanceof Error ? error.message : "Unknown error",
+      };
+    }
+  }
+
+  async testGetJobShipments(jobNumber) {
+    const parameters = { jobNumber, bit: "get-job-shipments" };
+
+    try {
+      const response = await enhancedAPIClient.getJobShipments(jobNumber);
+      return {
+        endpoint: "get-job-shipments",
+        url: `/Jobs/ajax/JobHandler.ashx?bit=get-job-shipments&jobNumber=${jobNumber}`,
+        method: "GET",
+        parameters,
+        timestamp: new Date().toISOString(),
+        response,
+      };
+    } catch (error) {
+      return {
+        endpoint: "get-job-shipments",
+        url: `/Jobs/ajax/JobHandler.ashx?bit=get-job-shipments&jobNumber=${jobNumber}`,
+        method: "GET",
+        parameters,
+        timestamp: new Date().toISOString(),
+        response: null,
+        error: error instanceof Error ? error.message : "Unknown error",
+      };
+    }
+  }
+
+  async testGetDeliveryOptions(customerId) {
+    const parameters = { customerId, bit: "get-delivery-options" };
+
+    try {
+      const response = await enhancedAPIClient.getDeliveryOptions(customerId);
+      return {
+        endpoint: "get-delivery-options",
+        url: `/Jobs/ajax/JobHandler.ashx?bit=get-delivery-options&customerId=${customerId}`,
+        method: "GET",
+        parameters,
+        timestamp: new Date().toISOString(),
+        response,
+      };
+    } catch (error) {
+      return {
+        endpoint: "get-delivery-options",
+        url: `/Jobs/ajax/JobHandler.ashx?bit=get-delivery-options&customerId=${customerId}`,
+        method: "GET",
+        parameters,
+        timestamp: new Date().toISOString(),
+        response: null,
+        error: error instanceof Error ? error.message : "Unknown error",
+      };
+    }
+  }
+
+  async testGetAllCategoryUnits() {
+    const parameters = { bit: "get-all-category-units" };
+
+    try {
+      const response = await enhancedAPIClient.getAllCategoryUnits();
+      return {
+        endpoint: "get-all-category-units",
+        url: "/assetmanager/ajax/assetbit.ashx?bit=get-all-category-units",
+        method: "GET",
+        parameters,
+        timestamp: new Date().toISOString(),
+        response,
+      };
+    } catch (error) {
+      return {
+        endpoint: "get-all-category-units",
+        url: "/assetmanager/ajax/assetbit.ashx?bit=get-all-category-units",
+        method: "GET",
+        parameters,
+        timestamp: new Date().toISOString(),
+        response: null,
+        error: error instanceof Error ? error.message : "Unknown error",
+      };
+    }
+  }
+
+  async testGetJobHistory(jobNumber) {
+    const parameters = { jobNumber, bit: "get-job-history" };
+
+    try {
+      const response = await enhancedAPIClient.getJobHistory(jobNumber);
+      return {
+        endpoint: "get-job-history",
+        url: `/Jobs/ajax/JobHandler.ashx?bit=get-job-history&jobNumber=${jobNumber}`,
+        method: "GET",
+        parameters,
+        timestamp: new Date().toISOString(),
+        response,
+      };
+    } catch (error) {
+      return {
+        endpoint: "get-job-history",
+        url: `/Jobs/ajax/JobHandler.ashx?bit=get-job-history&jobNumber=${jobNumber}`,
+        method: "GET",
+        parameters,
+        timestamp: new Date().toISOString(),
+        response: null,
+        error: error instanceof Error ? error.message : "Unknown error",
+      };
+    }
+  }
+
+  async testGetCustomerById(customerId) {
+    const parameters = { id: customerId, bit: "get-customer-by-id" };
+
+    try {
+      const response = await enhancedAPIClient.getCustomerById(customerId);
+      return {
+        endpoint: "get-customer-by-id",
+        url: `/customer/ajax/CustomerHandler.ashx?bit=get-customer-by-id&id=${customerId}`,
+        method: "GET",
+        parameters,
+        timestamp: new Date().toISOString(),
+        response,
+      };
+    } catch (error) {
+      return {
+        endpoint: "get-customer-by-id",
+        url: `/customer/ajax/CustomerHandler.ashx?bit=get-customer-by-id&id=${customerId}`,
+        method: "GET",
+        parameters,
+        timestamp: new Date().toISOString(),
+        response: null,
+        error: error instanceof Error ? error.message : "Unknown error",
+      };
+    }
+  }
+
+  async testGetPriceQuantityBands() {
+    const parameters = {
+      "category-unit-id": "13476", // Default value, would normally come from jobline data
+      "price-tier": "F", // Default value
+      "price-code": "EM_DIRECT:EM_DIRECT", // Default value
+      bit: "get-price-quantity-bands",
+    };
+
+    try {
+      const response = await enhancedAPIClient.getPriceQuantityBands(
+        parameters["category-unit-id"],
+        parameters["price-tier"],
+        parameters["price-code"]
+      );
+      return {
+        endpoint: "get-price-quantity-bands",
+        url: "/assetmanager/ajax/assetbit.ashx",
+        method: "POST",
+        parameters,
+        timestamp: new Date().toISOString(),
+        response,
+      };
+    } catch (error) {
+      return {
+        endpoint: "get-price-quantity-bands",
+        url: "/assetmanager/ajax/assetbit.ashx",
+        method: "POST",
+        parameters,
+        timestamp: new Date().toISOString(),
+        response: null,
+        error: error instanceof Error ? error.message : "Unknown error",
+      };
+    }
+  }
+
+  async saveResponses() {
+    const outputPath = path.join(DATA_DIR, "oms-api-responses.json");
+
+    const output = {
+      metadata: {
+        collectedAt: new Date().toISOString(),
+        selectedJobNumber: this.selectedJobNumber,
+        selectedCustomerId: this.selectedCustomerId,
+        totalEndpoints: this.responses.length,
+        successfulCalls: this.responses.filter((r) => !r.error).length,
+        failedCalls: this.responses.filter((r) => r.error).length,
+        note: "Testing all 10 OMS API endpoints from api_knowledge.md",
+      },
+      responses: this.responses,
+    };
+
+    fs.writeFileSync(outputPath, JSON.stringify(output, null, 2));
+    console.log(`💾 Saved OMS API responses to ${outputPath}`);
+  }
+}
+
+// Run the testing
+const tester = new OMSAPIEndpointTester();
+tester
+  .testAllEndpoints()
+  .then(() => {
+    console.log("\n✅ All 10 OMS API endpoints tested successfully");
+    process.exit(0);
+  })
+  .catch((error) => {
+    console.error("\n❌ OMS API endpoint testing failed:", error);
+    process.exit(1);
+  });

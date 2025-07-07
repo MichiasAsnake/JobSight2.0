@@ -1,0 +1,261 @@
+{
+  "metadata": {
+    "collectedAt": "ISO_TIMESTAMP",
+    "baseUrl": "https://intranet.decopress.com",
+    "totalEndpoints": "NUMBER",
+    "successfulCalls": "NUMBER",
+    "failedCalls": "NUMBER",
+    "jobsTested": ["JOB_NUMBER_ARRAY"],
+    "customersTested": ["CUSTOMER_ID_ARRAY"],
+    "endpointsCovered": ["ENDPOINT_NAME_ARRAY"]
+  },
+  "responses": [
+    {
+      "endpoint": "get-job-list",
+      "url": "ENDPOINT_URL",
+      "method": "POST",
+      "parameters": {
+        "job-status": "STATUS_CODES",
+        "due-date": "DATE_FILTERS",
+        "process-filter": "PROCESS_CODES",
+        "page-size": "NUMBER",
+        "requested-page": "NUMBER"
+      },
+      "response": {
+        "isSuccess": true,
+        "data": {
+          "Entities": [
+            {
+              "JobNumber": "NUMBER",
+              "CustomerId": "NUMBER",
+              "Client": "STRING",
+              "Description": "STRING",
+              "OrderNumber": "STRING",
+              "JobQuantity": "NUMBER",
+              "DateDue": "ISO_TIMESTAMP",
+              "MasterJobStatus": "STRING",
+              "StockCompleteStatus": "STRING",
+              "DeliveryOption": "STRING",
+              "ProcessQuantities": [
+                {
+                  "Code": "STRING",
+                  "Qty": "NUMBER"
+                }
+              ],
+              "JobTags": [
+                {
+                  "Tag": "STRING",
+                  "WhoEnteredUsername": "STRING",
+                  "WhenEntered": "ISO_TIMESTAMP"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "endpoint": "get-joblines",
+      "parameters": {
+        "job-number": "JOB_NUMBER"
+      },
+      "response": {
+        "data": [
+          {
+            "ID": "NUMBER",
+            "JobNumber": "NUMBER",
+            "Prgram": "STRING",
+            "Description": "STRING",
+            "Garment": "STRING",
+            "Qty": "NUMBER",
+            "UnitPrice": "NUMBER",
+            "Comments": "STRING",
+            "AssetId": "NUMBER",
+            "IsParentJobline": "BOOLEAN",
+            "IsChildJobline": "BOOLEAN",
+            "JoblineTypes": [
+              {
+                "Machine": "STRING",
+                "isAutoAdd": "BOOLEAN"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "endpoint": "get-joblines-cost-details",
+      "parameters": {
+        "job-number": "JOB_NUMBER"
+      },
+      "response": {
+        "data": [
+          {
+            "JobLineId": "NUMBER",
+            "JobNumber": "NUMBER",
+            "Program": "STRING",
+            "Description": "STRING",
+            "Qty": "NUMBER",
+            "UnitPrice": "NUMBER",
+            "TotalPrice": "NUMBER",
+            "CostDetails": [
+              {
+                "CostType": "STRING",
+                "Amount": "NUMBER",
+                "Description": "STRING"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "endpoint": "get-all-inwards-and-stock-items",
+      "parameters": {
+        "job-number": "JOB_NUMBER"
+      },
+      "response": {
+        "data": {
+          "Inwards": [
+            {
+              "ID": "NUMBER",
+              "JobNumber": "NUMBER",
+              "ItemCode": "STRING",
+              "Description": "STRING",
+              "QtyOrdered": "NUMBER",
+              "QtyReceived": "NUMBER",
+              "QtyAllocated": "NUMBER",
+              "QtyAvailable": "NUMBER",
+              "DateReceived": "ISO_TIMESTAMP",
+              "Supplier": "STRING",
+              "Status": "STRING"
+            }
+          ],
+          "StockItems": [
+            {
+              "ID": "NUMBER",
+              "ItemCode": "STRING",
+              "Description": "STRING",
+              "QtyInStock": "NUMBER",
+              "QtyReserved": "NUMBER",
+              "QtyAvailable": "NUMBER",
+              "Location": "STRING",
+              "LastUpdated": "ISO_TIMESTAMP"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "endpoint": "get-job-shipments",
+      "parameters": {
+        "job-number": "JOB_NUMBER"
+      },
+      "response": {
+        "data": [
+          {
+            "ID": "NUMBER",
+            "JobNumber": "NUMBER",
+            "ShipmentNumber": "STRING",
+            "ShipmentDate": "ISO_TIMESTAMP",
+            "Carrier": "STRING",
+            "TrackingNumber": "STRING",
+            "Status": "STRING",
+            "Items": [
+              {
+                "ItemCode": "STRING",
+                "Qty": "NUMBER",
+                "Description": "STRING"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "endpoint": "get-job-history",
+      "parameters": {
+        "job-number": "JOB_NUMBER"
+      },
+      "response": {
+        "data": [
+          {
+            "ID": "NUMBER",
+            "JobNumber": "NUMBER",
+            "Action": "STRING",
+            "Description": "STRING",
+            "Timestamp": "ISO_TIMESTAMP",
+            "User": "STRING",
+            "Details": "OBJECT"
+          }
+        ]
+      }
+    },
+    {
+      "endpoint": "get-delivery-options",
+      "parameters": {
+        "customer-id": "CUSTOMER_ID"
+      },
+      "response": {
+        "data": [
+          {
+            "ID": "NUMBER",
+            "Code": "STRING",
+            "Description": "STRING",
+            "Price": "NUMBER",
+            "IsAvailable": "BOOLEAN",
+            "DeliveryTime": "STRING"
+          }
+        ]
+      }
+    },
+    {
+      "endpoint": "get-customer-by-id",
+      "parameters": {
+        "customer-id": "CUSTOMER_ID"
+      },
+      "response": {
+        "data": {
+          "Users": [
+            {
+              "UserName": {
+                "FirstName": "STRING",
+                "LastName": "STRING",
+                "FullName": "STRING"
+              },
+              "Id": "NUMBER",
+              "EmailAddress": "STRING",
+              "IsCustomerAdmin": "BOOLEAN",
+              "Phone": "STRING",
+              "UserAddress": {
+                "StreetAddress": "STRING",
+                "City": "STRING",
+                "State": "STRING",
+                "PostalCode": "STRING",
+                "Country": "STRING"
+              }
+            }
+          ],
+          "Id": "NUMBER",
+          "Name": "STRING",
+          "PriceTierCode": "STRING",
+          "AccountOnCreditHold": "BOOLEAN"
+        }
+      }
+    }
+  ],
+  "relationships": {
+    "jobDependencies": [
+      {
+        "jobNumber": "JOB_NUMBER",
+        "dependentEndpoints": ["ENDPOINT_ARRAY"]
+      }
+    ],
+    "customerDependencies": [
+      {
+        "customerId": "CUSTOMER_ID",
+        "dependentEndpoints": ["ENDPOINT_ARRAY"]
+      }
+    ]
+  }
+}

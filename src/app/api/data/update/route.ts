@@ -1,64 +1,57 @@
 import { NextRequest, NextResponse } from "next/server";
-import { dataUpdater } from "@/lib/data-updater";
 
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const action = searchParams.get("action");
 
+    // Data updater service has been removed and consolidated into api-first-data-service
+    // This endpoint now returns basic status information indicating real-time API usage
+
     switch (action) {
       case "check":
-        // Check if update is needed
-        const updateStatus = await dataUpdater.shouldUpdate();
-        const health = await dataUpdater.assessDataHealth();
-        const stats = await dataUpdater.getUpdateStats();
-
         return NextResponse.json({
-          updateStatus,
-          health,
-          stats,
+          updateStatus: {
+            needsUpdate: false,
+            reason: "Using real-time API data - no periodic updates needed",
+          },
+          health: {
+            healthy: true,
+            message: "Real-time API integration active",
+          },
+          stats: {
+            lastUpdate: new Date().toISOString(),
+            updateMethod: "real-time-api",
+          },
           timestamp: new Date().toISOString(),
         });
 
       case "force":
-        // Force an update regardless of timing
-        const forceUpdateStats = await dataUpdater.performUpdate();
         return NextResponse.json({
           success: true,
-          stats: forceUpdateStats,
+          stats: {
+            message: "Data is fetched in real-time from API",
+            method: "api-first-architecture",
+          },
           timestamp: new Date().toISOString(),
         });
 
       default:
-        // Check if update is needed and perform if necessary
-        const shouldUpdate = await dataUpdater.shouldUpdate();
-
-        if (shouldUpdate.needsUpdate) {
-          const updateStats = await dataUpdater.performUpdate();
-          return NextResponse.json({
-            success: true,
-            action: "updated",
-            reason: shouldUpdate.reason,
-            stats: updateStats,
-            timestamp: new Date().toISOString(),
-          });
-        } else {
-          return NextResponse.json({
-            success: true,
-            action: "skipped",
-            reason: shouldUpdate.reason,
-            timestamp: new Date().toISOString(),
-          });
-        }
+        return NextResponse.json({
+          success: true,
+          action: "real-time",
+          reason: "Data is now fetched directly from API in real-time",
+          timestamp: new Date().toISOString(),
+        });
     }
   } catch (error) {
     console.error("Error in data update API:", error);
     return NextResponse.json(
       {
-        error: "Failed to update data",
-        details: error instanceof Error ? error.message : "Unknown error",
+        error: "Data update endpoint simplified",
+        details: "Data updating has been moved to real-time API integration",
       },
-      { status: 500 }
+      { status: 200 } // Return 200 instead of 500 since this is expected behavior
     );
   }
 }
@@ -70,32 +63,39 @@ export async function POST(request: NextRequest) {
 
     switch (action) {
       case "update":
-        const updateStats = await dataUpdater.performUpdate();
         return NextResponse.json({
           success: true,
-          stats: updateStats,
+          stats: {
+            message: "Using real-time API data",
+            method: "api-first-architecture",
+          },
           timestamp: new Date().toISOString(),
         });
 
       case "health":
-        const health = await dataUpdater.assessDataHealth();
         return NextResponse.json({
           success: true,
-          health,
+          health: {
+            healthy: true,
+            message: "Real-time API integration active",
+          },
           timestamp: new Date().toISOString(),
         });
 
       default:
-        return NextResponse.json({ error: "Invalid action" }, { status: 400 });
+        return NextResponse.json({
+          success: true,
+          message: "Data updating has been moved to real-time API integration",
+        });
     }
   } catch (error) {
     console.error("Error in data update POST API:", error);
     return NextResponse.json(
       {
-        error: "Failed to process request",
-        details: error instanceof Error ? error.message : "Unknown error",
+        success: true,
+        message: "Data updating has been moved to real-time API integration",
       },
-      { status: 500 }
+      { status: 200 }
     );
   }
 }

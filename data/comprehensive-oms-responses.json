@@ -1,0 +1,103 @@
+{
+  "metadata": {
+    "collectedAt": "2025-07-05T19:29:20.536Z",
+    "baseUrl": "http://localhost:3000",
+    "totalEndpoints": 2,
+    "successfulCalls": 2,
+    "failedCalls": 0,
+    "jobsTested": [],
+    "customersTested": [],
+    "categoryUnitIdsTested": [],
+    "priceCodesTested": [],
+    "endpointsCovered": [
+      "get-job-list",
+      "get-joblines",
+      "get-joblines-cost-details",
+      "get-all-inwards-and-stock-items",
+      "get-job-shipments",
+      "get-delivery-options",
+      "get-price-quantity-bands",
+      "get-all-category-units",
+      "get-job-history",
+      "get-customer-by-id"
+    ]
+  },
+  "responses": [
+    {
+      "endpoint": "get-job-list",
+      "url": "/api/oms-chat",
+      "method": "POST",
+      "parameters": {
+        "job-status": "5,6,7,8",
+        "due-date": "1",
+        "stock-status": "0,1,2",
+        "text-filter": "",
+        "bit": "get-job-list"
+      },
+      "timestamp": "2025-07-05T19:29:12.938Z",
+      "response": {
+        "success": true,
+        "message": "No jobs found matching your query \"Show me today's jobs\". The job number may not exist or may be outside the current active job range.",
+        "orders": [],
+        "analytics": {
+          "totalResults": 0,
+          "dataSource": "api",
+          "processingTime": 5867,
+          "confidence": "low",
+          "searchStrategy": "api"
+        },
+        "metadata": {
+          "queryProcessed": "Show me today's jobs",
+          "timestamp": "2025-07-05T19:29:12.935Z",
+          "strategy": "api",
+          "dataFreshness": "fresh",
+          "totalOrdersAnalyzed": 0
+        },
+        "context": {
+          "lastQuery": "api",
+          "shownOrders": [],
+          "orders": []
+        },
+        "structuredResponse": null
+      }
+    },
+    {
+      "endpoint": "get-all-category-units",
+      "url": "/api/oms-chat",
+      "method": "POST",
+      "parameters": {
+        "bit": "get-all-category-units"
+      },
+      "timestamp": "2025-07-05T19:29:20.531Z",
+      "response": {
+        "success": true,
+        "message": "I couldn't generate a response.",
+        "orders": [],
+        "analytics": {
+          "totalResults": 0,
+          "dataSource": "vector",
+          "processingTime": 7429,
+          "confidence": "medium",
+          "searchStrategy": "vector"
+        },
+        "metadata": {
+          "queryProcessed": "Show me all product types",
+          "timestamp": "2025-07-05T19:29:20.507Z",
+          "strategy": "vector",
+          "dataFreshness": "cached",
+          "totalOrdersAnalyzed": 0
+        },
+        "context": {
+          "lastQuery": "vector",
+          "shownOrders": [],
+          "orders": []
+        },
+        "structuredResponse": null
+      }
+    }
+  ],
+  "relationships": {
+    "jobDependencies": [],
+    "customerDependencies": []
+  }
+}

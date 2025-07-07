@@ -7,6 +7,7 @@ interface Message {
   content: string;
   role: "user" | "assistant";
   timestamp: Date;
+  context?: any; // Context data from API responses for enhanced message display
 }
 
 interface Chat {

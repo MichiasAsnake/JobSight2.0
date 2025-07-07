@@ -290,14 +290,20 @@ export function ChatInput({
     <div className="relative">
       {/* Quick Actions */}
       {!message && !showSuggestions && (
-        <div className="mb-2 flex flex-wrap gap-2">
+        <div
+          className="mb-2 flex flex-wrap gap-2"
+          role="toolbar"
+          aria-label="Quick action buttons"
+        >
           {getQuickActions().map((action, index) => (
             <button
               key={index}
               onClick={() => setMessage(action.text)}
               className="inline-flex items-center gap-1 px-3 py-1 text-sm bg-gray-100 hover:bg-gray-200 rounded-full transition-colors"
+              aria-label={`Quick action: ${action.text}`}
+              type="button"
             >
-              <span>{action.icon}</span>
+              <span aria-hidden="true">{action.icon}</span>
               <span>{action.text}</span>
             </button>
           ))}
@@ -307,13 +313,19 @@ export function ChatInput({
       {/* Suggestions Dropdown */}
       {showSuggestions && filteredSuggestions.length > 0 && (
         <div
+          id="chat-suggestions"
           ref={suggestionsRef}
           className="absolute bottom-full left-0 right-0 mb-2 bg-white border border-gray-200 rounded-lg shadow-lg z-50 max-h-64 overflow-y-auto"
+          role="listbox"
+          aria-label="Chat suggestions"
+          aria-expanded="true"
         >
           <div
             className={`px-3 py-2 border-b text-xs font-medium flex items-center gap-2 ${getCategoryColor(
               suggestionCategory
             )}`}
+            role="option"
+            aria-selected="false"
           >
             {getCategoryIcon(suggestionCategory)}
             <span className="capitalize">{suggestionCategory} Suggestions</span>
@@ -321,26 +333,46 @@ export function ChatInput({
           {filteredSuggestions.map((suggestion, index) => (
             <button
               key={index}
+              id={`suggestion-${index}`}
               onClick={() => selectSuggestion(suggestion)}
               className={`w-full text-left px-3 py-2 hover:bg-gray-50 transition-colors border-b border-gray-100 last:border-b-0 ${
                 selectedSuggestionIndex === index
                   ? "bg-blue-50 border-l-4 border-l-blue-500"
                   : ""
               }`}
+              role="option"
+              aria-selected={selectedSuggestionIndex === index}
             >
               <div className="text-sm text-gray-900">{suggestion}</div>
             </button>
           ))}
-          <div className="px-3 py-2 text-xs text-gray-500 bg-gray-50">
+          <div
+            className="px-3 py-2 text-xs text-gray-500 bg-gray-50"
+            role="note"
+            aria-label="Keyboard navigation instructions"
+          >
             Use ↑↓ arrows to navigate, Enter to select, Esc to close
           </div>
         </div>
       )}
 
       {/* Input Area */}
-      <div className="flex items-end gap-2 p-3 bg-white border border-gray-200 rounded-lg shadow-sm">
+      <div
+        className="flex items-end gap-3 p-4 bg-white border border-gray-200 rounded-lg shadow-sm"
+        role="group"
+        aria-labelledby="chat-input-label"
+        aria-describedby="chat-input-description"
+      >
         <div className="flex-1 relative">
+          <label
+            id="chat-input-label"
+            htmlFor="chat-input-textarea"
+            className="sr-only"
+          >
+            Chat message input
+          </label>
           <Textarea
+            id="chat-input-textarea"
             ref={textareaRef}
             value={message}
             onChange={(e) => setMessage(e.target.value)}
@@ -350,17 +382,30 @@ export function ChatInput({
                 setShowSuggestions(true);
               }
             }}
-            placeholder="Ask about orders, customers, revenue, or any OMS data..."
-            className="min-h-[44px] max-h-32 resize-none border-0 focus:ring-0 p-0 placeholder:text-gray-400"
+            placeholder="What's due today? Show me rush orders. Revenue this month. Job 12345..."
+            className="min-h-[60px] max-h-48 resize-none border-0 focus:ring-0 p-0 placeholder:text-gray-400 text-base leading-relaxed"
             disabled={disabled || isLoading}
-            rows={1}
+            rows={2}
+            aria-label="Type your message here"
+            aria-describedby="chat-input-description"
+            aria-expanded={showSuggestions}
+            aria-autocomplete="list"
+            aria-controls="chat-suggestions"
+            aria-activedescendant={
+              selectedSuggestionIndex >= 0
+                ? `suggestion-${selectedSuggestionIndex}`
+                : undefined
+            }
           />
 
           {/* Input Helper Text */}
           {message.length === 0 && (
-            <div className="absolute top-full left-0 mt-1 text-xs text-gray-400">
-              Try: &quot;orders due today&quot;, &quot;revenue this month&quot;,
-              or &quot;job 12345&quot;
+            <div
+              id="chat-input-description"
+              className="absolute top-full left-0 mt-2 text-sm text-gray-500"
+            >
+              Try: &quot;What's due today?&quot;, &quot;Show me rush
+              orders&quot;, or &quot;Revenue this month&quot;
             </div>
           )}
         </div>
@@ -368,13 +413,20 @@ export function ChatInput({
         <Button
           onClick={handleSend}
           disabled={disabled || isLoading || !message.trim()}
-          size="sm"
-          className="shrink-0"
+          size="default"
+          className="shrink-0 h-12 px-4"
+          aria-label="Send message"
+          aria-describedby={isLoading ? "sending-status" : undefined}
         >
           {isLoading ? (
-            <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+            <>
+              <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+              <span id="sending-status" className="sr-only">
+                Sending message...
+              </span>
+            </>
           ) : (
-            <Send className="w-4 h-4" />
+            <Send className="w-5 h-5" />
           )}
         </Button>
       </div>
@@ -382,9 +434,8 @@ export function ChatInput({
       {/* Suggestion Examples */}
       {message.length === 0 && (
         <div className="mt-2 text-xs text-gray-500">
-          <strong>Popular queries:</strong> &quot;What orders are due
-          today?&quot; • &quot;Show me rush orders&quot; • &quot;Revenue this
-          month&quot;
+          <strong>Popular queries:</strong> &quot;What's due today?&quot; •
+          &quot;Show me rush orders&quot; • &quot;Revenue this month&quot;
         </div>
       )}
     </div>

@@ -1,11 +1,6 @@
 import fs from "fs";
 import path from "path";
-import {
-  APIJob,
-  APIJobStatus,
-  APIJobShipments,
-  APIJobFiles,
-} from "./api-client";
+import { APIJob, APIJobShipments, APIJobFiles } from "./enhanced-api-client";
 
 export interface Order {
   jobNumber: string;
@@ -85,7 +80,7 @@ export interface Order {
 // Enhanced Order interface that combines scraped data with live API data
 export interface EnhancedOrder extends Order {
   // Live API data (when available)
-  liveStatus?: APIJobStatus["data"];
+  liveStatus?: { [key: string]: any };
   liveShipping?: APIJobShipments["data"];
   liveFiles?: APIJobFiles["data"];
   apiJobData?: APIJob;

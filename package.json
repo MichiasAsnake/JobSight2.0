@@ -13,15 +13,22 @@
     "check-data": "node scripts/api-data-updater.js check",
     "data-health": "node scripts/api-data-updater.js health",
     "populate-vectors": "node scripts/populate-vector-db.js",
-    "update-vectors": "node scripts/daily-vector-update.js",
+    "update-vectors": "tsx scripts/daily-vector-update.ts",
     "enhanced-vectors": "tsx scripts/enhanced-vector-operations.js",
     "realtime-vectors": "tsx scripts/realtime-vector-updater.js",
     "test-query-router": "tsx scripts/test-query-router.js",
-    "api-health": "node scripts/api-health-check.js"
+    "api-health": "node scripts/api-health-check.js",
+    "populate-pinecone": "tsx scripts/pinecone-population-runner.ts",
+    "monitor-pinecone": "tsx scripts/monitor-pinecone-performance.ts",
+    "monitor-pinecone-report": "tsx scripts/monitor-pinecone-performance.ts report",
+    "monitor-pinecone-metrics": "tsx scripts/monitor-pinecone-performance.ts metrics",
+    "monitor-pinecone-trends": "tsx scripts/monitor-pinecone-performance.ts trends"
   },
   "dependencies": {
+    "@ariakit/react": "^0.4.17",
     "@pinecone-database/pinecone": "^2.2.2",
     "@radix-ui/react-slot": "^1.2.3",
+    "ai": "^4.3.16",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "lodash": "^4.17.21",
@@ -30,6 +37,7 @@
     "openai": "^5.8.2",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "react-markdown": "^10.1.0",
     "tailwind-merge": "^3.3.1"
   },
   "devDependencies": {
@@ -43,6 +51,7 @@
     "eslint": "^9",
     "eslint-config-next": "15.3.4",
     "tailwindcss": "^4",
+    "ts-node": "^10.9.2",
     "tsx": "^4.20.3",
     "tw-animate-css": "^1.3.4",
     "typescript": "^5"

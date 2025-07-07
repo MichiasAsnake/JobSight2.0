@@ -3,7 +3,7 @@
 
 import { Pinecone } from "@pinecone-database/pinecone";
 import { Order } from "./oms-data";
-import { APIJob } from "./api-client";
+import { APIJob } from "./enhanced-api-client";
 import path from "path";
 import fs from "fs";
 import crypto from "crypto";
@@ -355,9 +355,10 @@ export class VectorDBService {
 
         const metadata: any = {
           jobNumber: order.jobNumber,
-          customerCompany: order.customer?.company || "Unknown",
-          status: order.status || "Unknown",
-          dateEntered: order.dateEntered || new Date().toISOString(),
+          customerCompany: order.customer?.company || order.client || "Unknown",
+          status: order.masterJobStatus || order.status || "Unknown",
+          dateEntered:
+            order.dateInUtc || order.dateEntered || new Date().toISOString(),
           description: (order.description || "").substring(0, 500),
           orderNumber: order.orderNumber || order.jobNumber,
           dataSource: order.dataSource || "scraped",
@@ -365,10 +366,33 @@ export class VectorDBService {
         };
 
         // Add optional metadata fields
-        if (order.customer?.customerId)
-          metadata.customerId = order.customer.customerId;
+        if (order.customer?.customerId || order.customerId)
+          metadata.customerId = order.customer?.customerId || order.customerId;
         if (order.priority) metadata.priority = order.priority;
         if (order.pricing?.totalDue) metadata.totalDue = order.pricing.totalDue;
+
+        // Priority and workflow flags
+        if (order.timeSensitive) metadata.timeSensitive = order.timeSensitive;
+        if (order.mustDate) metadata.mustDate = order.mustDate;
+        if (order.isReprint) metadata.isReprint = order.isReprint;
+        if (order.isDupe) metadata.isDupe = order.isDupe;
+
+        // Location and delivery
+        if (order.locationCode) metadata.locationCode = order.locationCode;
+        if (order.deliveryOption)
+          metadata.deliveryOption = order.deliveryOption;
+
+        // Workflow capabilities
+        if (order.workflow?.hasJobFiles)
+          metadata.hasFiles = order.workflow.hasJobFiles;
+        if (order.workflow?.hasProof)
+          metadata.hasProof = order.workflow.hasProof;
+        if (order.workflow?.hasScheduleableJobLines)
+          metadata.scheduleable = order.workflow.hasScheduleableJobLines;
+
+        // Dates
+        if (order.dateDueUtc) metadata.dateDue = order.dateDueUtc;
+        if (order.daysToDueDate) metadata.daysToDue = order.daysToDueDate;
 
         vectors.push({
           id: `order-${order.jobNumber}`,
@@ -390,57 +414,129 @@ export class VectorDBService {
   private generateEnhancedSearchText(order: any): string {
     const parts = [];
 
-    // Core identifiers
+    // Core identifiers (HIGH PRIORITY)
     parts.push(`Job ${order.jobNumber}`);
     if (order.orderNumber && order.orderNumber !== order.jobNumber) {
       parts.push(`Order ${order.orderNumber}`);
     }
 
-    // Customer context
+    // Customer context (HIGH PRIORITY)
     if (order.customer?.company) {
       parts.push(`Customer ${order.customer.company}`);
     }
+    if (order.client) {
+      parts.push(`Customer ${order.client}`);
+    }
 
-    // Descriptions and comments
+    // Descriptions and comments (HIGH PRIORITY)
     if (order.description) parts.push(order.description);
     if (order.comment) parts.push(order.comment);
+    if (order.comments) parts.push(order.comments);
 
-    // Line item details with enhanced keyword extraction
+    // Line item details with enhanced keyword extraction (HIGH PRIORITY)
     if (order.lineItems) {
       for (const item of order.lineItems) {
         const itemParts = [];
         if (item.description) itemParts.push(item.description);
         if (item.category) itemParts.push(item.category);
         if (item.comment) itemParts.push(item.comment);
-        if (item.material) itemParts.push(`material ${item.material}`);
-        if (item.process) itemParts.push(`process ${item.process}`);
-        if (item.size) itemParts.push(`size ${item.size}`);
+        if (item.assetSKU) itemParts.push(`SKU ${item.assetSKU}`);
+        if (item.processCodes) itemParts.push(...item.processCodes);
+        if (item.materials)
+          itemParts.push(...item.materials.map((m: string) => `material ${m}`));
+        if (item.hasImage) itemParts.push("has image");
+        if (item.hasPDF) itemParts.push("has pdf");
 
         parts.push(itemParts.join(" "));
       }
     }
 
-    // Production and workflow context
+    // Production and workflow context (HIGH PRIORITY)
     if (order.production?.productionNotes) {
       parts.push(...order.production.productionNotes);
     }
+    if (order.processQuantities) {
+      for (const process of order.processQuantities) {
+        if (process.code) parts.push(process.code);
+        if (process.displayCode) parts.push(process.displayCode);
+        if (process.suggestedMachineLabel)
+          parts.push(`machine ${process.suggestedMachineLabel}`);
+      }
+    }
 
+    // Priority and status indicators (HIGH PRIORITY)
     if (order.workflow?.isRush) {
       parts.push("rush urgent priority");
     }
+    if (order.timeSensitive) {
+      parts.push("rush urgent priority time sensitive");
+    }
+    if (order.mustDate) {
+      parts.push("must date required");
+    }
+    if (order.isReprint) {
+      parts.push("reprint job");
+    }
+    if (order.isDupe) {
+      parts.push("duplicate job");
+    }
 
-    // Shipping information
+    // Status information (HIGH PRIORITY)
+    if (order.masterJobStatus) parts.push(order.masterJobStatus);
+    if (order.stockCompleteStatus) parts.push(order.stockCompleteStatus);
+    if (order.statusLine) parts.push(order.statusLine);
+    if (order.statusLineHtml) {
+      // Strip HTML tags for plain text
+      const plainText = order.statusLineHtml.replace(/<[^>]*>/g, "");
+      parts.push(plainText);
+    }
+
+    // Location and delivery (MEDIUM PRIORITY)
+    if (order.locationCode) parts.push(`location ${order.locationCode}`);
+    if (order.jobLocationCode) parts.push(`location ${order.jobLocationCode}`);
+    if (order.jobLocationName) parts.push(`location ${order.jobLocationName}`);
+    if (order.deliveryOption) parts.push(`delivery ${order.deliveryOption}`);
+
+    // Gang codes and process information (MEDIUM PRIORITY)
+    if (order.gangCodes) {
+      parts.push(...order.gangCodes.map((code: string) => `gang ${code}`));
+    }
+
+    // Shipping information (MEDIUM PRIORITY)
     if (order.shipments) {
       for (const shipment of order.shipments) {
         const shipParts = [];
-        if (shipment.shipToAddress?.company)
-          shipParts.push(shipment.shipToAddress.company);
-        if (shipment.shipToAddress?.city)
-          shipParts.push(shipment.shipToAddress.city);
-        if (shipment.shipToAddress?.state)
-          shipParts.push(shipment.shipToAddress.state);
-        if (shipment.specialInstructions)
-          shipParts.push(shipment.specialInstructions);
+        if (shipment.title) shipParts.push(shipment.title);
+        if (shipment.shipped) shipParts.push("shipped");
+        if (shipment.collected) shipParts.push("collected");
+        if (shipment.shipmentNotes) shipParts.push(shipment.shipmentNotes);
+
+        // Address information
+        if (shipment.address) {
+          const addr = shipment.address;
+          if (addr.organisation) shipParts.push(addr.organisation);
+          if (addr.contactName) shipParts.push(addr.contactName);
+          if (addr.streetAddress) shipParts.push(addr.streetAddress);
+          if (addr.city) shipParts.push(addr.city);
+          if (addr.administrativeArea) shipParts.push(addr.administrativeArea);
+          if (addr.administrativeAreaAbbreviation)
+            shipParts.push(addr.administrativeAreaAbbreviation);
+          if (addr.countryName) shipParts.push(addr.countryName);
+        }
+
+        // Shipping method
+        if (shipment.shipmentMethod?.label) {
+          shipParts.push(`shipping ${shipment.shipmentMethod.label}`);
+        }
+
+        // Tracking information
+        if (shipment.trackingDetails) {
+          const tracking = shipment.trackingDetails;
+          if (tracking.deliveryStatus) shipParts.push(tracking.deliveryStatus);
+          if (tracking.status) shipParts.push(tracking.status);
+          if (tracking.shippedVia) shipParts.push(`via ${tracking.shippedVia}`);
+          if (tracking.infoLine) shipParts.push(tracking.infoLine);
+        }
 
         if (shipParts.length > 0) {
           parts.push(shipParts.join(" "));
@@ -448,14 +544,51 @@ export class VectorDBService {
       }
     }
 
-    // Metadata tags and context
+    // File attachments (MEDIUM PRIORITY)
+    if (order.files) {
+      for (const file of order.files) {
+        const fileParts = [];
+        if (file.fileName) fileParts.push(`file ${file.fileName}`);
+        if (file.fileType) fileParts.push(`type ${file.fileType}`);
+        if (file.category) fileParts.push(`category ${file.category}`);
+        if (file.subcategory) fileParts.push(`subcategory ${file.subcategory}`);
+        if (file.fileStatus) fileParts.push(`status ${file.fileStatus}`);
+        if (file.createdBy?.fullName)
+          fileParts.push(`by ${file.createdBy.fullName}`);
+
+        if (fileParts.length > 0) {
+          parts.push(fileParts.join(" "));
+        }
+      }
+    }
+
+    // Tags and metadata (MEDIUM PRIORITY)
     if (order.metadata?.tags) {
       parts.push(...order.metadata.tags);
     }
-    if (order.metadata?.department)
+    if (order.metadata?.department) {
       parts.push(`department ${order.metadata.department}`);
-    if (order.metadata?.complexity)
+    }
+    if (order.metadata?.complexity) {
       parts.push(`complexity ${order.metadata.complexity}`);
+    }
+    if (order.jobTags) {
+      parts.push(...order.jobTags.map((tag: any) => tag.tag));
+    }
+
+    // Workflow indicators (LOW PRIORITY)
+    if (order.workflow?.hasJobFiles) {
+      parts.push("has files");
+    }
+    if (order.workflow?.hasProof) {
+      parts.push("has proof");
+    }
+    if (order.workflow?.hasScheduleableJobLines) {
+      parts.push("scheduleable");
+    }
+    if (order.workflow?.canPrintJobLineLabels) {
+      parts.push("can print labels");
+    }
 
     return parts.filter(Boolean).join(" ").trim();
   }

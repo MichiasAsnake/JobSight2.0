@@ -1,0 +1,414 @@
+{
+  "metadata": {
+    "collectedAt": "2025-07-05T18:58:22.388Z",
+    "baseUrl": "http://localhost:3001",
+    "totalEndpoints": 6,
+    "successfulCalls": 6,
+    "failedCalls": 0
+  },
+  "responses": [
+    {
+      "endpoint": "vector-stats",
+      "url": "/api/vector-stats",
+      "method": "GET",
+      "parameters": {},
+      "timestamp": "2025-07-05T18:58:10.173Z",
+      "response": {
+        "success": true,
+        "data": {
+          "changeTracker": {
+            "lastVectorUpdate": "2025-07-03T01:15:16.294Z",
+            "processedOrdersCount": 81,
+            "deletedOrdersCount": 0,
+            "trackedHashesCount": 81
+          },
+          "timestamp": "2025-07-05T18:58:10.171Z",
+          "message": "Vector database statistics (simplified after data-updater removal)"
+        }
+      }
+    },
+    {
+      "endpoint": "admin-health",
+      "url": "/api/admin/health",
+      "method": "GET",
+      "parameters": {},
+      "timestamp": "2025-07-05T18:58:12.416Z",
+      "response": {
+        "overall": false,
+        "components": {
+          "api": {
+            "healthy": true,
+            "responseTime": 723,
+            "endpoints": {}
+          },
+          "vectors": {
+            "healthy": true,
+            "stats": {
+              "namespaces": {},
+              "dimension": 1024,
+              "indexFullness": 0,
+              "totalRecordCount": 0
+            },
+            "changeTracker": {
+              "lastUpdate": "1970-01-01T00:00:00.000Z",
+              "processedOrders": 0,
+              "updateHistory": 0
+            }
+          },
+          "cache": {
+            "healthy": true,
+            "hitRate": 0,
+            "totalEntries": 0,
+            "totalSize": 0,
+            "averageAge": 0,
+            "performanceMetrics": {
+              "averageRetrievalTime": 0,
+              "averageStorageTime": 0,
+              "evictionRate": 0
+            }
+          },
+          "rag": {
+            "healthy": true
+          },
+          "queryRouter": {
+            "healthy": false,
+            "successRate": 0,
+            "avgResponseTime": 0,
+            "totalQueries": 0
+          }
+        },
+        "timestamp": "2025-07-05T18:58:12.406Z",
+        "responseTime": 1930
+      }
+    },
+    {
+      "endpoint": "admin-metrics",
+      "url": "/api/admin/metrics",
+      "method": "GET",
+      "parameters": {},
+      "timestamp": "2025-07-05T18:58:15.553Z",
+      "response": {
+        "totalQueries": 0,
+        "averageResponseTime": 0,
+        "successRate": 0,
+        "cacheHitRate": 0,
+        "cacheEntries": 0,
+        "cacheSize": 0,
+        "apiCalls": 3,
+        "apiSuccessRate": 1,
+        "apiAverageTime": 714.6666666666666,
+        "vectorHealth": 100,
+        "vectorEntries": 0,
+        "activeConnections": 14,
+        "memoryUsage": 117682853,
+        "timestamp": "2025-07-05T18:58:15.544Z",
+        "collectionTime": 202,
+        "overallPerformanceScore": 50,
+        "systemLoadIndicator": "medium"
+      }
+    },
+    {
+      "endpoint": "admin-logs",
+      "url": "/api/admin/logs",
+      "method": "GET",
+      "parameters": {},
+      "timestamp": "2025-07-05T18:58:18.179Z",
+      "response": {
+        "logs": [
+          {
+            "level": "info",
+            "message": "Application started successfully",
+            "component": "application",
+            "timestamp": "2025-07-05T18:58:18.164Z"
+          },
+          {
+            "level": "info",
+            "message": "System health check completed - all components healthy",
+            "timestamp": "2025-07-05T18:57:18.167Z",
+            "component": "health-monitor"
+          },
+          {
+            "level": "info",
+            "message": "Successfully fetched order data batch",
+            "timestamp": "2025-07-05T18:56:18.166Z",
+            "component": "api-client"
+          },
+          {
+            "level": "info",
+            "message": "Cache hit rate improved to 87%",
+            "timestamp": "2025-07-05T18:55:18.167Z",
+            "component": "cache"
+          },
+          {
+            "level": "warn",
+            "message": "Query router response time elevated",
+            "timestamp": "2025-07-05T18:54:18.167Z",
+            "component": "health-monitor"
+          },
+          {
+            "level": "warn",
+            "message": "API rate limit approaching threshold",
+            "timestamp": "2025-07-05T18:53:18.166Z",
+            "component": "api-client"
+          },
+          {
+            "level": "info",
+            "message": "Database connection established",
+            "component": "database",
+            "timestamp": "2025-07-05T18:53:18.164Z"
+          },
+          {
+            "level": "warn",
+            "message": "Cache eviction triggered due to memory pressure",
+            "timestamp": "2025-07-05T18:50:48.167Z",
+            "component": "cache"
+          },
+          {
+            "level": "info",
+            "message": "API connection pool initialized with 10 connections",
+            "timestamp": "2025-07-05T18:48:18.166Z",
+            "component": "api-client"
+          },
+          {
+            "level": "warn",
+            "message": "High memory usage detected",
+            "component": "system",
+            "timestamp": "2025-07-05T18:48:18.164Z"
+          },
+          {
+            "level": "info",
+            "message": "Cache optimization completed",
+            "timestamp": "2025-07-05T18:43:18.167Z",
+            "component": "cache"
+          },
+          {
+            "level": "info",
+            "message": "Cache warmed up with initial data",
+            "component": "cache",
+            "timestamp": "2025-07-05T18:43:18.164Z"
+          },
+          {
+            "level": "error",
+            "message": "Failed to connect to external API",
+            "component": "api-client",
+            "timestamp": "2025-07-05T18:38:18.164Z"
+          },
+          {
+            "level": "info",
+            "message": "Vector pipeline initialized",
+            "component": "vectors",
+            "timestamp": "2025-07-05T18:33:18.164Z"
+          },
+          {
+            "level": "warn",
+            "message": "Query timeout exceeded for complex search",
+            "component": "query-router",
+            "timestamp": "2025-07-05T18:28:18.164Z"
+          },
+          {
+            "level": "info",
+            "message": "RAG pipeline processing completed",
+            "component": "rag",
+            "timestamp": "2025-07-05T18:23:18.164Z"
+          }
+        ],
+        "summary": {
+          "total": 16,
+          "byLevel": {
+            "error": 1,
+            "warn": 5,
+            "info": 10,
+            "debug": 0
+          },
+          "byComponent": {
+            "application": 1,
+            "health-monitor": 2,
+            "api-client": 4,
+            "cache": 4,
+            "database": 1,
+            "system": 1,
+            "vectors": 1,
+            "query-router": 1,
+            "rag": 1
+          },
+          "timeRange": {
+            "oldest": "2025-07-05T18:23:18.164Z",
+            "newest": "2025-07-05T18:58:18.164Z"
+          }
+        },
+        "filters": {
+          "limit": 50,
+          "level": null,
+          "component": null,
+          "since": null
+        },
+        "timestamp": "2025-07-05T18:58:18.169Z"
+      }
+    },
+    {
+      "endpoint": "admin-config",
+      "url": "/api/admin/config",
+      "method": "GET",
+      "parameters": {},
+      "timestamp": "2025-07-05T18:58:20.215Z",
+      "response": {
+        "configuration": [
+          {
+            "key": "api.baseUrl",
+            "value": "https://intranet.decopress.com",
+            "type": "string",
+            "description": "Base URL for OMS API endpoints",
+            "category": "api",
+            "editable": false
+          },
+          {
+            "key": "api.timeout",
+            "value": "30000",
+            "type": "number",
+            "description": "API request timeout in milliseconds",
+            "category": "api",
+            "editable": true
+          },
+          {
+            "key": "api.maxRetries",
+            "value": "3",
+            "type": "number",
+            "description": "Maximum number of retry attempts for failed requests",
+            "category": "api",
+            "editable": true
+          },
+          {
+            "key": "api.rateLimitPerMinute",
+            "value": "60",
+            "type": "number",
+            "description": "Maximum API requests per minute",
+            "category": "api",
+            "editable": true
+          },
+          {
+            "key": "vector.embeddingModel",
+            "value": "text-embedding-3-small",
+            "type": "string",
+            "description": "OpenAI embedding model for vector generation",
+            "category": "vector",
+            "editable": true
+          },
+          {
+            "key": "vector.updateInterval",
+            "value": "1800000",
+            "type": "number",
+            "description": "Vector update interval in milliseconds (30 minutes)",
+            "category": "vector",
+            "editable": true
+          },
+          {
+            "key": "vector.batchSize",
+            "value": "10",
+            "type": "number",
+            "description": "Number of orders to process in each vector update batch",
+            "category": "vector",
+            "editable": true
+          },
+          {
+            "key": "cache.defaultTTL",
+            "value": "300000",
+            "type": "number",
+            "description": "Default cache TTL in milliseconds (5 minutes)",
+            "category": "cache",
+            "editable": true
+          },
+          {
+            "key": "cache.maxSize",
+            "value": "157286400",
+            "type": "number",
+            "description": "Maximum cache size in bytes (150MB)",
+            "category": "cache",
+            "editable": true
+          },
+          {
+            "key": "cache.enableIntelligentEviction",
+            "value": "true",
+            "type": "boolean",
+            "description": "Enable intelligent cache eviction based on usage patterns",
+            "category": "cache",
+            "editable": true
+          },
+          {
+            "key": "rag.maxContextLength",
+            "value": "4000",
+            "type": "number",
+            "description": "Maximum context length for RAG responses",
+            "category": "rag",
+            "editable": true
+          },
+          {
+            "key": "rag.minConfidenceThreshold",
+            "value": "0.7",
+            "type": "number",
+            "description": "Minimum confidence threshold for vector search results",
+            "category": "rag",
+            "editable": true
+          },
+          {
+            "key": "rag.maxResults",
+            "value": "10",
+            "type": "number",
+            "description": "Maximum number of search results to include in context",
+            "category": "rag",
+            "editable": true
+          },
+          {
+            "key": "general.environment",
+            "value": "development",
+            "type": "string",
+            "description": "Current environment (development/production)",
+            "category": "general",
+            "editable": false
+          },
+          {
+            "key": "general.logLevel",
+            "value": "info",
+            "type": "string",
+            "description": "Logging level (debug/info/warn/error)",
+            "category": "general",
+            "editable": true
+          },
+          {
+            "key": "general.enableHealthChecks",
+            "value": "true",
+            "type": "boolean",
+            "description": "Enable automatic health checks for all components",
+            "category": "general",
+            "editable": true
+          }
+        ],
+        "summary": {
+          "total": 16,
+          "editable": 14,
+          "readonly": 2,
+          "byCategory": {
+            "api": 4,
+            "vector": 3,
+            "cache": 3,
+            "rag": 3,
+            "general": 3
+          }
+        },
+        "lastUpdated": "2025-07-05T18:58:20.211Z"
+      }
+    },
+    {
+      "endpoint": "data-update",
+      "url": "/api/data/update",
+      "method": "GET",
+      "parameters": {},
+      "timestamp": "2025-07-05T18:58:22.387Z",
+      "response": {
+        "success": true,
+        "action": "real-time",
+        "reason": "Data is now fetched directly from API in real-time",
+        "timestamp": "2025-07-05T18:58:22.377Z"
+      }
+    }
+  ]
+}

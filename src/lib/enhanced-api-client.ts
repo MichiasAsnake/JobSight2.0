@@ -86,20 +86,105 @@ export interface APIJobLines {
 }
 
 export interface APIJobLine {
-  LineId: number;
+  // Core identification
+  ID: number;
   JobNumber: number;
-  AssetSKU: string;
+  Prgram: string; // Program/SKU/Asset code
+
+  // Basic information
   Description: string;
-  Category: string;
-  Quantity: number;
+  Garment: string; // Garment type/name
+  Comments: string; // Detailed comments
+  ProgComment: string; // Program-specific comments
+
+  // Quantities and pricing
+  Qty: number; // Requested quantity
+  ActQty: number; // Actual quantity
   UnitPrice: number;
-  TotalPrice: number;
-  Comment: string;
-  Status: string;
-  ProcessCodes: string[];
-  Materials: string[];
+
+  // Status and progress
+  Progress: number;
+  MachineNumber: string;
+  MachNum: number;
+
+  // File and asset information
+  PDFInstructions: string | null;
+  PDFId: number;
+  AssetImage: string | null;
+  AssetImagePreviewUrl: string | null;
+  AssetId: number;
   HasImage: boolean;
-  HasPDF: boolean;
+  AssetHasPDF: boolean;
+
+  // Relationships
+  ParentJobLineID: number;
+  IsParentJobline: boolean;
+  IsChildJobline: boolean;
+  IsJoblineAlone: boolean;
+  Order: number;
+
+  // Capabilities and permissions
+  IsScheduleable: boolean;
+  IsEditable: boolean;
+  CanUploadPDF: boolean;
+  CanEdit: boolean;
+  CanDelete: boolean;
+  CanUploadImage: boolean;
+  CanDuplicate: boolean;
+  CanPrintLabel: boolean;
+  CanReprintSeps: boolean;
+  CanQCComplete: boolean;
+  CanCheckSeps: boolean;
+
+  // Type classification
+  IsStock: boolean;
+  IsAsset: boolean;
+  IsOther: boolean;
+  AssetIsNew: boolean;
+
+  // Additional information
+  Gang: string;
+  GangMondayLink: string;
+  Supplier: string;
+  WorksheetId: number;
+  WorksheetType: string;
+  ExternalArtworkUrl: string | null;
+  ExternalSupplier: string | null;
+
+  // Encryption (for API calls)
+  EncrptedJobLineId: string;
+  EncrptedPrgram: string;
+
+  // Machine types available for this job line
+  JoblineTypes: Array<{
+    ID: number;
+    Machine: string;
+    isAutoAdd: boolean;
+  }>;
+
+  // Price band information (optional)
+  priceBand?: {
+    categoryCode?: string;
+    unitType?: string;
+    priceCode?: string;
+    humanName?: string;
+    filterName?: string;
+    processCode?: string;
+    categorySetupMultiplier?: number;
+    priceFormulaType?: string;
+    active?: boolean;
+  };
+
+  // Legacy fields for backward compatibility
+  LineId?: number;
+  AssetSKU?: string;
+  Category?: string;
+  TotalPrice?: number;
+  Comment?: string;
+  Status?: string;
+  ProcessCodes?: string[];
+  Materials?: string[];
+  HasPDF?: boolean;
 }
 
 export interface APIJobShipments {
@@ -277,6 +362,21 @@ export interface APIError {
   Data?: unknown;
 }
 
+export interface APIJobLinesCostDetails {
+  isSuccess: boolean;
+  isError: boolean;
+  data: {
+    jobLinesSubTotal: number;
+    jobLinesTaxTotal: number;
+    jobLinesTotalCost: number;
+    jobLinesSubTotalFormattedText: string;
+    jobLinesTaxTotalFormattedText: string;
+    jobLinesTotalCostFormattedText: string;
+  };
+  responseText?: string;
+  error?: APIError;
+}
+
 // ===== REQUEST INTERFACES =====
 
 export interface JobListFilters {
@@ -350,9 +450,13 @@ export class EnhancedOMSAPIClient {
     averageResponseTime: 0,
   };
 
+  // Cache for category unit mappings
+  private categoryUnitCache: Map<string, number | any[]> | null = null;
+  private categoryUnitCacheInitializing: Promise<void> | null = null;
+
   constructor(config: Partial<APIClientConfig> = {}) {
     this.config = {
-      baseUrl: "https://intranet.decopress.com",
+      baseUrl: process.env.OMS_API_BASE_URL || "https://intranet.decopress.com",
       defaultTimeout: 30000,
       maxRetries: 3,
       retryDelay: 1000,
@@ -368,8 +472,15 @@ export class EnhancedOMSAPIClient {
     this.lastRateLimitReset = Date.now();
 
     // Auto-configure authentication from environment
-    if (process.env.OMS_AUTH_COOKIE) {
-      this.setAuthCookies(process.env.OMS_AUTH_COOKIE);
+    const authCookies =
+      process.env.OMS_AUTH_COOKIES ||
+      process.env.OMS_AUTH_COOKIE ||
+      process.env.AUTH_COOKIES ||
+      process.env.AUTH_COOKIE ||
+      "";
+
+    if (authCookies) {
+      this.setAuthCookies(authCookies);
       console.log("🔐 Authentication cookie loaded from environment");
     }
 
@@ -563,7 +674,33 @@ export class EnhancedOMSAPIClient {
             throw new Error(`HTTP ${response.status}: ${response.statusText}`);
           }
 
-          const data = (await response.json()) as T;
+          // Get response text first to check if it's HTML
+          const responseText = await response.text();
+
+          // Check if response is HTML (likely an error page)
+          if (
+            responseText.includes("<!DOCTYPE") ||
+            responseText.includes("<html")
+          ) {
+            this.stats.totalErrors++;
+            throw new Error(
+              `Authentication failed - received HTML response instead of JSON. Session may have expired.`
+            );
+          }
+
+          // Try to parse as JSON
+          let data: T;
+          try {
+            data = JSON.parse(responseText) as T;
+          } catch (parseError) {
+            this.stats.totalErrors++;
+            throw new Error(
+              `Failed to parse JSON response: ${parseError}. Response preview: ${responseText.substring(
+                0,
+                200
+              )}`
+            );
+          }
 
           // Cache successful responses
           if (!requestOptions.skipCache) {
@@ -603,10 +740,11 @@ export class EnhancedOMSAPIClient {
       "tagged-user": "@laser",
       "app-timezone": "America/Los_Angeles",
       location: "-1",
-      "job-status-codes": "approved,ontime,runninglate,problem",
+      "job-status-codes":
+        "awaitingproof,changerequested,proofed,approved,ontime,runninglate,problem,completed,dispatched",
       "sort-by": "dateduefactory",
       "sort-direction": "asc",
-      "job-status": "5,6,7,8",
+      "job-status": "2,18,3,4,11,5,6,7,8,9,10",
       "due-date": "1,2,3",
       "stock-status": "0,1,2",
       "process-filter":
@@ -728,17 +866,157 @@ export class EnhancedOMSAPIClient {
     });
   }
 
-  async getJobLinesCostDetails(jobNumber: string): Promise<unknown> {
+  async getJobLinesCostDetails(
+    jobNumber: string
+  ): Promise<APIJobLinesCostDetails> {
     const params = new URLSearchParams({
       jobNumber,
       bit: "get-joblines-cost-details",
     });
 
-    return this.makeRequest(`/Jobs/ajax/JobHandler.ashx`, {
-      method: "POST",
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      body: params,
-    });
+    return this.makeRequest<APIJobLinesCostDetails>(
+      `/Jobs/ajax/JobHandler.ashx`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: params,
+      }
+    );
+  }
+
+  async getJobByNumber(jobNumber: string): Promise<APIJobListResponse> {
+    const filters: JobListFilters = {
+      "text-filter": jobNumber, // Filter by job number
+      "page-size": "1", // We only need one result
+      "requested-page": "1",
+    };
+
+    return this.getJobList(filters);
+  }
+
+  /**
+   * Get job details with optional additional data
+   * This allows us to minimize API calls by only fetching what's needed
+   */
+  async getJobDetailsOptimized(
+    jobNumber: string,
+    options: {
+      includeHistory?: boolean;
+      includeShipments?: boolean;
+      includeFiles?: boolean;
+    } = {}
+  ): Promise<{
+    job: APIJob | null;
+    lines: APIJobLine[];
+    history: APIJobHistory["data"] | null;
+    shipments: APIJobShipment[];
+    files: APIJobFile[];
+  }> {
+    const startTime = Date.now();
+    console.log(`📡 Fetching optimized job details for ${jobNumber}...`);
+
+    try {
+      // Always fetch job info and line items (essential data)
+      const promises: Promise<any>[] = [
+        this.getJobByNumber(jobNumber),
+        this.getJobLines(jobNumber),
+      ];
+
+      // Only fetch additional data if requested
+      if (options.includeHistory) {
+        promises.push(this.getJobHistory(jobNumber));
+      }
+      if (options.includeShipments) {
+        promises.push(this.getJobShipments(jobNumber));
+      }
+      if (options.includeFiles) {
+        promises.push(this.getJobFiles(jobNumber));
+      }
+
+      const responses = await Promise.allSettled(promises);
+      const [jobResponse, linesResponse, ...additionalResponses] = responses;
+
+      // Extract job data from responses
+      let job: APIJob | null = null;
+      let lines: APIJobLine[] = [];
+      let history: APIJobHistory["data"] | null = null;
+      let shipments: APIJobShipment[] = [];
+      let files: APIJobFile[] = [];
+
+      // Process job response
+      if (
+        jobResponse.status === "fulfilled" &&
+        jobResponse.value.isSuccess &&
+        jobResponse.value.data.Entities.length > 0
+      ) {
+        job = jobResponse.value.data.Entities[0];
+      }
+
+      // Process lines response
+      if (
+        linesResponse.status === "fulfilled" &&
+        linesResponse.value.isSuccess
+      ) {
+        lines = linesResponse.value.data;
+      }
+
+      // Process additional responses based on what was requested
+      let responseIndex = 0;
+      if (options.includeHistory) {
+        const historyResponse = additionalResponses[responseIndex++];
+        if (
+          historyResponse.status === "fulfilled" &&
+          historyResponse.value.isSuccess
+        ) {
+          history = historyResponse.value.data;
+        }
+      }
+
+      if (options.includeShipments) {
+        const shipmentsResponse = additionalResponses[responseIndex++];
+        if (
+          shipmentsResponse.status === "fulfilled" &&
+          shipmentsResponse.value.isSuccess
+        ) {
+          shipments = shipmentsResponse.value.data.JobShipments;
+        }
+      }
+
+      if (options.includeFiles) {
+        const filesResponse = additionalResponses[responseIndex++];
+        if (
+          filesResponse.status === "fulfilled" &&
+          filesResponse.value.isSuccess
+        ) {
+          files = filesResponse.value.Aux4.Entities;
+        }
+      }
+
+      const duration = Date.now() - startTime;
+      const apiCalls =
+        2 +
+        (options.includeHistory ? 1 : 0) +
+        (options.includeShipments ? 1 : 0) +
+        (options.includeFiles ? 1 : 0);
+      console.log(
+        `✅ Optimized job details fetched for ${jobNumber} in ${duration}ms (${apiCalls} API calls)`
+      );
+
+      return {
+        job,
+        lines,
+        history,
+        shipments,
+        files,
+      };
+    } catch (error) {
+      const duration = Date.now() - startTime;
+      console.error(
+        `❌ Failed to fetch optimized job details for ${jobNumber} after ${duration}ms:`,
+        error
+      );
+      throw error;
+    }
   }
 
   // ===== SECONDARY API ENDPOINTS =====
@@ -790,136 +1068,765 @@ export class EnhancedOMSAPIClient {
     });
   }
 
+  /**
+   * Get the appropriate category unit ID for a given program and quantity
+   * This maps programs to their correct category unit IDs for pricing based on actual API data
+   */
+  public async getCategoryUnitIdForProgram(
+    program: string,
+    quantity?: number
+  ): Promise<number> {
+    // Initialize cache if needed
+    if (!this.categoryUnitCache) {
+      await this.initializeCategoryUnitCache();
+    }
+
+    // Double-check cache is available after initialization
+    if (!this.categoryUnitCache) {
+      console.warn(
+        "⚠️ [CATEGORY-UNIT] Cache initialization failed, using fallback"
+      );
+      return 1; // Fallback category unit ID
+    }
+
+    console.log(
+      `🔍 [CATEGORY-UNIT] Looking for program: "${program}" (qty: ${quantity})`
+    );
+
+    // Try to find a direct match first
+    if (this.categoryUnitCache.has(program)) {
+      const cached = this.categoryUnitCache.get(program)!;
+      if (typeof cached === "number") {
+        console.log(
+          `✅ [CATEGORY-UNIT] Found direct cache match for "${program}": ID ${cached}`
+        );
+        return cached;
+      }
+    }
+
+    console.log(
+      `🔍 [CATEGORY-UNIT] No direct cache match for "${program}", searching full data...`
+    );
+
+    // If we have the full category units data, use it to find the best match
+    if (this.categoryUnitCache.has("__full_data__")) {
+      const fullData = this.categoryUnitCache.get("__full_data__") as any[];
+      const programUpper = program.toUpperCase();
+
+      console.log(
+        `🔍 [CATEGORY-UNIT] Searching ${fullData.length} units for program "${program}"`
+      );
+
+      // Strategy 1: Try exact match on CategoryCode
+      let matchingUnits = fullData.filter(
+        (unit) =>
+          unit.CategoryCode && unit.CategoryCode.toUpperCase() === programUpper
+      );
+
+      console.log(
+        `🔍 [CATEGORY-UNIT] Strategy 1 - Exact match: Found ${matchingUnits.length} matches for "${program}"`
+      );
+
+      if (matchingUnits.length > 0) {
+        // If we have quantity, find the best matching unit based on quantity ranges
+        if (quantity) {
+          const bestMatch = this.findBestQuantityMatch(matchingUnits, quantity);
+          if (bestMatch) {
+            console.log(
+              `🔍 [PRICE-BAND] Found exact quantity match for "${program}" (qty: ${quantity}): ID ${bestMatch.Id} (${bestMatch.UnitType})`
+            );
+            return bestMatch.Id;
+          }
+        }
+
+        // Otherwise, use the first (lowest rank) unit
+        const firstUnit = matchingUnits.sort((a, b) => a.Rank - b.Rank)[0];
+        console.log(
+          `🔍 [PRICE-BAND] Using first available unit for "${program}": ID ${firstUnit.Id} (${firstUnit.UnitType})`
+        );
+        return firstUnit.Id;
+      }
+
+      // Strategy 2: Try base program matching
+      const baseProgram = this.extractBaseProgram(program);
+      console.log(
+        `🔍 [CATEGORY-UNIT] Strategy 2 - Base program "${baseProgram}" for "${program}"`
+      );
+
+      matchingUnits = fullData.filter(
+        (unit) =>
+          unit.CategoryCode &&
+          unit.CategoryCode.toUpperCase().includes(baseProgram.toUpperCase())
+      );
+
+      console.log(
+        `🔍 [CATEGORY-UNIT] Strategy 2 - Base program match: Found ${matchingUnits.length} matches for "${baseProgram}"`
+      );
+
+      if (matchingUnits.length > 0) {
+        const firstMatch = matchingUnits.sort((a, b) => a.Rank - b.Rank)[0];
+        console.log(
+          `🔍 [PRICE-BAND] Found base program match for "${program}": ID ${firstMatch.Id} (${firstMatch.CategoryCode})`
+        );
+        return firstMatch.Id;
+      }
+
+      // Strategy 3: Try process code matching
+      const processCode = this.extractProcessCode(program);
+      console.log(
+        `🔍 [CATEGORY-UNIT] Strategy 3 - Process code "${processCode}" for "${program}"`
+      );
+
+      matchingUnits = fullData.filter(
+        (unit) =>
+          unit.ProcessCode &&
+          unit.ProcessCode.toUpperCase() === processCode.toUpperCase()
+      );
+
+      console.log(
+        `🔍 [CATEGORY-UNIT] Strategy 3 - Process code match: Found ${matchingUnits.length} matches for "${processCode}"`
+      );
+
+      if (matchingUnits.length > 0) {
+        const firstMatch = matchingUnits.sort((a, b) => a.Rank - b.Rank)[0];
+        console.log(
+          `🔍 [PRICE-BAND] Found process code match for "${program}": ID ${firstMatch.Id} (${firstMatch.ProcessCode})`
+        );
+        return firstMatch.Id;
+      }
+    }
+
+    // Strategy 4: Try partial matches on category code
+    if (this.categoryUnitCache.has("__full_data__")) {
+      const fullData = this.categoryUnitCache.get("__full_data__") as any[];
+      const programUpper = program.toUpperCase();
+
+      const partialMatches = fullData.filter(
+        (unit) =>
+          unit.CategoryCode &&
+          unit.CategoryCode.toUpperCase().includes(programUpper)
+      );
+
+      console.log(
+        `🔍 [CATEGORY-UNIT] Strategy 4 - Partial match: Found ${partialMatches.length} matches for "${program}"`
+      );
+
+      if (partialMatches.length > 0) {
+        const firstMatch = partialMatches.sort((a, b) => a.Rank - b.Rank)[0];
+        console.log(
+          `🔍 [PRICE-BAND] Found partial match for "${program}": ID ${firstMatch.Id} (${firstMatch.CategoryCode})`
+        );
+        return firstMatch.Id;
+      }
+    }
+
+    // Last resort: find any active unit with the lowest rank
+    if (this.categoryUnitCache.has("__full_data__")) {
+      const fullData = this.categoryUnitCache.get("__full_data__") as any[];
+      const activeUnits = fullData.filter((unit) => unit.Active === true);
+
+      if (activeUnits.length > 0) {
+        const lowestRankUnit = activeUnits.sort((a, b) => a.Rank - b.Rank)[0];
+        console.warn(
+          `⚠️ [PRICE-BAND] No specific mapping found for program "${program}", using lowest rank active unit: ID ${lowestRankUnit.Id} (${lowestRankUnit.CategoryCode})`
+        );
+        return lowestRankUnit.Id;
+      }
+    }
+
+    // If we have no data at all, throw an error
+    console.error(
+      `❌ [CATEGORY-UNIT] No mapping found for program "${program}"`
+    );
+    console.error(
+      `❌ [CATEGORY-UNIT] Available category codes:`,
+      this.categoryUnitCache.has("__full_data__")
+        ? Array.from(
+            new Set(
+              (this.categoryUnitCache.get("__full_data__") as any[])
+                .map((u) => u.CategoryCode)
+                .filter(Boolean)
+            )
+          ).slice(0, 10)
+        : "No full data available"
+    );
+    throw new Error(
+      `No category unit mapping found for program "${program}" and no fallback data available`
+    );
+  }
+
+  /**
+   * Get the appropriate price code for a given program
+   * This constructs the price code based on the category unit data
+   */
+  public async getPriceCodeForProgram(program: string): Promise<string> {
+    // Initialize cache if needed
+    if (!this.categoryUnitCache) {
+      await this.initializeCategoryUnitCache();
+    }
+
+    // Double-check cache is available after initialization
+    if (!this.categoryUnitCache) {
+      console.warn(
+        "⚠️ [PRICE-CODE] Cache initialization failed, using fallback"
+      );
+      return `${program}:${program}`; // Fallback price code
+    }
+
+    // If we have full data, try to find the price code
+    if (this.categoryUnitCache.has("__full_data__")) {
+      const fullData = this.categoryUnitCache.get("__full_data__") as any[];
+      const programUpper = program.toUpperCase();
+
+      // Find the first unit for this program
+      const matchingUnit = fullData.find(
+        (unit) =>
+          unit.CategoryCode && unit.CategoryCode.toUpperCase() === programUpper
+      );
+
+      if (matchingUnit && matchingUnit.PriceCode) {
+        return matchingUnit.PriceCode;
+      }
+    }
+
+    // Fallback: construct a basic price code
+    return `${program}:${program}`;
+  }
+
+  /**
+   * Get the price tier for a given program based on category unit data
+   * This determines the appropriate pricing tier dynamically
+   */
+  public async getPriceTierForProgram(program: string): Promise<string> {
+    try {
+      // Ensure category unit cache is initialized
+      if (!this.categoryUnitCache) {
+        await this.initializeCategoryUnitCache();
+      }
+
+      // Double-check cache is available
+      if (!this.categoryUnitCache) {
+        console.warn(
+          "⚠️ [PRICE-TIER] Category unit cache initialization failed, using fallback"
+        );
+        return "F"; // Fallback
+      }
+
+      // Get the full category unit data
+      const fullData = this.categoryUnitCache.get("__full_data__") as any[];
+      if (!fullData) {
+        console.warn(
+          "⚠️ [PRICE-TIER] No category unit data available, using fallback"
+        );
+        return "F"; // Fallback
+      }
+
+      // Find category units that match this program
+      const matchingUnits = fullData.filter(
+        (unit: any) =>
+          unit.CategoryCode === program ||
+          unit.HumanName?.toLowerCase().includes(program.toLowerCase())
+      );
+
+      if (matchingUnits.length === 0) {
+        console.warn(
+          `⚠️ [PRICE-TIER] No matching units found for program "${program}", using fallback`
+        );
+        return "F"; // Fallback
+      }
+
+      // Sort by rank (lower rank = higher priority)
+      const sortedUnits = matchingUnits.sort(
+        (a: any, b: any) => a.Rank - b.Rank
+      );
+      const bestUnit = sortedUnits[0];
+
+      // Extract price tier from the unit data
+      // The price tier is typically in the PriceCode field or can be derived from the unit type
+      if (bestUnit.PriceCode) {
+        // Try to extract tier from price code (e.g., "JACKET:F" -> "F")
+        const tierMatch = bestUnit.PriceCode.match(/:([A-Z])$/);
+        if (tierMatch) {
+          console.log(
+            `✅ [PRICE-TIER] Found tier "${tierMatch[1]}" for program "${program}" from price code`
+          );
+          return tierMatch[1];
+        }
+      }
+
+      // If no price code, try to determine from unit type or other fields
+      if (bestUnit.UnitType) {
+        // Look for tier indicators in unit type
+        const tierMatch = bestUnit.UnitType.match(/([A-Z])\s*$/);
+        if (tierMatch) {
+          console.log(
+            `✅ [PRICE-TIER] Found tier "${tierMatch[1]}" for program "${program}" from unit type`
+          );
+          return tierMatch[1];
+        }
+      }
+
+      // If still no match, use the first unit's default tier or fallback
+      console.log(
+        `ℹ️ [PRICE-TIER] Using fallback tier "F" for program "${program}"`
+      );
+      return "F";
+    } catch (error) {
+      console.error(
+        `❌ [PRICE-TIER] Error determining price tier for program "${program}":`,
+        error
+      );
+      return "F"; // Fallback
+    }
+  }
+
+  /**
+   * Extract the base program type from a program code
+   * e.g., "HW13669" -> "HW", "EMB_BORDER_L" -> "EMB"
+   */
+  private extractBaseProgram(program: string): string {
+    // Remove numbers and special characters, keep only letters
+    const base = program.replace(/[0-9_]/g, "").toUpperCase();
+
+    // Common mappings
+    if (base.includes("EMB") || base.includes("EMBROIDERY")) return "EM";
+    if (base.includes("HW") || base.includes("HEAT")) return "HW";
+    if (base.includes("CR") || base.includes("SCREEN")) return "CR";
+    if (base.includes("DF") || base.includes("DIGITAL")) return "DF";
+    if (base.includes("DS") || base.includes("SUPPLIED")) return "DS";
+
+    return base;
+  }
+
+  /**
+   * Extract the process code from a program
+   * e.g., "HW13669" -> "HW", "EMB_BORDER_L" -> "EM"
+   */
+  private extractProcessCode(program: string): string {
+    const base = this.extractBaseProgram(program);
+
+    // Map base programs to process codes
+    switch (base) {
+      case "EMB":
+        return "EM";
+      case "HW":
+        return "HW";
+      case "CR":
+        return "CR";
+      case "DF":
+        return "DF";
+      case "DS":
+        return "DS";
+      default:
+        return base;
+    }
+  }
+
+  /**
+   * Find the best matching category unit based on quantity ranges
+   */
+  private findBestQuantityMatch(units: any[], quantity: number): any | null {
+    // Sort units by rank (lower rank = higher priority)
+    const sortedUnits = units.sort((a, b) => a.Rank - b.Rank);
+
+    for (const unit of sortedUnits) {
+      const unitType = unit.UnitType;
+
+      // Parse quantity ranges like "1 to 6000", "6001 to 7000", etc.
+      const rangeMatch = unitType.match(/(\d+)\s+to\s+(\d+)/);
+      if (rangeMatch) {
+        const minQty = parseInt(rangeMatch[1]);
+        const maxQty = parseInt(rangeMatch[2]);
+
+        if (quantity >= minQty && quantity <= maxQty) {
+          return unit;
+        }
+      }
+
+      // Handle single quantity ranges like "1 to 6000"
+      if (unitType === "1 to 6000" && quantity <= 6000) {
+        return unit;
+      }
+    }
+
+    // If no exact match, return the first unit (lowest rank)
+    return sortedUnits[0] || null;
+  }
+
+  /**
+   * Initialize the category unit cache by fetching all category units
+   * Handles concurrent access to prevent multiple simultaneous initializations
+   */
+  private async initializeCategoryUnitCache(): Promise<void> {
+    // If already initializing, wait for that to complete
+    if (this.categoryUnitCacheInitializing) {
+      console.log(
+        "⏳ [PRICE-BAND] Waiting for existing cache initialization..."
+      );
+      await this.categoryUnitCacheInitializing;
+      return;
+    }
+
+    // If already initialized, return immediately
+    if (this.categoryUnitCache) {
+      return;
+    }
+
+    // Start initialization and store the promise
+    this.categoryUnitCacheInitializing = this._initializeCategoryUnitCache();
+
+    try {
+      await this.categoryUnitCacheInitializing;
+    } catch (error) {
+      console.error("❌ [PRICE-BAND] Cache initialization failed:", error);
+      // Reset the cache to null so we can retry
+      this.categoryUnitCache = null;
+      throw error;
+    } finally {
+      // Clear the initialization promise
+      this.categoryUnitCacheInitializing = null;
+    }
+  }
+
+  /**
+   * Internal method to actually perform the cache initialization
+   */
+  private async _initializeCategoryUnitCache(): Promise<void> {
+    try {
+      console.log("🔄 [PRICE-BAND] Initializing category unit cache...");
+      const response = await this.getAllCategoryUnits();
+
+      if (response.isSuccess && response.data) {
+        // Create a new Map instance
+        const newCache = new Map<string, number | any[]>();
+
+        // Store the full data for dynamic lookups
+        newCache.set("__full_data__", response.data);
+
+        // Debug: Log some sample data to understand the structure
+        const sampleUnits = (response.data as any[]).slice(0, 3);
+        console.log(
+          "🔍 [PRICE-BAND] Sample category units:",
+          sampleUnits.map((u) => ({
+            id: u.Id,
+            categoryCode: u.CategoryCode,
+            humanName: u.HumanName,
+            unitType: u.UnitType,
+            priceCode: u.PriceCode,
+            rank: u.Rank,
+            active: u.Active,
+          }))
+        );
+
+        // Create quick lookup mappings from the actual data
+        const quickLookups = new Map<string, number>();
+
+        // Find the first (lowest rank) unit for each unique category code
+        const categoryGroups = new Map<string, any[]>();
+        for (const unit of response.data as any[]) {
+          if (unit.CategoryCode) {
+            if (!categoryGroups.has(unit.CategoryCode)) {
+              categoryGroups.set(unit.CategoryCode, []);
+            }
+            categoryGroups.get(unit.CategoryCode)!.push(unit);
+          }
+        }
+
+        // Add the first unit for each category code as a quick lookup
+        for (const [categoryCode, units] of categoryGroups) {
+          const firstUnit = units.sort((a: any, b: any) => a.Rank - b.Rank)[0];
+          quickLookups.set(categoryCode, firstUnit.Id);
+        }
+
+        // Add quick lookup entries
+        for (const [categoryCode, id] of quickLookups) {
+          newCache.set(categoryCode, id);
+        }
+
+        // Only assign the cache after it's fully populated
+        this.categoryUnitCache = newCache;
+
+        console.log(
+          `✅ [PRICE-BAND] Category unit cache initialized with ${response.data.length} units, ${categoryGroups.size} unique categories`
+        );
+
+        // Debug: Log some mappings
+        const sampleMappings = Array.from(quickLookups.entries()).slice(0, 5);
+        console.log(
+          "🔍 [PRICE-BAND] Sample category mappings:",
+          sampleMappings
+        );
+      } else {
+        console.warn(
+          "⚠️ [PRICE-BAND] Failed to initialize category unit cache, using fallback mappings"
+        );
+        this.categoryUnitCache = new Map();
+      }
+    } catch (error) {
+      console.error(
+        "❌ [PRICE-BAND] Error initializing category unit cache:",
+        error
+      );
+      // Don't set an empty cache, let it remain null so we can retry
+      throw error;
+    }
+  }
+
   // ===== BATCH OPERATIONS =====
 
-  async getJobDetails(jobNumber: string): Promise<{
+  async getJobDetails(
+    jobNumber: string,
+    options: {
+      includePriceBands?: boolean;
+      includeHistory?: boolean;
+      includeShipments?: boolean;
+      includeFiles?: boolean;
+    } = {}
+  ): Promise<{
     job: APIJob | null;
     lines: APIJobLine[];
     history: APIJobHistory["data"] | null;
     shipments: APIJobShipment[];
     files: APIJobFile[];
   }> {
-    console.log(`📊 Fetching complete job details for: ${jobNumber}`);
+    const startTime = Date.now();
+    console.log(`📡 Fetching job details for ${jobNumber}...`);
 
     try {
-      // Get job from list first
-      const jobListResponse = await this.getJobList({
-        "text-filter": jobNumber,
-      });
-      const job =
-        jobListResponse.data.Entities.find(
-          (j) => j.JobNumber.toString() === jobNumber
-        ) || null;
+      // For most queries, we only need job info and line items with pricing
+      // Only fetch additional data if specifically requested
+      const [jobResponse, linesResponse] = await Promise.allSettled([
+        this.getJobByNumber(jobNumber),
+        this.getJobLines(jobNumber),
+      ]);
 
-      if (!job) {
-        console.warn(`⚠️ Job ${jobNumber} not found in job list`);
-        return {
-          job: null,
-          lines: [],
-          history: null,
-          shipments: [],
-          files: [],
-        };
+      // Extract job data from responses
+      let job: APIJob | null = null;
+      let lines: APIJobLine[] = [];
+      let history: APIJobHistory["data"] | null = null;
+      let shipments: APIJobShipment[] = [];
+      let files: APIJobFile[] = [];
+
+      // Process job response
+      if (
+        jobResponse.status === "fulfilled" &&
+        jobResponse.value.isSuccess &&
+        jobResponse.value.data.Entities.length > 0
+      ) {
+        job = jobResponse.value.data.Entities[0];
       }
 
-      // Fetch all related data in parallel
-      const [linesResponse, historyResponse, shipmentsResponse, filesResponse] =
-        await Promise.all([
-          this.getJobLines(jobNumber, job.CustomerId.toString()).catch(
-            (err) => {
-              console.warn(
-                `⚠️ Failed to fetch job lines for ${jobNumber}:`,
-                err
+      // Process lines response
+      if (
+        linesResponse.status === "fulfilled" &&
+        linesResponse.value.isSuccess
+      ) {
+        lines = linesResponse.value.data;
+
+        // Optionally fetch price bands for each line item
+        if (options.includePriceBands && lines.length > 0) {
+          console.log(
+            `💰 Fetching price bands for ${lines.length} line items...`
+          );
+
+          // Fetch price bands in parallel for all line items
+          const priceBandPromises = lines.map(async (line) => {
+            try {
+              console.log(`🔍 [PRICE-BAND] Processing line ${line.ID}:`, {
+                program: line.Prgram,
+                quantity: line.Qty,
+                description: line.Description,
+                garment: line.Garment,
+              });
+
+              // Get the correct category unit ID for this program and quantity
+              const categoryUnitId = await this.getCategoryUnitIdForProgram(
+                line.Prgram,
+                line.Qty
               );
-              return {
-                isSuccess: false,
-                isError: true,
-                data: [],
-                error: {
-                  Message: err.message || "Failed to fetch job lines",
-                  ClassName: "APIError",
-                },
-              } as APIJobLines;
-            }
-          ),
-          this.getJobHistory(jobNumber).catch((err) => {
-            console.warn(
-              `⚠️ Failed to fetch job history for ${jobNumber}:`,
-              err
-            );
-            return {
-              isSuccess: false,
-              isError: true,
-              data: {
-                MasterStatus: { Id: 0, Status: "Unknown" },
-                StockStatus: { Id: 0, Status: "Unknown" },
-                Location: { Id: 0, Code: "", Name: "" },
-                StatusFormat: "",
-                StatusLineHtml: "",
-                StatusLineText: "",
-              },
-              error: {
-                Message: err.message || "Failed to fetch job history",
-                ClassName: "APIError",
-              },
-            } as APIJobHistory;
-          }),
-          this.getJobShipments(jobNumber, job.CustomerId.toString()).catch(
-            (err) => {
-              console.warn(
-                `⚠️ Failed to fetch job shipments for ${jobNumber}:`,
-                err
+              const priceTier = await this.getPriceTierForProgram(line.Prgram);
+              const priceCode = await this.getPriceCodeForProgram(line.Prgram);
+
+              console.log(`🔍 [PRICE-BAND] Fetching for line ${line.ID}:`, {
+                categoryUnitId,
+                priceTier,
+                priceCode,
+                program: line.Prgram,
+                assetId: line.AssetId,
+              });
+
+              const priceBand = (await this.getPriceQuantityBands(
+                categoryUnitId.toString(),
+                priceTier,
+                priceCode
+              )) as any; // Type assertion for now since the response type is unknown
+
+              console.log(
+                `📡 [PRICE-BAND] Raw response for line ${line.ID}:`,
+                priceBand
               );
+
+              const transformedPriceBand = {
+                categoryCode: priceBand?.CategoryCode,
+                unitType: priceBand?.UnitType,
+                priceCode: priceBand?.PriceCode,
+                humanName: priceBand?.HumanName,
+                filterName: priceBand?.FilterName,
+                processCode: priceBand?.ProcessCode,
+                categorySetupMultiplier: priceBand?.CategorySetupMultiplier,
+                priceFormulaType: priceBand?.PriceFormulaType,
+                active: priceBand?.Active,
+              };
+
+              console.log(
+                `✅ [PRICE-BAND] Transformed for line ${line.ID}:`,
+                transformedPriceBand
+              );
+
               return {
-                isSuccess: false,
-                isError: true,
-                data: { JobShipments: [] },
-                error: {
-                  Message: err.message || "Failed to fetch job shipments",
-                  ClassName: "APIError",
-                },
-              } as APIJobShipments;
+                lineId: line.ID,
+                priceBand: transformedPriceBand,
+              };
+            } catch (error) {
+              console.warn(
+                `⚠️ Failed to fetch price band for line ${line.ID}:`,
+                error
+              );
+              return { lineId: line.ID, priceBand: null };
             }
-          ),
-          this.getJobFiles(jobNumber).catch((err) => {
-            console.warn(`⚠️ Failed to fetch job files for ${jobNumber}:`, err);
-            return {
-              isSuccess: false,
-              isError: true,
-              data: [],
-              Aux4: {
-                PageSize: 0,
-                ReturnedResults: 0,
-                TotalResults: 0,
-                TotalPages: 0,
-                CurrentPage: 1,
-                HasNext: false,
-                HasPrevious: false,
-                Entities: [],
-              },
-              error: {
-                Message: err.message || "Failed to fetch job files",
-                ClassName: "APIError",
-              },
-            } as APIJobFiles;
-          }),
-        ]);
+          });
+
+          const priceBandResults = await Promise.allSettled(priceBandPromises);
+
+          // Attach price band data to line items
+          priceBandResults.forEach((result, index) => {
+            if (result.status === "fulfilled" && result.value.priceBand) {
+              lines[index] = {
+                ...lines[index],
+                priceBand: result.value.priceBand,
+              };
+            }
+          });
+
+          console.log(`✅ Price bands fetched for ${lines.length} line items`);
+        }
+      }
+
+      // For now, we'll skip history, shipments, and files unless specifically needed
+      // This reduces API calls from 5 to 2 for most queries
+      // TODO: Add optional parameters to fetch additional data when needed
+
+      const duration = Date.now() - startTime;
+      console.log(
+        `✅ Job details fetched for ${jobNumber} in ${duration}ms (lines: ${lines.length}, shipments: ${shipments.length}, files: ${files.length})`
+      );
 
       return {
         job,
-        lines: linesResponse.data || [],
-        history: historyResponse.isSuccess ? historyResponse.data : null,
-        shipments: shipmentsResponse.data?.JobShipments || [],
-        files: filesResponse.Aux4?.Entities || [],
+        lines,
+        history,
+        shipments,
+        files,
       };
     } catch (error) {
-      console.error(`❌ Failed to fetch job details for ${jobNumber}:`, error);
+      const duration = Date.now() - startTime;
+      console.error(
+        `❌ Failed to fetch job details for ${jobNumber} after ${duration}ms:`,
+        error
+      );
       throw error;
     }
   }
 
+  /**
+   * Batch get job details for multiple jobs to reduce API calls
+   */
+  async getJobDetailsBatch(jobNumbers: string[]): Promise<
+    Map<
+      string,
+      {
+        job: APIJob | null;
+        lines: APIJobLine[];
+        history: APIJobHistory["data"] | null;
+        shipments: APIJobShipment[];
+        files: APIJobFile[];
+      }
+    >
+  > {
+    const startTime = Date.now();
+    console.log(
+      `📡 Batch fetching job details for ${jobNumbers.length} jobs...`
+    );
+
+    const results = new Map<
+      string,
+      {
+        job: APIJob | null;
+        lines: APIJobLine[];
+        history: APIJobHistory["data"] | null;
+        shipments: APIJobShipment[];
+        files: APIJobFile[];
+      }
+    >();
+
+    // Process in smaller batches to avoid overwhelming the API
+    const batchSize = 5;
+    for (let i = 0; i < jobNumbers.length; i += batchSize) {
+      const batch = jobNumbers.slice(i, i + batchSize);
+      console.log(
+        `📦 Processing batch ${Math.floor(i / batchSize) + 1}/${Math.ceil(
+          jobNumbers.length / batchSize
+        )}`
+      );
+
+      // Process batch in parallel with rate limiting
+      const batchPromises = batch.map(async (jobNumber) => {
+        try {
+          const details = await this.getJobDetails(jobNumber);
+          return { jobNumber, details };
+        } catch (error) {
+          console.error(
+            `❌ Failed to fetch details for job ${jobNumber}:`,
+            error
+          );
+          return {
+            jobNumber,
+            details: {
+              job: null,
+              lines: [],
+              history: null,
+              shipments: [],
+              files: [],
+            },
+          };
+        }
+      });
+
+      const batchResults = await Promise.all(batchPromises);
+
+      // Add results to map
+      for (const { jobNumber, details } of batchResults) {
+        results.set(jobNumber, details);
+      }
+
+      // Add delay between batches to respect rate limits
+      if (i + batchSize < jobNumbers.length) {
+        await new Promise((resolve) => setTimeout(resolve, 1000)); // 1 second delay
+      }
+    }
+
+    const duration = Date.now() - startTime;
+    console.log(
+      `✅ Batch job details completed in ${duration}ms for ${results.size} jobs`
+    );
+
+    return results;
+  }
+
   async getAllActiveJobs(): Promise<APIJob[]> {
-    console.log("📊 Fetching all active jobs with pagination...");
+    console.log(
+      "📊 Fetching all active jobs with comprehensive filters and pagination..."
+    );
 
     const allJobs: APIJob[] = [];
     let currentPage = 1;
@@ -929,7 +1836,7 @@ export class EnhancedOMSAPIClient {
       try {
         const response = await this.getJobList({
           "requested-page": currentPage.toString(),
-          "page-size": "200",
+          "page-size": "200", // Ensure we get maximum jobs per page
         });
 
         if (response.isSuccess && response.data.Entities) {
@@ -940,6 +1847,11 @@ export class EnhancedOMSAPIClient {
 
           hasMore = response.data.HasNext;
           currentPage++;
+
+          // Add a small delay between pages to avoid overwhelming the API
+          if (hasMore) {
+            await new Promise((resolve) => setTimeout(resolve, 100));
+          }
         } else {
           console.error("❌ Failed to fetch job list page:", response.error);
           break;
@@ -950,7 +1862,21 @@ export class EnhancedOMSAPIClient {
       }
     }
 
-    console.log(`✅ Fetched ${allJobs.length} total active jobs`);
+    console.log(
+      `✅ Fetched ${allJobs.length} total active jobs with comprehensive status coverage`
+    );
+    console.log(`📊 Job status breakdown:`);
+
+    // Log status breakdown for verification
+    const statusCounts = allJobs.reduce((acc, job) => {
+      acc[job.MasterJobStatus] = (acc[job.MasterJobStatus] || 0) + 1;
+      return acc;
+    }, {} as Record<string, number>);
+
+    Object.entries(statusCounts).forEach(([status, count]) => {
+      console.log(`   - ${status}: ${count} jobs`);
+    });
+
     return allJobs;
   }
 
@@ -1121,27 +2047,42 @@ function loadAuthCookiesFromEnv(): string {
 
 // ===== SINGLETON INSTANCE =====
 
-export const enhancedAPIClient = new EnhancedOMSAPIClient({
-  cacheEnabled: true,
-  cacheTTL: 5 * 60 * 1000, // 5 minutes
-  rateLimitPerMinute: 60,
-  connectionPoolSize: 10,
-});
+let _enhancedAPIClient: EnhancedOMSAPIClient | null = null;
 
-// Set authentication cookies on initialization
-if (typeof window === "undefined") {
-  // Server-side only - load auth cookies from environment
-  const authCookies = loadAuthCookiesFromEnv();
-  if (authCookies) {
-    enhancedAPIClient.setAuthCookies(authCookies);
-    console.log("🔐 Authentication cookies updated");
-  }
+function getEnhancedAPIClient(): EnhancedOMSAPIClient {
+  if (!_enhancedAPIClient) {
+    _enhancedAPIClient = new EnhancedOMSAPIClient({
+      cacheEnabled: true,
+      cacheTTL: 5 * 60 * 1000, // 5 minutes
+      rateLimitPerMinute: 60,
+      connectionPoolSize: 10,
+    });
 
-  // Skip cache warmup during build to avoid expired cookie errors
-  // Cache will warm up during actual runtime requests
-  if (process.env.NODE_ENV !== "production") {
-    setTimeout(() => {
-      enhancedAPIClient.warmupCache().catch(console.error);
-    }, 1000);
+    // Set authentication cookies on first access
+    if (typeof window === "undefined") {
+      // Server-side only - load auth cookies from environment
+      const authCookies = loadAuthCookiesFromEnv();
+      if (authCookies) {
+        _enhancedAPIClient.setAuthCookies(authCookies);
+        console.log("🔐 Authentication cookies updated for singleton");
+      }
+
+      // Skip cache warmup during build to avoid expired cookie errors
+      // Cache will warm up during actual runtime requests
+      if (process.env.NODE_ENV !== "production") {
+        setTimeout(() => {
+          _enhancedAPIClient!.warmupCache().catch(console.error);
+        }, 1000);
+      }
+    }
   }
+  return _enhancedAPIClient;
 }
+
+// Export a getter that creates the instance on first access
+export const enhancedAPIClient = new Proxy({} as EnhancedOMSAPIClient, {
+  get(target, prop) {
+    const instance = getEnhancedAPIClient();
+    return (instance as any)[prop];
+  },
+});

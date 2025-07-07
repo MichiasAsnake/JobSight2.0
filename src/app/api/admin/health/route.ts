@@ -4,7 +4,7 @@ import { enhancedAPIClient } from "@/lib/enhanced-api-client";
 import { enhancedVectorPipeline } from "@/lib/enhanced-vector-pipeline";
 import { advancedCacheService } from "@/lib/advanced-cache-service";
 import { intelligentQueryRouter } from "@/lib/query-router";
-import { ragPipeline } from "@/lib/rag-pipeline";
+import { enhancedRAGPipeline } from "@/lib/enhanced-rag-pipeline";
 
 export async function GET(request: NextRequest) {
   const startTime = Date.now();
@@ -184,7 +184,7 @@ async function checkQueryRouterHealth() {
 // RAG Health Check
 async function checkRAGHealth() {
   try {
-    const health = await ragPipeline.healthCheck();
+    const health = await enhancedRAGPipeline.healthCheck();
     return {
       healthy: health.healthy,
       error: health.error,

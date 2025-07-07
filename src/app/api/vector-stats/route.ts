@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 import { vectorDBService } from "@/lib/vector-db";
-import { dataUpdater } from "@/lib/data-updater";
 import { apiFirstDataService } from "@/lib/api-first-data-service";
 
 export async function GET(request: NextRequest) {
@@ -18,103 +17,122 @@ export async function GET(request: NextRequest) {
         });
 
       case "data-health":
-        // Get comprehensive data health
-        const dataHealth = await dataUpdater.assessDataHealth();
-        return NextResponse.json({
-          success: true,
-          data: dataHealth,
-        });
+        // Simplified data health check using API service
+        try {
+          const apiHealth = await apiFirstDataService.healthCheck();
+          const vectorHealth = await vectorDBService.healthCheck();
+
+          return NextResponse.json({
+            success: true,
+            data: {
+              api: apiHealth,
+              vector: vectorHealth,
+              status:
+                apiHealth.healthy && vectorHealth.healthy
+                  ? "healthy"
+                  : "degraded",
+            },
+          });
+        } catch (error) {
+          return NextResponse.json({
+            success: false,
+            error:
+              "Health check failed: " +
+              (error instanceof Error ? error.message : String(error)),
+          });
+        }
 
       case "detect-changes":
         // Detect what changes would happen in an incremental update
-        const ordersData = await apiFirstDataService.getAllOrders();
-        const regularOrders = ordersData.orders.map((order) => ({
-          ...order,
-          // Remove enhanced fields for change detection
-          dataSource: undefined,
-          lastAPIUpdate: undefined,
-          needsRefresh: undefined,
-          staleness: undefined,
-          liveStatus: undefined,
-          liveShipping: undefined,
-          liveFiles: undefined,
-          apiJobData: undefined,
-          apiErrors: undefined,
-          dataAge: undefined,
-        }));
+        try {
+          const ordersData = await apiFirstDataService.getAllOrders();
+          const changes = await vectorDBService.detectOrderChanges(
+            ordersData.orders
+          );
 
-        const changes = await vectorDBService.detectOrderChanges(regularOrders);
-
-        return NextResponse.json({
-          success: true,
-          data: {
-            totalOrders: regularOrders.length,
-            changes: {
-              newOrders: changes.newOrders.length,
-              updatedOrders: changes.updatedOrders.length,
-              unchangedOrders: changes.unchangedOrders.length,
-              deletedOrders: changes.deletedOrderIds.length,
+          return NextResponse.json({
+            success: true,
+            data: {
+              totalOrders: ordersData.orders.length,
+              changes: {
+                newOrders: changes.newOrders.length,
+                updatedOrders: changes.updatedOrders.length,
+                unchangedOrders: changes.unchangedOrders.length,
+                deletedOrders: changes.deletedOrderIds.length,
+              },
+              sampleNewOrders: changes.newOrders.slice(0, 3).map((o) => ({
+                jobNumber: o.jobNumber,
+                customer: o.customer?.company,
+                description: o.description?.substring(0, 100),
+              })),
+              sampleUpdatedOrders: changes.updatedOrders
+                .slice(0, 3)
+                .map((o) => ({
+                  jobNumber: o.jobNumber,
+                  customer: o.customer?.company,
+                  description: o.description?.substring(0, 100),
+                })),
             },
-            sampleNewOrders: changes.newOrders.slice(0, 3).map((o) => ({
-              jobNumber: o.jobNumber,
-              customer: o.customer?.company,
-              description: o.description?.substring(0, 100),
-            })),
-            sampleUpdatedOrders: changes.updatedOrders.slice(0, 3).map((o) => ({
-              jobNumber: o.jobNumber,
-              customer: o.customer?.company,
-              description: o.description?.substring(0, 100),
-            })),
-          },
-        });
+          });
+        } catch (error) {
+          return NextResponse.json({
+            success: false,
+            error:
+              "Change detection failed: " +
+              (error instanceof Error ? error.message : String(error)),
+          });
+        }
 
       case "test-incremental":
         // Test incremental update with current data
-        const testOrdersData = await apiFirstDataService.getAllOrders();
-        const testRegularOrders = testOrdersData.orders.map((order) => ({
-          ...order,
-          dataSource: undefined,
-          lastAPIUpdate: undefined,
-          needsRefresh: undefined,
-          staleness: undefined,
-          liveStatus: undefined,
-          liveShipping: undefined,
-          liveFiles: undefined,
-          apiJobData: undefined,
-          apiErrors: undefined,
-          dataAge: undefined,
-        }));
+        try {
+          const ordersData = await apiFirstDataService.getAllOrders();
+          const updateResult = await vectorDBService.performIncrementalUpdate(
+            ordersData.orders
+          );
 
-        const updateResult = await vectorDBService.performIncrementalUpdate(
-          testRegularOrders
-        );
-
-        return NextResponse.json({
-          success: true,
-          data: updateResult,
-        });
+          return NextResponse.json({
+            success: true,
+            data: updateResult,
+          });
+        } catch (error) {
+          return NextResponse.json({
+            success: false,
+            error:
+              "Incremental update test failed: " +
+              (error instanceof Error ? error.message : String(error)),
+          });
+        }
 
       case "system-overview":
-        // Comprehensive system overview
-        const [health, tracker, systemHealth] = await Promise.all([
-          dataUpdater.assessDataHealth(),
-          vectorDBService.getChangeTrackerStats(),
-          apiFirstDataService.healthCheck(),
-        ]);
+        // Simplified system overview
+        try {
+          const [apiHealth, vectorHealth, tracker] = await Promise.all([
+            apiFirstDataService.healthCheck(),
+            vectorDBService.healthCheck(),
+            vectorDBService.getChangeTrackerStats(),
+          ]);
 
-        return NextResponse.json({
-          success: true,
-          data: {
-            dataHealth: health,
-            changeTracker: tracker,
-            hybridSystem: systemStatus,
-            vectorDBStats: {
-              lastUpdate: tracker.lastVectorUpdate,
-              trackedOrders: tracker.processedOrdersCount,
-              isHealthy: health.vectorSyncHealth.isInSync,
+          return NextResponse.json({
+            success: true,
+            data: {
+              api: apiHealth,
+              vector: vectorHealth,
+              changeTracker: tracker,
+              overallHealth:
+                apiHealth.healthy && vectorHealth.healthy
+                  ? "healthy"
+                  : "degraded",
             },
-          },
-        });
+          });
+        } catch (error) {
+          return NextResponse.json({
+            success: false,
+            error:
+              "System overview failed: " +
+              (error instanceof Error ? error.message : String(error)),
+          });
+        }
 
       case "test-search":
         // Test raw vector search with debug info
@@ -190,8 +208,9 @@ export async function GET(request: NextRequest) {
         // Default: return basic stats
         const basicStats = {
           changeTracker: vectorDBService.getChangeTrackerStats(),
-          apiStats: hybridOMSDataService.getAPIStats(),
           timestamp: new Date().toISOString(),
+          message:
+            "Vector database statistics (simplified after data-updater removal)",
         };
 
         return NextResponse.json({
@@ -217,63 +236,33 @@ export async function POST(request: NextRequest) {
     const { action } = body;
 
     switch (action) {
-      case "force-rebuild":
-        // Force a full vector database rebuild
-        const orders = await hybridOMSDataService.getEnhancedOrders();
-        const regularOrders = orders.map((order) => ({
-          ...order,
-          dataSource: undefined,
-          lastAPIUpdate: undefined,
-          needsRefresh: undefined,
-          staleness: undefined,
-          liveStatus: undefined,
-          liveShipping: undefined,
-          liveFiles: undefined,
-          apiJobData: undefined,
-          apiErrors: undefined,
-          dataAge: undefined,
-        }));
+      case "force-update":
+        // Force a vector database update
+        try {
+          const ordersData = await apiFirstDataService.getAllOrders();
+          const updateResult = await vectorDBService.performIncrementalUpdate(
+            ordersData.orders
+          );
 
-        const rebuildResult = await vectorDBService.forceFullRebuild(
-          regularOrders
-        );
-
-        return NextResponse.json({
-          success: true,
-          data: rebuildResult,
-          message: "Full vector database rebuild completed",
-        });
-
-      case "reset-tracker":
-        // Reset the change tracker
-        vectorDBService.resetChangeTracker();
-
-        return NextResponse.json({
-          success: true,
-          message: "Change tracker reset successfully",
-        });
-
-      case "trigger-update":
-        // Trigger a data update cycle
-        const updateStats = await dataUpdater.performUpdate();
-
-        return NextResponse.json({
-          success: true,
-          data: updateStats,
-          message: "Data update cycle completed",
-        });
+          return NextResponse.json({
+            success: true,
+            data: updateResult,
+            message: "Vector database update completed",
+          });
+        } catch (error) {
+          return NextResponse.json({
+            success: false,
+            error:
+              "Force update failed: " +
+              (error instanceof Error ? error.message : String(error)),
+          });
+        }
 
       default:
-        return NextResponse.json(
-          {
-            success: false,
-            error: "Unknown action",
-          },
-          { status: 400 }
-        );
+        return NextResponse.json({ error: "Invalid action" }, { status: 400 });
     }
   } catch (error) {
-    console.error("Vector stats API POST error:", error);
+    console.error("Vector stats POST error:", error);
     return NextResponse.json(
       {
         success: false,

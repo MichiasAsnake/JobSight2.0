@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { Send } from "lucide-react";
 import {
   filterSuggestions,
@@ -26,7 +26,7 @@ export default function OMSChatInput({
   const [suggestionCategory, setSuggestionCategory] =
     useState<string>("common");
 
-  const inputRef = useRef<HTMLInputElement>(null);
+  const inputRef = useRef<HTMLTextAreaElement>(null);
   const suggestionsRef = useRef<HTMLDivElement>(null);
 
   // Update suggestions based on input - only show for meaningful input
@@ -103,52 +103,46 @@ export default function OMSChatInput({
     }
   };
 
-  // Function kept for potential future use
-  // const getCategoryIcon = (category: string) => {
-  //   switch (category) {
-  //     case "financial":
-  //       return <TrendingUp className="w-4 h-4" />;
-  //     case "operational":
-  //       return <Search className="w-4 h-4" />;
-  //     case "customer":
-  //       return <Users className="w-4 h-4" />;
-  //     case "date":
-  //       return <Calendar className="w-4 h-4" />;
-  //     default:
-  //       return <Lightbulb className="w-4 h-4" />;
-  //   }
-  // };
-
-  // Function kept for potential future use
-  // const getCategoryColor = (category: string) => {
-  //   switch (category) {
-  //     case "financial":
-  //       return "text-green-600 bg-green-50 border-green-200";
-  //     case "operational":
-  //       return "text-blue-600 bg-blue-50 border-blue-200";
-  //     case "customer":
-  //       return "text-purple-600 bg-purple-50 border-purple-200";
-  //     case "date":
-  //       return "text-orange-600 bg-orange-50 border-orange-200";
-  //     default:
-  //       return "text-gray-600 bg-gray-50 border-gray-200";
-  //   }
-  // };
+  // Auto-resize textarea
+  useEffect(() => {
+    if (inputRef.current) {
+      inputRef.current.style.height = "auto";
+      inputRef.current.style.height = `${Math.min(
+        inputRef.current.scrollHeight,
+        120
+      )}px`;
+    }
+  }, [message]);
 
   return (
-    <div className="relative w-full">
-      <div className="flex gap-2 items-end">
+    <div className="relative w-6/12 mx-auto mb-5">
+      <div className="flex gap-3 items-end">
         <div className="flex-1 relative">
-          <Input
+          <Textarea
             ref={inputRef}
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder='Ask about orders... e.g., "What"s due today?" or "Show overdue jobs"'
+            placeholder="Ask about orders, jobs, or shipments... e.g., 'Show overdue jobs' or 'What's due this week?'"
             disabled={disabled}
-            className="w-full pr-12 resize-none"
+            className="w-full min-h-[120px] max-h-[120px] rounded-lg resize-none pr-12 text-base leading-relaxed"
             autoComplete="off"
+            aria-label="Order management system chat input"
+            aria-describedby="chat-input-help"
+            role="textbox"
+            aria-multiline="true"
+            aria-expanded={showSuggestions}
+            aria-haspopup="listbox"
+            aria-controls="chat-suggestions"
+            aria-activedescendant={
+              selectedIndex >= 0 ? `suggestion-${selectedIndex}` : undefined
+            }
           />
+
+          <div id="chat-input-help" className="sr-only">
+            Type your question about orders, jobs, or shipments. Press Enter to
+            send, Shift+Enter for new line.
+          </div>
 
           {/* Quick Actions - only show when input is empty */}
           {message.trim().length === 0 && (
@@ -166,6 +160,7 @@ export default function OMSChatInput({
                         inputRef.current?.focus();
                       }}
                       className="inline-flex items-center gap-1 px-2 py-1 text-xs bg-gray-50 hover:bg-gray-100 border border-gray-200 rounded-md transition-colors"
+                      aria-label={`Use quick action: ${action}`}
                     >
                       <span>💬</span>
                       <span>{action}</span>
@@ -182,6 +177,9 @@ export default function OMSChatInput({
             message.trim().length >= 4 && (
               <div
                 ref={suggestionsRef}
+                id="chat-suggestions"
+                role="listbox"
+                aria-label="Query suggestions"
                 className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-[9999] max-h-60 overflow-y-auto"
                 style={{ zIndex: 9999 }}
               >
@@ -202,6 +200,9 @@ export default function OMSChatInput({
                 {suggestions.map((suggestion, index) => (
                   <button
                     key={index}
+                    id={`suggestion-${index}`}
+                    role="option"
+                    aria-selected={index === selectedIndex}
                     onClick={() => selectSuggestion(suggestion)}
                     className={`w-full text-left px-3 py-2 text-sm hover:bg-gray-50 transition-colors ${
                       index === selectedIndex
@@ -225,9 +226,10 @@ export default function OMSChatInput({
           onClick={handleSend}
           disabled={disabled || !message.trim()}
           size="icon"
-          className="h-10 w-10 shrink-0"
+          className="h-12 w-12 shrink-0 bg-blue-600 hover:bg-blue-700 text-white"
+          aria-label="Send message"
         >
-          <Send className="h-4 w-4" />
+          <Send className="h-5 w-5" />
         </Button>
       </div>
     </div>
