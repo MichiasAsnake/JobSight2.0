@@ -648,6 +648,9 @@ export function transformAPILineItemToLineItem(
     // Machine types available for this job line
     joblineTypes: apiLineItem.JoblineTypes || apiLineItem.joblineTypes,
 
+    // Price band information (will be populated when needed)
+    priceBand: apiLineItem.priceBand || apiLineItem.PriceBand,
+
     // Legacy fields for backward compatibility
     status: apiLineItem.Status || apiLineItem.status,
     category: apiLineItem.Category || apiLineItem.category,
@@ -1206,6 +1209,21 @@ function PriceBandInfo({
                 `⚠️ [PRICE-BAND] No data returned for ${program}:`,
                 result
               );
+
+              // Check if it's a temporary service unavailable error
+              if (
+                result.error &&
+                result.error.includes("temporarily unavailable")
+              ) {
+                console.log(
+                  `🔄 [PRICE-BAND] Service temporarily unavailable, will retry automatically`
+                );
+                // Retry after a short delay
+                setTimeout(() => {
+                  handleExpand();
+                }, 2000);
+                return;
+              }
             }
           })
           .catch((error) => {
@@ -1321,6 +1339,10 @@ function PriceBandInfo({
         <div className="mt-2 p-3 bg-gray-50 rounded-lg border border-gray-200">
           <p className="text-xs text-gray-500">
             No pricing information available for this program.
+          </p>
+          <p className="text-xs text-gray-400 mt-1">
+            This may be because the program is not configured for pricing, or
+            the pricing service is temporarily unavailable.
           </p>
         </div>
       )}

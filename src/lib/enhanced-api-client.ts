@@ -1078,15 +1078,26 @@ export class EnhancedOMSAPIClient {
   ): Promise<number> {
     // Initialize cache if needed
     if (!this.categoryUnitCache) {
-      await this.initializeCategoryUnitCache();
+      try {
+        await this.initializeCategoryUnitCache();
+      } catch (error) {
+        console.error(
+          "❌ [CATEGORY-UNIT] Cache initialization failed, will retry on next call:",
+          error
+        );
+        // Don't return fallback ID 1, throw error instead
+        throw new Error(
+          `Category unit cache initialization failed for program "${program}": ${error}`
+        );
+      }
     }
 
     // Double-check cache is available after initialization
     if (!this.categoryUnitCache) {
-      console.warn(
-        "⚠️ [CATEGORY-UNIT] Cache initialization failed, using fallback"
+      console.error("❌ [CATEGORY-UNIT] Cache is null after initialization");
+      throw new Error(
+        `Category unit cache is not available for program "${program}"`
       );
-      return 1; // Fallback category unit ID
     }
 
     console.log(
@@ -1568,6 +1579,10 @@ export class EnhancedOMSAPIClient {
         error
       );
       // Don't set an empty cache, let it remain null so we can retry
+      // But also log what we were trying to do
+      console.error(
+        "❌ [PRICE-BAND] Cache initialization failed, this will cause fallback to invalid category unit ID 1"
+      );
       throw error;
     }
   }
@@ -1655,7 +1670,7 @@ export class EnhancedOMSAPIClient {
                 assetId: line.AssetId,
               });
 
-              const priceBand = (await this.getPriceQuantityBands(
+              const priceBandResponse = (await this.getPriceQuantityBands(
                 categoryUnitId.toString(),
                 priceTier,
                 priceCode
@@ -1663,19 +1678,29 @@ export class EnhancedOMSAPIClient {
 
               console.log(
                 `📡 [PRICE-BAND] Raw response for line ${line.ID}:`,
-                priceBand
+                priceBandResponse
               );
 
+              // Check if the response indicates an error
+              if (priceBandResponse?.isError || !priceBandResponse?.isSuccess) {
+                console.warn(
+                  `⚠️ [PRICE-BAND] API error for line ${line.ID}:`,
+                  priceBandResponse?.error?.Message || "Unknown error"
+                );
+                return { lineId: line.ID, priceBand: null };
+              }
+
               const transformedPriceBand = {
-                categoryCode: priceBand?.CategoryCode,
-                unitType: priceBand?.UnitType,
-                priceCode: priceBand?.PriceCode,
-                humanName: priceBand?.HumanName,
-                filterName: priceBand?.FilterName,
-                processCode: priceBand?.ProcessCode,
-                categorySetupMultiplier: priceBand?.CategorySetupMultiplier,
-                priceFormulaType: priceBand?.PriceFormulaType,
-                active: priceBand?.Active,
+                categoryCode: priceBandResponse?.CategoryCode,
+                unitType: priceBandResponse?.UnitType,
+                priceCode: priceBandResponse?.PriceCode,
+                humanName: priceBandResponse?.HumanName,
+                filterName: priceBandResponse?.FilterName,
+                processCode: priceBandResponse?.ProcessCode,
+                categorySetupMultiplier:
+                  priceBandResponse?.CategorySetupMultiplier,
+                priceFormulaType: priceBandResponse?.PriceFormulaType,
+                active: priceBandResponse?.Active,
               };
 
               console.log(

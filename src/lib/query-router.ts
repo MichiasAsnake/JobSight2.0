@@ -434,26 +434,18 @@ Return a JSON object with this exact structure:
   private fallbackPatternAnalysis(query: string): QueryIntent {
     const queryLower = query.toLowerCase();
 
-    // Enhanced specific order detection patterns
-    const specificOrderPatterns = [
-      /show\s+me\s+(?:order|job)\s+(\d+)/i,
-      /(?:order|job)\s+details?\s+for\s+(\d+)/i,
-      /more\s+(?:on|about)\s+(?:order|job)\s+(\d+)/i,
-      /get\s+(?:order|job)\s+(\d+)/i,
-      /find\s+(?:order|job)\s+(\d+)/i,
-    ];
-
-    // Check for specific order requests first
-    for (const pattern of specificOrderPatterns) {
-      const match = query.match(pattern);
-      if (match && match[1]) {
+    // Use the consolidated specific order detection method
+    if (this.isSpecificOrderDetailRequest(query)) {
+      // Extract job numbers using the same logic as the frontend
+      const jobNumbers = this.extractJobNumbersFromRequest(query);
+      if (jobNumbers.length > 0) {
         return {
           type: "specific",
           strategy: "api",
           confidence: 0.9,
           explanation: "Fallback: Specific order detail request detected",
           extractedEntities: {
-            jobNumbers: [match[1]],
+            jobNumbers: jobNumbers,
           },
         };
       }
@@ -518,7 +510,10 @@ Return a JSON object with this exact structure:
       const sources = ["api"];
 
       // Route based on extracted entities
-      if (intent.extractedEntities.jobNumbers?.length) {
+      if (
+        intent.extractedEntities.jobNumbers &&
+        intent.extractedEntities.jobNumbers.length > 0
+      ) {
         // Get specific orders by job number
         for (const jobNumber of intent.extractedEntities.jobNumbers) {
           const order = await apiFirstDataService.getOrderByJobNumber(
@@ -533,15 +528,28 @@ Return a JSON object with this exact structure:
         // Search orders by query - FETCH DATA FIRST, then filter
         console.log("🔍 Searching orders for:", query);
 
-        // Always fetch all orders first WITH enrichment for pricing data, then apply filtering
-        const ordersData = await apiFirstDataService.getAllOrdersWithEnrichment(
-          {
-            pageSize: 500,
-            includeLineItems: true, // Include line items for pricing calculation
-            includeShipments: false, // Not needed for pricing
-            includeFiles: false, // Not needed for pricing
-          }
+        // Determine if we need detailed pricing information based on query intent
+        const needsDetailedPricing = this.shouldIncludeDetailedPricing(
+          query,
+          intent
         );
+
+        console.log(
+          `🔍 [PRICING] Query "${query}" needs detailed pricing: ${needsDetailedPricing}`
+        );
+
+        // Fetch orders with appropriate level of detail
+        const ordersData = needsDetailedPricing
+          ? await apiFirstDataService.getAllOrdersWithEnrichment({
+              pageSize: 500,
+              includeLineItems: true, // Include line items for pricing calculation
+              includeShipments: false, // Not needed for pricing
+              includeFiles: false, // Not needed for pricing
+            })
+          : await apiFirstDataService.getAllOrders({
+              pageSize: 500,
+              // No enrichment - just basic order data
+            });
         orders = ordersData.orders || [];
         performanceMetrics.apiCalls++;
 
@@ -1400,6 +1408,148 @@ Return a JSON object with this exact structure:
   // Get captured debug logs
   private getCapturedLogs(): string[] {
     return [...this.debugLogs];
+  }
+
+  /**
+   * Determine if a query is requesting specific order details
+   * Uses the same logic as the frontend component
+   */
+  private isSpecificOrderDetailRequest(query: string): boolean {
+    const specificOrderPatterns = [
+      /show\s+me\s+order\s+(\d+)/i,
+      /show\s+me\s+job\s+(\d+)/i,
+      /order\s+(\d+)/i,
+      /job\s+(\d+)/i,
+      /details?\s+for\s+(?:order|job)\s+(\d+)/i,
+      /more\s+(?:on|about)\s+(?:order|job)\s+(\d+)/i,
+      /get\s+(?:order|job)\s+(\d+)/i,
+      /find\s+(?:order|job)\s+(\d+)/i,
+    ];
+
+    return specificOrderPatterns.some((pattern) => pattern.test(query));
+  }
+
+  /**
+   * Extract job numbers from specific order requests
+   * Uses the same logic as the frontend component
+   */
+  private extractJobNumbersFromRequest(query: string): string[] {
+    const patterns = [
+      /show\s+me\s+order\s+(\d+)/gi,
+      /show\s+me\s+job\s+(\d+)/gi,
+      /order\s+(\d+)/gi,
+      /job\s+(\d+)/gi,
+      /details?\s+for\s+(?:order|job)\s+(\d+)/gi,
+      /more\s+(?:on|about)\s+(?:order|job)\s+(\d+)/gi,
+      /get\s+(?:order|job)\s+(\d+)/gi,
+      /find\s+(?:order|job)\s+(\d+)/gi,
+    ];
+
+    const jobNumbers = new Set<string>();
+
+    patterns.forEach((pattern) => {
+      const matches = Array.from(query.matchAll(pattern));
+      matches.forEach((match) => {
+        if (match[1]) {
+          jobNumbers.add(match[1]);
+        }
+      });
+    });
+
+    return Array.from(jobNumbers);
+  }
+
+  /**
+   * Determine if a query needs detailed pricing information
+   * Only fetch price bands for queries that explicitly ask for pricing details
+   */
+  private shouldIncludeDetailedPricing(
+    query: string,
+    intent: QueryIntent
+  ): boolean {
+    const queryLower = query.toLowerCase();
+
+    // Keywords that indicate pricing/pricing band information is needed
+    const pricingKeywords = [
+      "price",
+      "pricing",
+      "cost",
+      "costs",
+      "pricing band",
+      "price band",
+      "bands",
+      "quote",
+      "quotes",
+      "quoted",
+      "estimate",
+      "estimates",
+      "estimated",
+      "rate",
+      "rates",
+      "pricing tier",
+      "price tier",
+      "tier",
+      "discount",
+      "discounts",
+      "markup",
+      "markups",
+      "margin",
+      "margins",
+      "total cost",
+      "unit cost",
+      "per piece",
+      "per item",
+      "per unit",
+      "show pricing",
+      "show prices",
+      "show costs",
+      "pricing details",
+      "price breakdown",
+      "cost breakdown",
+      "detailed pricing",
+    ];
+
+    // Check if query contains pricing-related keywords
+    const hasPricingKeywords = pricingKeywords.some((keyword) =>
+      queryLower.includes(keyword)
+    );
+
+    // Check if it's a specific order query (these often need detailed pricing)
+    const isSpecificOrder =
+      this.isSpecificOrderDetailRequest(query) ||
+      (intent.extractedEntities.jobNumbers &&
+        intent.extractedEntities.jobNumbers.length > 0);
+
+    // Check if it's a detailed analysis query
+    const isDetailedQuery =
+      queryLower.includes("detailed") ||
+      queryLower.includes("breakdown") ||
+      queryLower.includes("analysis") ||
+      queryLower.includes("show more") ||
+      queryLower.includes("expand");
+
+    // Check if it's a pricing-related function call
+    const isPricingFunction =
+      intent.strategy === "api" &&
+      (queryLower.includes("get_job_cost") ||
+        queryLower.includes("get_price_bands"));
+
+    const needsDetailedPricing =
+      hasPricingKeywords ||
+      isSpecificOrder ||
+      isDetailedQuery ||
+      isPricingFunction;
+
+    console.log(`🔍 [PRICING-ANALYSIS] Query analysis:`, {
+      query: query,
+      hasPricingKeywords,
+      isSpecificOrder,
+      isDetailedQuery,
+      isPricingFunction,
+      needsDetailedPricing,
+    });
+
+    return needsDetailedPricing;
   }
 }
 

@@ -40,11 +40,31 @@ export async function POST(request: NextRequest) {
           `🔍 [PRICE-BANDS] Mapped program "${program}" to category unit ID: ${finalCategoryUnitId}`
         );
       } catch (error) {
-        console.error(`❌ [PRICE-BANDS] Failed to map program "${program}"`);
+        console.error(
+          `❌ [PRICE-BANDS] Failed to map program "${program}":`,
+          error
+        );
+
+        // Check if it's a cache initialization error
+        if (
+          error instanceof Error &&
+          error.message.includes("cache initialization failed")
+        ) {
+          return NextResponse.json(
+            {
+              success: false,
+              error: `Price band service is temporarily unavailable. Please try again in a moment.`,
+              details: "Cache initialization in progress",
+            },
+            { status: 503 } // Service Unavailable
+          );
+        }
+
         return NextResponse.json(
           {
             success: false,
-            error: `No category unit mapping found for program "${program}"`,
+            error: `No category unit mapping found for program "${program}". This program may not be configured for pricing.`,
+            details: error instanceof Error ? error.message : "Unknown error",
           },
           { status: 400 }
         );
@@ -76,23 +96,41 @@ export async function POST(request: NextRequest) {
     }
 
     // Call the OMS API directly
-    const priceBandData = (await enhancedAPIClient.getPriceQuantityBands(
+    const priceBandResponse = (await enhancedAPIClient.getPriceQuantityBands(
       finalCategoryUnitId,
       finalPriceTier,
       finalPriceCode
-    )) as PriceBandResponse;
+    )) as any;
+
+    // Check if the response indicates an error
+    if (priceBandResponse?.isError || !priceBandResponse?.isSuccess) {
+      console.error(
+        `❌ [PRICE-BANDS] API error for program "${program}":`,
+        priceBandResponse?.error?.Message || "Unknown error"
+      );
+      return NextResponse.json(
+        {
+          success: false,
+          error:
+            priceBandResponse?.error?.Message ||
+            "Failed to fetch price band data",
+          program,
+        },
+        { status: 400 }
+      );
+    }
 
     // Transform the response to match our interface
     const transformedData = {
-      categoryCode: priceBandData?.CategoryCode,
-      unitType: priceBandData?.UnitType,
-      priceCode: priceBandData?.PriceCode,
-      humanName: priceBandData?.HumanName,
-      filterName: priceBandData?.FilterName,
-      processCode: priceBandData?.ProcessCode,
-      categorySetupMultiplier: priceBandData?.CategorySetupMultiplier,
-      priceFormulaType: priceBandData?.PriceFormulaType,
-      active: priceBandData?.Active,
+      categoryCode: priceBandResponse?.CategoryCode,
+      unitType: priceBandResponse?.UnitType,
+      priceCode: priceBandResponse?.PriceCode,
+      humanName: priceBandResponse?.HumanName,
+      filterName: priceBandResponse?.FilterName,
+      processCode: priceBandResponse?.ProcessCode,
+      categorySetupMultiplier: priceBandResponse?.CategorySetupMultiplier,
+      priceFormulaType: priceBandResponse?.PriceFormulaType,
+      active: priceBandResponse?.Active,
     };
 
     console.log(
