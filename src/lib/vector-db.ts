@@ -89,7 +89,7 @@ export class VectorDBService {
   private changeTrackerPath: string;
 
   constructor() {
-    this.indexName = process.env.PINECONE_INDEX_NAME || "oms-orders";
+    this.indexName = process.env.PINECONE_INDEX_NAME || "serene-laurel";
     this.changeTrackerPath = path.join(
       process.cwd(),
       "data",

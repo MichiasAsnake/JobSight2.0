@@ -123,7 +123,7 @@ export class EnhancedVectorPipeline {
   private batchSize = 50; // Optimal batch size for Pinecone
 
   constructor() {
-    this.indexName = process.env.PINECONE_INDEX_NAME || "oms-orders-enhanced";
+    this.indexName = process.env.PINECONE_INDEX_NAME || "serene-laurel";
     this.changeTrackerPath = path.join(
       process.cwd(),
       "data",

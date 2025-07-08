@@ -129,7 +129,7 @@ export class PineconePopulationStrategy {
   private stats: PopulationStats;
 
   constructor(
-    indexName: string = process.env.PINECONE_INDEX_NAME || "oms-orders",
+    indexName: string = process.env.PINECONE_INDEX_NAME || "serene-laurel",
     config: Partial<PopulationConfig> = {}
   ) {
     this.indexName = indexName;
